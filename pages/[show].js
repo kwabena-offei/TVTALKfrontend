@@ -8,4 +8,4 @@ const [show] = ({props}) => {
     );
 };
 
-export default [show];
+export default show;
