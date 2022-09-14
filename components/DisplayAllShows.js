@@ -19,9 +19,7 @@ const DisplayAllShows = ({ shows }) => {
 
     // Pushes tmsID to the about page
     const handleAbout = (tmsId, title) => {
-        // converts the title 
-        // let slug = convertToSlug(title)
-        // `/${slug}`
+  
         router.push({ pathname: '/about', query: { tmsId: tmsId } })
     }
 
