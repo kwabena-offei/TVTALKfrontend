@@ -27,8 +27,8 @@ const DisplayAllShows = ({ shows }) => {
 
     return (
         <Box className='wrapper'>
-            {shows.map((show) =>
-                <div style={{ margin: '100px 0' }}>
+            {shows.map((show, index) =>
+                <div key={index} style={{ margin: '100px 0' }}>
                     {/* <Accordion sx={{
                         boxShadow:'none',
                         padding: 0,
