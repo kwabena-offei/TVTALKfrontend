@@ -1,0 +1,25 @@
+.about{
+    &__header{
+        position: relative;
+        height: 960px; 
+        background-repeat: no-repeat !important;
+        background-size: cover !important;
+        background-position: center ;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        &::before{
+            
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: radial-gradient(86.2% 341.88% at 50% 50%, rgba(9, 15, 39, 0.92) 0%, rgba(9, 15, 39, 0) 100%, rgba(9, 15, 39, 0.88) 100%) !important;
+        }
+     
+    }
+}
+
