@@ -5,6 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Carousel from 'react-elastic-carousel';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+// import header from '/assets/header.png'
 import { useRouter } from 'next/router'
 
 
@@ -19,86 +20,105 @@ const DisplayAllShows = ({ shows }) => {
 
     // Pushes tmsID to the about page
     const handleAbout = (tmsId, title) => {
-  
+
         router.push({ pathname: '/about', query: { tmsId: tmsId } })
     }
 
     return (
-        <Box className='wrapper'>
-            {shows.map((show, index) =>
-                <div key={index} style={{ margin: '100px 0' }}>
-                    {/* <Accordion sx={{
-                        boxShadow:'none',
-                        padding: 0,
-                        '& .MuiCollapse-root': {
-                            
-                            minHeight: '370px !important',
-                            visibility: 'visible !important'
-                        },
-                        '& .MuiAccordion-root': {
-                            backgroundColor: 'transparent !important'
-                        }
-                    }} style={{ background: 'transparent' }} >
-                        <AccordionSummary
-                            style={{ padding: 0 }}
-                            expandIcon={<Button style={{ color: '#FFF' }} variant='outlined'>Show All</Button>}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
-                        >
-                            <Typography style={{ color: '#FFF' }}>{show.title}</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails style={{ padding: 0 }}> */}
+        <>
+            <Box style={{position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                <Box style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 4}}>
+                    <Typography sx={{color: 'white'}}>Let's start a community of TV fans </Typography>
+                    <Typography sx={{color: 'white'}}>Press "Chat" and post a message!</Typography>
+                </Box>
+                <Box style={{position: 'absolute', top:0, bottom: 0, left: 0, right: 0, background: 'rgba(9, 15, 39, 0.32)',}}/>
+                <img src='/assets/header.jpg' width='100%'/>
+            </Box>
+            <Box className='wrapper'>
+
+
+                {/* <Accordion sx={{
+                    boxShadow: 'none',
+                    padding: 0,
+                    '& .MuiCollapse-root': {
+
+                        minHeight: '200px !important',
+                        visibility: 'visible !important'
+                    },
+                    '& .MuiAccordion-root': {
+                        backgroundColor: 'red !important'
+                    }
+                }} style={{ background: 'blue' }} >
+
+
+                    <AccordionSummary
+                        style={{ padding: 0 }}
+                        expandIcon={<Button style={{ color: '#FFF' }} variant='outlined'>Show All</Button>}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                        <Typography style={{ color: '#FFF' }}>Test</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails style={{ padding: 0 }}>
+                        <Box sx={{ background: '' }}></Box>
+                    </AccordionDetails>
+                </Accordion> */}
+                {shows.map((show, index) =>
+                    <div key={index} style={{ margin: '100px 0' }}>
+
+
+
+
+
+
                         <Typography></Typography>
-                    <Carousel itemsToShow={4} itemsToScroll={4} pagination={false} itemPadding={[0, 10]}>
+                        <Carousel itemsToShow={4} itemsToScroll={4} pagination={false} itemPadding={[0, 10]}>
 
-                        {/* <Grid container spacing={5}> */}
-                        {show.shows.map((tvShow, ind) =>
-                            <Card key={ind} sx={{ background: 'transparent' }}>
-                                <CardMedia
-                                    component="img"
-                                    height="140"
-                                    image={tvShow.preferred_image_uri}
-                                    alt="green iguana"
-                                />
-                                <CardContent sx={{ background: '#131B3F' }}>
-                                    <Typography sx={{ color: '#EFF2FD' }} gutterBottom variant="h5" component="div">
-                                        {tvShow.title}
-                                    </Typography>
-                                    <Grid container spacing={1}>
-                                        <Grid item>
-                                            <Button style={{ background: '#3361FF', borderRadius: '10000px' }} variant='contained'>
-                                                <Typography sx={{ color: '#EFF2FD' }} variant='string'>Chat</Typography>
-                                            </Button>
+                            {show.shows.map((tvShow, ind) =>
+                                <Card key={ind} sx={{ background: 'transparent' }}>
+                                    <CardMedia
+                                        component="img"
+                                        image={tvShow.preferred_image_uri}
+
+                                    />
+                                    <CardContent sx={{ background: '#131B3F' }}>
+                                        <Typography sx={{ color: '#EFF2FD' }} gutterBottom variant="h5" component="div">
+                                            {tvShow.title}
+                                        </Typography>
+                                        <Grid container spacing={1}>
+                                            <Grid item>
+                                                <Button style={{ background: '#3361FF', borderRadius: '10000px' }} variant='contained'>
+                                                    <Typography sx={{ color: '#EFF2FD' }} variant='string'>Chat</Typography>
+                                                </Button>
+                                            </Grid>
+                                            <Grid item>
+                                                <Button onClick={() => handleAbout(tvShow.tmsId)} style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
+                                                    <Typography sx={{ color: '#919CC0' }} variant='string'>About</Typography>
+                                                </Button>
+                                            </Grid>
+                                            <Grid item>
+                                                <IconButton style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
+                                                    <FavoriteBorderIcon htmlColor='#919CC0' />
+                                                </IconButton>
+                                            </Grid>
                                         </Grid>
-                                        <Grid item>
-                                            <Button onClick={() => handleAbout(tvShow.tmsId)} style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
-                                                <Typography sx={{ color: '#919CC0' }} variant='string'>About</Typography>
-                                            </Button>
-                                        </Grid>
-                                        <Grid item>
-                                            <IconButton style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
-                                                <FavoriteBorderIcon htmlColor='#919CC0' />
-                                            </IconButton>
-                                        </Grid>
-                                    </Grid>
-                                </CardContent>
+                                    </CardContent>
 
-                            </Card>
-                            // </div>
+                                </Card>
 
-                            // </Grid>
-                        )}
-                        {/* </Grid> */}
-                    </Carousel>
+                            )}
+                        </Carousel>
 
-                    {/* </AccordionDetails>
+                        {/* </AccordionDetails>
                     </Accordion> */}
 
 
 
-                </div>
-            )}
-        </Box>
+                    </div>
+                )}
+            </Box>
+        </>
+
 
     );
 };

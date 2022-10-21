@@ -1,0 +1,12 @@
+.news{
+    &__description{
+        -webkit-line-clamp: 4 !important;
+        -webkit-box-orient: vertical;
+        color: '#EFF2FD'; 
+        font-weight: 100; 
+        font-size: 12px; 
+        white-space: 'nowrap'; 
+        overflow: 'hidden'; 
+        text-overflow: 'ellipsis';
+    }
+}
