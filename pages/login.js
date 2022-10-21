@@ -13,7 +13,8 @@ const StyledBox = styled(Box, {
 const StyledText = styled(Typography, {})({
     color: 'blue',
     fontWeight: 500,
-    fontSize: '30px'
+    fontSize: '30px',
+
 
 })
 
