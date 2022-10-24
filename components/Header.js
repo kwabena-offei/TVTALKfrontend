@@ -1,6 +1,7 @@
-import { Box, Button, Link, TextField, Typography } from '@mui/material';
+import { Box, Link, TextField, Typography } from '@mui/material';
 import { fontWeight } from '@mui/system';
 import React from 'react';
+import NavigationButton from './NavigationButton';
 
 const Header = props => {
     return (
@@ -17,9 +18,14 @@ const Header = props => {
             </Box>
 
             <TextField InputProps={{ disableUnderline: true }} sx={{ background: '#131B3F', borderRadius: '10000px', width: '300px', input: { color: '#FFF', fontSize: '1.6rem', fontWeight: 300, padding: '16px' } }} variant="filled" fullWidth placeholder='Search...' style={{ color: '#FFF', fontSize: '1.8rem', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }} />
-            <Button onClick={() => { }} style={{ background: '#3361FF', borderRadius: '10000px' }} variant='contained'>
+            {/* <Button onClick={() => { }} style={{ background: '#3361FF', borderRadius: '10000px' }} variant='contained'>
                 <Typography sx={{ color: '#EFF2FD' }} variant='string'>Login</Typography>
-            </Button>
+            </Button> */}
+            <NavigationButton
+                size='large'
+                link='/login'
+                title='Login'
+            />
         </Box >
     );
 };

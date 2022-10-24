@@ -9,6 +9,7 @@ import theme from '../styles/theme/theme';
 const clientSideEmotionCache = createEmotionCache();
 
 function MyApp(props) {
+  console.log('props', props)
 
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   return (
@@ -17,7 +18,7 @@ function MyApp(props) {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Box >
-            <Header />
+            {/* <Header /> */}
             <Component {...pageProps} />
             <Footer />
           </Box>

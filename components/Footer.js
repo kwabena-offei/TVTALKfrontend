@@ -1,11 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Box, Typography } from '@mui/material';
+import { styled, positions } from '@mui/system';
 
-const Footer = props => {
+ 
+const StyledText = styled(Typography, {})({
+    color: '#EFF2FD',
+    fontWeight: 500,
+    fontSize: '1.8rem',
+})
+const Footer = (props) => {
     return (
-        <div>
-            Footer
-        </div>
+        <Box
+        sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: 60,
+            backgroundColor: '#131B3F',
+            width: '100%',
+            bottom: 0,
+            top: 'auto'
+        }}
+        >
+            <StyledText>
+                Copyright © 2022 TV Talk
+            </StyledText>
+        </Box>
     );
 };
 
