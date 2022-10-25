@@ -1,21 +1,19 @@
 import React from "react";
-import { Box, TextField, Typography, Card, CardHeader, CardContent, Input } from "@mui/material";
+import { Box, Link, Typography, Card, CardHeader, CardContent, Stack, Button, Divider } from "@mui/material";
 // import Grid2 from '@mui/material/Unstable_Grid2'; // Grid version 2
 import { styled } from "@mui/system";
 import bg from "../public/assets/LoginBackground.jpg";
-import { BackgroundPage } from '../components/BackgroundPage'
+import { BackgroundPage } from '../components/BackgroundPage';
+import { FormInput } from '../components/FormInput';
 
-// const StyledBox = styled(Box, {
-//   name: "Test", // Changes class name in the DOM
-//   slot: "boxWrapper", // appends slot name to the name above in the DOM
-// })({
-//   background: "#090F27",
-//   borderRadius: '6px',
-//   height: "755px",
-//   width: "620px",
-//   marginTop: 82,
-//   marginBottom: 83
-// });
+const StyledButton = styled(Button, {
+  name: "custom", // Changes class name in the DOM
+  slot: "outlined", // appends slot name to the name above in the DOM
+})({
+  backgroundColor: "#090F27",
+  borderRadius: '6vh',
+  border: '1px solid #131B3F'
+});
 
 const StyledCard = styled(Card, {
   name: "Form", // Changes class name in the DOM
@@ -23,11 +21,8 @@ const StyledCard = styled(Card, {
 })({
   background: "#090F27",
   borderRadius: '6px',
-  height: "80%",
-  width: "100%",
-  marginTop: 82,
-  marginBottom: 83,
-  color: '#fff'
+  // height: "60vh",
+  width: "50%",
 });
 const StyledText = styled(
   Typography,
@@ -43,23 +38,47 @@ const login = (props) => {
   return (
     <>
         <BackgroundPage source={bg} alternative='main-bg' />
-        <Box flexDirection='column' justifyContent='center' sx={{ marginLeft: '50%' }} >
-            {/* <StyledBox
-            component="form"
-            sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "evenly"
-            }}>
-                <StyledText>
-                    Log In
-                </StyledText>
-            </StyledBox> */}
-            <StyledCard>
-                <CardHeader>Log In</CardHeader>
+        <Box
+          marginY={20}
+          paddingRight={20}
+          flexDirection='column'
+          justifyContent='center'
+        >
+            <StyledCard sx={{ marginLeft: '50%' }}> 
+                <CardHeader
+                  titleTypographyProps={{ textAlign: 'center', margin: 3, fontWeight: 700, fontSize: '40px' }}
+                  title="Log In"
+                  subheader={
+                    <Stack direction='row' spacing={2} justifyContent='center'>
+                      <Typography>New User?</Typography>
+                      <Link href="#" underline="none" color='primary'>Create an account</Link>
+                    </Stack>
+                  }
+                />
                 <CardContent>
-                    <TextField placeholder={<StyledText>example@mail.com</StyledText>}></TextField>
-                    <Input variant="filled" type="password" placeholder="Enter Password" sx={{ color: '#fff!important'}}></Input>
+                    <Stack direction='column' spacing={2}>
+                      <Stack direction='column' spacing={2}>
+                        <Button variant='contained' color='primary'>Continue with Google</Button>
+                        <Button variant='contained' color='secondary'>Continue with Facebook</Button>
+                        <StyledButton variant='outlined' color='neutral'>Continue with Apple</StyledButton>
+                      </Stack>
+                      <Divider><Typography fontWeight={400} color="#636D92">Or</Typography></Divider>
+                      <Stack direction='column' spacing={2}>
+                      <FormInput
+                          id='UsernameInput'
+                          label="Email/Username"
+                          type="email"
+                          placeholder='example@mail.com'
+                        />
+                        <FormInput
+                          id='UserPassword'
+                          label='Password'
+                          type="password"
+                          placeholder='Enter Password'
+                          endAdornment={'eye'}
+                        />
+                      </Stack>
+                    </Stack>
                 </CardContent>
             </StyledCard>
 

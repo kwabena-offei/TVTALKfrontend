@@ -2,7 +2,7 @@ import Footer from "../components/Footer"
 import Header from "../components/Header"
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider, CssBaseline, Box } from '@mui/material';
-import '../styles/main.scss'
+// import '../styles/main.scss'
 import createEmotionCache from '../util/createEmotionCache';
 import theme from '../styles/theme/theme';
 
@@ -12,13 +12,14 @@ function MyApp(props) {
   console.log('props', props)
 
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  console.log('pageProps', pageProps)
   return (
     <>
       <CacheProvider value={emotionCache}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Box >
-            {/* <Header /> */}
+            <Header />
             <Component {...pageProps} />
             <Footer />
           </Box>
