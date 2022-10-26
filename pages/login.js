@@ -1,19 +1,11 @@
 import React from "react";
-import { Box, Link, Typography, Card, CardHeader, CardContent, Stack, Button, Divider } from "@mui/material";
-// import Grid2 from '@mui/material/Unstable_Grid2'; // Grid version 2
+import { Link, Typography, Card, CardContent, Stack, Button, Divider, Grid } from "@mui/material";
 import { styled } from "@mui/system";
 import bg from "../public/assets/LoginBackground.jpg";
 import { BackgroundPage } from '../components/BackgroundPage';
 import { FormInput } from '../components/FormInput';
-
-const StyledButton = styled(Button, {
-  name: "custom", // Changes class name in the DOM
-  slot: "outlined", // appends slot name to the name above in the DOM
-})({
-  backgroundColor: "#090F27",
-  borderRadius: '6vh',
-  border: '1px solid #131B3F'
-});
+import { OutlinedButton } from '../components/OutlinedButton'
+import { CustomCardHeader } from "../components/Login/CustomCardHeader";
 
 const StyledCard = styled(Card, {
   name: "Form", // Changes class name in the DOM
@@ -21,68 +13,55 @@ const StyledCard = styled(Card, {
 })({
   background: "#090F27",
   borderRadius: '6px',
-  // height: "60vh",
-  width: "50%",
+  padding: '2.8vh 3vw'
 });
-const StyledText = styled(
-  Typography,
-  {}
-)({
-  color: "#fff",
-  fontWeight: 500,
-  fontSize: "30px",
-});
-{/* <StyledText>Слава Україні</StyledText> */}
 
 const login = (props) => {
   return (
     <>
+        <div style={{width: '100%', height: '10vh'}}>header imitation</div>
         <BackgroundPage source={bg} alternative='main-bg' />
-        <Box
-          marginY={20}
-          paddingRight={20}
-          flexDirection='column'
-          justifyContent='center'
-        >
-            <StyledCard sx={{ marginLeft: '50%' }}> 
-                <CardHeader
-                  titleTypographyProps={{ textAlign: 'center', margin: 3, fontWeight: 700, fontSize: '40px' }}
-                  title="Log In"
-                  subheader={
-                    <Stack direction='row' spacing={2} justifyContent='center'>
-                      <Typography>New User?</Typography>
-                      <Link href="#" underline="none" color='primary'>Create an account</Link>
-                    </Stack>
-                  }
+        <Grid container spacing={{lg: '3.6', md: '2'}} sx={{paddingTop: 10.25}}>
+          <Grid item xs={0} md={6} lg={6}/>
+          <Grid item xs={12} md={5} lg={4}>
+            <StyledCard>
+                <CustomCardHeader
+                  title='Log In'
+                  subheader='New user?'
+                  subheaderLink='#'
+                  subheaderLinkTitle='Create an account'
                 />
-                <CardContent>
-                    <Stack direction='column' spacing={2}>
-                      <Stack direction='column' spacing={2}>
-                        <Button variant='contained' color='primary'>Continue with Google</Button>
-                        <Button variant='contained' color='secondary'>Continue with Facebook</Button>
-                        <StyledButton variant='outlined' color='neutral'>Continue with Apple</StyledButton>
-                      </Stack>
-                      <Divider><Typography fontWeight={400} color="#636D92">Or</Typography></Divider>
-                      <Stack direction='column' spacing={2}>
-                      <FormInput
-                          id='UsernameInput'
-                          label="Email/Username"
-                          type="email"
-                          placeholder='example@mail.com'
-                        />
-                        <FormInput
-                          id='UserPassword'
-                          label='Password'
-                          type="password"
-                          placeholder='Enter Password'
-                          endAdornment={'eye'}
-                        />
-                      </Stack>
+                <CardContent sx={{paddingY: 2.5}}>
+                    <Stack direction='column' spacing={3}>
+                        <Stack direction='column' spacing={1.25}>
+                            <Button variant='contained' color='primary' startIcon={'G'}>Continue with Google</Button>
+                            <Button variant='contained' color='secondary' startIcon={'F'}>Continue with Facebook</Button>
+                            <OutlinedButton startIcon={'A'}>Continue with Apple</OutlinedButton>
+                        </Stack>
+                        <Divider><Typography fontWeight={400} color="#636D92">Or</Typography></Divider>
+                        <Stack direction='column' spacing={3}>
+                            <FormInput
+                                id='UsernameInput'
+                                label="Email/Username"
+                                type="email"
+                                placeholder='example@mail.com'
+                              />
+                            <FormInput
+                              id='UserPassword'
+                              label='Password'
+                              type="password"
+                              placeholder='Enter Password'
+                              endAdornment={'eye'}
+                              helpertext={<Link href="#" underline="none" color='primary'>Forgot Password?</Link>}
+                            />
+                        </Stack>
+                        <Button variant='contained' color='primary'>Login</Button>
                     </Stack>
                 </CardContent>
             </StyledCard>
-
-        </Box>
+            </Grid>
+            <Grid item xs={0} md={1} lg={2}/>
+        </Grid>
     </>
   );
 };

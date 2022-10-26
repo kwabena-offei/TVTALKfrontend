@@ -17,9 +17,7 @@ export const BackgroundPage = ({ source, alternative }) => {
 			alt={alternative}
 			fill='true'
 			sizes="100vw"
-			// style={{
-			// objectFit: 'cover',
-			// }}
+			objectFit="cover"
 			/>
 		</Box>
 	)

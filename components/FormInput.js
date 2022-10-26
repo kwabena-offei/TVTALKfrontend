@@ -1,6 +1,5 @@
 import React from "react";
-import { FilledInput, InputLabel, Stack } from "@mui/material";
-// import { styled } from "@mui/system";
+import { FilledInput, FormHelperText, InputLabel, Stack } from "@mui/material";
 
 export const FormInput = (props) => {
   return (
@@ -12,6 +11,12 @@ export const FormInput = (props) => {
         disableUnderline
         fullWidth
       />
+      {!!props.helpertext && 
+        <FormHelperText
+        >
+          {props.helpertext}
+        </FormHelperText>
+      }
     </Stack>
   )
 }

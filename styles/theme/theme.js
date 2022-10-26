@@ -2,9 +2,9 @@ import { createTheme } from "@mui/material/styles";
 
 
 const theme = createTheme({
-    // shape: {
-    //   borderRadius: 25
-    // },
+    shape: {
+      borderRadius: 25
+    },
     palette: {
         mode: 'dark',
         text: {
@@ -60,32 +60,29 @@ const theme = createTheme({
       MuiFilledInput: {
         styleOverrides: {
           root: {
-            borderRadius: '10vh',
+            borderRadius: 25,
             backgroundColor: '#131B3F',
           },
           input: {
-            padding: '2vh 4vh',
-            // backgroundColor: '#131B3F',
+            padding: '1.25vh 1.5vw'
           },
           adornedEnd: {
-            paddingRight: '4vh'
+            paddingRight: '1.5vw'
           }
         }
       },
       MuiTextField: {
         styleOverrides: {
           root: {
-            // borderRadius: 25,
-            // borderRadius: '4vh',
-            borderRadius: '10vh',
+            borderRadius: 25,
             backgroundColor: '#131B3F'
           }
         }
       },
-      MuiInputBase: {
+      MuiFormHelperText: {
         styleOverrides: {
           root: {
-            // border: 'none',
+            textAlign: 'right'
           }
         }
       },
@@ -94,6 +91,7 @@ const theme = createTheme({
           root: {
             borderRadius: '10vh',
             textTransform: 'none',
+            padding: '1.25vh 1.5vw',
           },
         } 
       }
