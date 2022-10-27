@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@mui/material';
 import { styled } from '@mui/system';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { useRouter } from 'next/router'
 
 const StyledButton = styled(Button, {})({
     backgroundColor: 'transparent',
@@ -9,19 +10,22 @@ const StyledButton = styled(Button, {})({
     height: '50px',
     width: '115px',
     borderRadius: '49px',
-    borderWidth: '1.5px',
-    borderColor: '#131B3F',
+    border: '1.5px solid #131B3F',
     padding: '16px 22px',
     fontWeight: '600',
     fontSize: '16px',
     lineHeight: '18px',
+    top: '40px',
+    position: 'absolute',
+    left: '194px',
 })
 
-const BackButton = ({title, onClick}) => {
+const BackButton = ({title}) => {
+    const router = useRouter();
+
     return (
         <StyledButton
-            iconSizeSmall
-            onClick={onClick}
+            onClick={() => router.back()}
             startIcon={
             <ChevronLeftIcon
                 size="small"
