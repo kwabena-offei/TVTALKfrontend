@@ -1,6 +1,5 @@
 import React from 'react';
-import { useRouter } from 'next/router'
-import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 
 
@@ -18,8 +17,8 @@ export async function getServerSideProps(context) {
     }
 }
 const about = ({ details, photos }) => {
-    console.log(photos)
-    const { preferred_image_uri, title, longDescription } = details;
+    console.log(details)
+    const { preferred_image_uri, title, longDescription, releaseYear, genres } = details;
     let image = preferred_image_uri.match(/(^.*)?\?/)[1]
     const handleChange = () => {
 
@@ -27,26 +26,28 @@ const about = ({ details, photos }) => {
 
     return (
         <Box className="about">
-            <Box className="about__header" style={{ background: `url(${image})` }}>
-                <Typography style={{ color: 'white', zIndex: 1 }} variant='h1'>{title}</Typography>
-                
-                {/* <FormControl style={{zIndex: 1}}>
-                    <InputLabel id="demo-simple-select-label">Age</InputLabel>
-                    <Select
-                        style={{background: 'white'}}
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={age}
-                        label="Age"
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                </FormControl> */}
-                <Box sx={{ width: '700px', zIndex: 1 }}>
-                    <Typography style={{ color: 'white' }} variant='string'>{longDescription}</Typography>
+            <Box 
+                className="about__header"
+                style={{ background: `url(${image})` }}
+                sx={{height: '960px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}
+                >
+                    <Typography 
+                    sx={{ color: '#EFF2FD', zIndex: 1 }} 
+                    variant='h1'>
+                        {title}
+                    </Typography>
+                <Typography 
+                    sx={{ color: '#454F75', zIndex: 1, fontSize: '20px' }} 
+                    variant='h1'>
+                        {`${releaseYear}/${genres.join('-')}`}
+                </Typography>
+     
+                <Box sx={{ width: '700px', zIndex: 1, textAlign: 'center' }}>
+                    <Typography 
+                        sx={{ color: '#A5B0D6', fontSize: '16px', lineHeight: '29px' }}
+                        variant='string'>
+                            {longDescription}
+                    </Typography>
                 </Box>
             </Box>
         </Box>
