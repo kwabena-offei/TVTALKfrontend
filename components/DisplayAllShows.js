@@ -7,7 +7,8 @@ import Carousel from 'react-elastic-carousel';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 // import header from '/assets/header.png'
 import { useRouter } from 'next/router'
-
+import HeartButton from '../components/HeartButton';
+import BlueButton from '../components/BlueButton';
 
 const DisplayAllShows = ({ shows }) => {
     const router = useRouter()
@@ -87,9 +88,9 @@ const DisplayAllShows = ({ shows }) => {
                                         </Typography>
                                         <Grid container spacing={1}>
                                             <Grid item>
-                                                <Button style={{ background: '#3361FF', borderRadius: '10000px' }} variant='contained'>
-                                                    <Typography sx={{ color: '#EFF2FD' }} variant='string'>Chat</Typography>
-                                                </Button>
+                                            <BlueButton 
+                                                title='Chat'
+                                             />
                                             </Grid>
                                             <Grid item>
                                                 <Button onClick={() => handleAbout(tvShow.tmsId)} style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
@@ -97,9 +98,7 @@ const DisplayAllShows = ({ shows }) => {
                                                 </Button>
                                             </Grid>
                                             <Grid item>
-                                                <IconButton style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
-                                                    <FavoriteBorderIcon htmlColor='#919CC0' />
-                                                </IconButton>
+                                                <HeartButton />
                                             </Grid>
                                         </Grid>
                                     </CardContent>

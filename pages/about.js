@@ -1,7 +1,9 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-
-
+import CustomSelect from '../components/CustomSelect';
+import BackButton from '../components/BackButton';
+import HeartButton from '../components/HeartButton';
+import BlueButton from '../components/BlueButton';
 
 export async function getServerSideProps(context) {
     let detailsResult = await fetch(`https://api.tvtalk.app/shows/${context.query.tmsId}`)
@@ -16,13 +18,20 @@ export async function getServerSideProps(context) {
         }, // will be passed to the page component as props
     }
 }
+
 const about = ({ details, photos }) => {
-    console.log(details)
+
     const { preferred_image_uri, title, longDescription, releaseYear, genres } = details;
     let image = preferred_image_uri.match(/(^.*)?\?/)[1]
-    const handleChange = () => {
+    const handleSeasonChange = () => {
+       
+    }
+
+    const handleEpisodeChange = () => {
 
     }
+
+    console.log(details)
 
     return (
         <Box className="about">
@@ -30,24 +39,48 @@ const about = ({ details, photos }) => {
                 className="about__header"
                 style={{ background: `url(${image})` }}
                 sx={{height: '960px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}
-                >
-                    <Typography 
-                    sx={{ color: '#EFF2FD', zIndex: 1 }} 
-                    variant='h1'>
-                        {title}
-                    </Typography>
+            >
+                <BackButton
+                    title='Back'
+                    />
                 <Typography 
-                    sx={{ color: '#454F75', zIndex: 1, fontSize: '20px' }} 
+                sx={{ color: '#EFF2FD', zIndex: 1, fontWeight: 700 }} 
+                variant='h1'>
+                    {title}
+                </Typography>
+                <Typography 
+                    sx={{ color: '#454F75', zIndex: 1, fontSize: '20px', marginBottom: '32px' }} 
                     variant='h1'>
                         {`${releaseYear}/${genres.join('-')}`}
                 </Typography>
-     
+                <Box sx={{ width: '491px', display: 'flex', gap: '29px', marginBottom: '22px' }}>
+                <CustomSelect
+                    selectList={['1', '2', '3']}
+                    label='Select Season'
+                    labelId='selectSeason'
+                    selectId='selectSeason'
+                    handleChange={handleSeasonChange}
+                 />
+                <CustomSelect
+                    selectList={['1', '2', '3']}
+                    label='Select Episode'
+                    labelId='selectEpisode'
+                    selectId='selectEpisode'
+                    handleChange={handleEpisodeChange}
+                />
+                </Box>     
                 <Box sx={{ width: '700px', zIndex: 1, textAlign: 'center' }}>
                     <Typography 
                         sx={{ color: '#A5B0D6', fontSize: '16px', lineHeight: '29px' }}
                         variant='string'>
                             {longDescription}
                     </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', gap: '20px', marginTop: '36px' }}>
+                    <BlueButton 
+                        title='Chat'
+                    />
+                    <HeartButton />
                 </Box>
             </Box>
         </Box>
