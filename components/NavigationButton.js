@@ -1,12 +1,6 @@
 import React from 'react';
-import { Button, Typography } from '@mui/material';
-import { styled } from '@mui/system';
+import { Button } from '@mui/material';
 import { useRouter } from 'next/router';
-
-const StyledButton = styled(Button, {})({
-  background: '#2F88FF!important',
-  borderRadius: '10000px'
-})
 
 const NavigationButton = ({ link, title, query }) => {
   const router = useRouter()
@@ -18,9 +12,9 @@ const NavigationButton = ({ link, title, query }) => {
     })
   }
   return (
-    <StyledButton onClick={navigate}>
-      <Typography sx={{ color: '#EFF2FD' }} variant='string'>{title}</Typography>
-    </StyledButton>
+    <Button variant='contained' color='primary' onClick={navigate}>
+      {title}
+    </Button>
   );
 }
 

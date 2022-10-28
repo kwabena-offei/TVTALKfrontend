@@ -28,7 +28,7 @@ const login = (props) => {
                 <CustomCardHeader
                   title='Log In'
                   subheader='New user?'
-                  subheaderLink='#'
+                  subheaderLink='/registration'
                   subheaderLinkTitle='Create an account'
                 />
                 <CardContent sx={{paddingY: 2.5}}>

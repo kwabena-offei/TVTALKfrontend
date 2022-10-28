@@ -1,8 +1,9 @@
 import { CardHeader, Typography, Stack, Link } from "@mui/material";
 
-export const CustomCardHeader = ({title, subheader, subheaderLink, subheaderLinkTitle}) => {
+export const CustomCardHeader = ({title, subheader, subheaderLink, subheaderLinkTitle, ...props}) => {
   return(
     <CardHeader
+      {...props}
       title={
       <Typography
         sx={{

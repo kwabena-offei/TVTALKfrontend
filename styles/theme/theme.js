@@ -1,10 +1,11 @@
 import { createTheme } from "@mui/material/styles";
-
+import { experimental_sx as sx } from '@mui/material/styles';
+import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 
 const theme = createTheme({
-    shape: {
-      borderRadius: 25
-    },
+    // shape: {
+    //   borderRadius: 25
+    // },
     palette: {
         mode: 'dark',
         text: {
@@ -62,6 +63,12 @@ const theme = createTheme({
           root: {
             borderRadius: 25,
             backgroundColor: '#131B3F',
+            "&:before": {
+              content: 'none'
+            },
+            "&:after": {
+              content: 'none'
+            },
           },
           input: {
             padding: '1.25vh 1.5vw'
@@ -75,7 +82,7 @@ const theme = createTheme({
         styleOverrides: {
           root: {
             borderRadius: 25,
-            backgroundColor: '#131B3F'
+            backgroundColor: '#131B3F',
           }
         }
       },
@@ -89,11 +96,29 @@ const theme = createTheme({
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: '10vh',
+            borderRadius: 25,
             textTransform: 'none',
             padding: '1.25vh 1.5vw',
           },
         } 
+      },
+      MuiInputBase: {
+        defaultProps: {
+          root: {
+            borderRadius: 25
+          }
+        }
+      },
+      MuiSelect: {
+        styleOverrides: {
+          root: {
+            borderRadius: 25
+          },
+          icon: sx({
+            color: '#3361FF',
+            marginRight: '1vw'
+          })
+        }
       }
     }
 })

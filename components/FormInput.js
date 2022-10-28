@@ -10,7 +10,7 @@ export const FormInput = (props) => {
         id={props.id}
         disableUnderline
         fullWidth
-      />
+      >{props.children}</FilledInput>
       {!!props.helpertext && 
         <FormHelperText
         >
