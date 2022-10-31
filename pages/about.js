@@ -6,7 +6,7 @@ import HeartButton from '../components/HeartButton';
 import BlueButton from '../components/BlueButton';
 import RatingButtonsGroup from '../components/RatingButtonsGroup';
 import CastSlider from '../components/CastSlider';
-import ActorCard from '../components/ActorCard';
+import SeriesPhotoSlider from '../components/SeriesPhotosSlider';
 
 export async function getServerSideProps(context) {
     let detailsResult = await fetch(`https://api.tvtalk.app/shows/${context.query.tmsId}`)
@@ -39,7 +39,7 @@ const about = ({ details, photos }) => {
 
     }
 
-    console.log(details)
+    console.log(photos)
 
     return (
         <Box className="about">
@@ -99,6 +99,11 @@ const about = ({ details, photos }) => {
                  />
                 <CastSlider
                   cast={details.cast}
+                />
+            </Box>
+            <Box sx={{ marginLeft: '194px' }}>
+                <SeriesPhotoSlider
+                    photos={photos}
                 />
             </Box>
         </Box>

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
-import Image from 'next/image'
+import { Box, Typography, CardMedia } from '@mui/material';
+import Image from 'next/image';
 
 
 const ActorCard = ({ name, characterName }) => {
@@ -8,14 +8,13 @@ const ActorCard = ({ name, characterName }) => {
         <Box
             sx={{ width: '230px' }}
         >
-            <Image
+            <CardMedia
+                component="img"
                 src="/assets/actor.png"
-                height="260px"
-                width="230px"
                 alt='Actors photo'
-                style={{ borderRadius: '6px' }}
+                sx={{ borderRadius: '6px', height: "260px", width: "230px" }}
             />   
-            <Box>
+            <Box sx={{ marginTop: '14px' }}>
                 <Typography sx={{ 
                     fontSize: '20px',
                     lineHeight: '26px',
