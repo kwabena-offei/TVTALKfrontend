@@ -119,6 +119,14 @@ const theme = createTheme({
             marginRight: '1vw'
           })
         }
+      },
+      MuiTab: {
+        styleOverrides: {
+          root: {
+            textTransform: 'none',
+            padding: '2.5vh 2vw'
+          }
+        }
       }
     }
 })

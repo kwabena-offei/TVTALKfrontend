@@ -46,7 +46,7 @@ export async function getServerSideProps(context) {
 const reactions = ({ reactions }) => {
   console.log('reactions', reactions)
   return (
-    <Box></Box>
+    <Box>Reactions</Box>
   )
 
 }
