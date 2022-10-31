@@ -10,9 +10,9 @@ const StyledButton = styled(Button, {})
         borderRadius: '20px'
     });
 
-const RatingButton = ({ title, rating, icon, checked, onClick }) => {
+const RatingButton = ({ title, rating, icon, checked, onClick, sx }) => {
     return (
-        <StyledButton style={{ background: checked ? '#EFF2FD' : '#131B3F' }} onClick={onClick} >
+        <StyledButton style={{ background: checked ? '#EFF2FD' : '#131B3F' }} onClick={onClick} sx={sx} >
             {icon}
             <Box>
                 <Typography sx={{ fontSize: '16px', fontWeight: '600', textTransform: 'none' }} >{title}</Typography>
