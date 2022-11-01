@@ -11,6 +11,7 @@ const clientSideEmotionCache = createEmotionCache();
 function MyApp(props) {
 
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  const getLayout = Component.getLayout || ((page) => page)
 
   return (
     <>
@@ -19,7 +20,7 @@ function MyApp(props) {
           <CssBaseline />
           <Box >
             {/* <Header /> */}
-            <Component {...pageProps} />
+            {getLayout(<Component {...pageProps} />)}
             {/* <Footer /> */}
           </Box>
         </ThemeProvider>

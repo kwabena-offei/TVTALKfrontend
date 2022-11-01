@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -9,20 +9,16 @@ import {
   Tabs,
   Tab
 } from "@mui/material";
-import React from "react";
 import { styled } from "@mui/system";
+import Link from "next/link";
+import { useRouter } from "next/router";
 // import { NavTabs } from '../../components/NavTabs'
 
-export async function getServerSideProps(context) {
+export async function fetchProfile(context) {
   const username = "funkparliament";
   let res = await fetch(`https://api.tvtalk.app/users/${username}`);
   let profile = await res.json();
-  console.log('context', context);
-  return {
-    props: {
-      profile: profile,
-    }, // will be passed to the page component as props
-  };
+  return profile;
 }
 
 const StyledBGBox = styled(Box, {
@@ -33,7 +29,7 @@ const StyledBGBox = styled(Box, {
   height: "18.5vh",
   background: `linear-gradient(89.18deg, #0B228D 0%, #6184FF 129.11%)`,
 });
-const StyledContainer = styled (Container, {
+const StyledContainer = styled(Container, {
   name: "WrapperTabs",
   slot: "account"
 })({
@@ -41,41 +37,51 @@ const StyledContainer = styled (Container, {
   paddingLeft: '0px!important',
   paddingRight: '0px!important'
 })
-const profile = ({ profile }) => {
+export const ProfileLayout = ({ children }) => {
+  console.log('layout props', children)
+  const { props } = children
   const [currentTab, setCurrentTab] = useState(0);
-  const handleChangeTab = (event, newValue) => {
-    setCurrentTab(newValue);
-
-  };
-  // console.log("profile", profile);
-  const { username, image, reactions_count, favorites_count, followers_count, following_count } = profile;
-  const tabs = [
-    {
+  const router = useRouter();
+  const currentRoute = router.route;
+  const { username, image, reactions_count, favorites_count, followers_count, following_count } = props.profile;
+  
+  const tabs = {
+    0: {
       id: 0,
-      title: 'Reactions',
-      count: reactions_count | '0'
+      title: "Reactions",
+      href: "/profile/reactions",
+      count: reactions_count | "0",
     },
-    {
+    1: {
       id: 1,
-      title: 'Favorites',
-      count: favorites_count | '0'
+      title: "Favorites",
+      href: "/profile/favorites",
+      count: favorites_count | "0",
     },
-    {
+    2: {
       id: 2,
-      title: 'Followers',
-      count: followers_count | '0'
+      title: "Followers",
+      href: "",
+      count: followers_count | "0",
     },
-    {
+    3: {
       id: 3,
-      title: 'Following',
-      count: following_count | '0'
-    }
-  ]
+      title: "Following",
+      href: "",
+      count: following_count | "0",
+    },
+  };
+
+  const handleChangeTab = (event, tabId) => {
+    // setCurrentTab(newValue);
+    console.log('handle')
+  };
+
   return (
     <>
       <div style={{ height: "9.2vh" }}>Header imitation</div>
       <StyledBGBox />
-      <StyledContainer maxWidth='xl'>
+      <StyledContainer maxWidth="xl">
         <Stack
           direction="row"
           justifyContent="flex-start"
@@ -123,27 +129,32 @@ const profile = ({ profile }) => {
           </Stack>
         </Stack>
       </StyledContainer>
-      <StyledContainer maxWidth='xl'>
-        <Box sx={{ width: '100%' }}>
+      <StyledContainer maxWidth="xl">
+        <Box sx={{ width: "100%" }}>
           <Tabs
             variant="fullWidth"
+            value={currentRoute}
             onChange={handleChangeTab}
-            value={currentTab}
             aria-label="Tabs where selection follows focus"
-            selectionFollowsFocus
-          >{tabs.map((child) => {
-            const { id, count, title } = child
-            const label = <Stack flexDirection='row' alignItems='center' gap={1}><Typography variant="h4">{count}</Typography><Typography variant="h5">{title}</Typography></Stack>
-              return <Tab key={`${id}-${title}`} label={label} />
+          >
+            {Object.entries(tabs).map(([key, value]) => {
+              const { id, count, title, href } = value;
+              const label = (
+                <Stack flexDirection="row" alignItems="center" gap={1}>
+                  <Typography variant="h4">{count}</Typography>
+                  <Typography variant="h5">{title}</Typography>
+                </Stack>
+              );
+              return (
+                <Link href={href} value={href} key={id}>
+                  <Tab value={href} label={label} />
+                </Link>
+              );
             })}
           </Tabs>
         </Box>
       </StyledContainer>
-      <StyledContainer maxWidth='xl'>
-        'tab'
-      </StyledContainer>
+      <StyledContainer maxWidth="xl">{children}</StyledContainer>
     </>
   );
 };
-
-export default profile;

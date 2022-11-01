@@ -1,55 +1,44 @@
-import { Box, Button, Card, CardContent, CardMedia, Grid, IconButton, Typography } from '@mui/material';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { Container, Grid } from '@mui/material';
 import React from 'react';
-
-const mockData = {
-  pagination: {
-    current_page: 1,
-    total_pages: 1,
-    prev_page: null,
-    next_page: null,
-    total_count: 8,
-    current_per_page: 50
-  },
-  results: [
-    {
-      id: 357,
-      text: 'Is this any good?',
-      hashtag: null,
-      user_id: 98,
-      created_at: '2022-02-13T17:57:52.827Z',
-      updated_at: '2022-02-13T17:57:52.827Z',
-      show_id: 1822312,
-      images: null,
-      likes_count: null,
-      sub_comments_count: null,
-      videos: null,
-      shares_count: 0,
-      story_id: null,
-      mute_notifications: false,
-      status: 'active',
-      tmsId: 'SH024314420000'
-    }]}
+import { fetchProfile, ProfileLayout } from '../../components/ProfileLayout';
+import { ReactionCard } from '../../components/ReactionCard';
 
 export async function getServerSideProps(context) {
-    const username = 'funkparliament'
-    let res = await fetch(`https://api.tvtalk.app/users/${username}/reactions`)
-    console.log(res)
-    let reactions = await res.json()
-    console.log(reactions)
+    console.log('context', context)
+    const username = "funkparliament";
+    let res = await fetch(`https://api.tvtalk.app/users/${username}/reactions`);
+    // console.log(res);
+    let reactions = await res.json();
+    const profile = await fetchProfile()
+    // console.log(reactions);
     return {
-        props: {
-            reactions: reactions
-        }, // will be passed to the page component as props
-    }
+      props: {
+        reactions,
+        profile,
+      }, // will be passed to the page component as props
+    };
 }
-const reactions = ({ reactions }) => {
-  console.log('reactions', reactions)
+
+export default function Page(data) {
+  const { reactions, profile } = data;
+  const { results } = reactions;
   return (
-    <Box>Reactions</Box>
-  )
-
+    <>
+      <Container maxWidth="xl" sx={{ marginTop: "2vh" }}>
+        <Grid container spacing={2}>
+          {results.map((result) => {
+            return (
+              <Grid item key={result.id} xs={12} md={6}>
+                <ReactionCard {...result} profile={profile} />
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Container>
+    </>
+  );
 }
 
-
-export default reactions;
+Page.getLayout = function getLayout(page) {
+  return <ProfileLayout>{page}</ProfileLayout>;
+};
