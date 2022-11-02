@@ -24,8 +24,8 @@ export default function Page(data) {
   const { results } = reactions;
   return (
     <>
-      <Container maxWidth="xl" sx={{ marginTop: "2vh" }}>
-        <Grid container spacing={2}>
+      <Container maxWidth="xl" sx={{ marginTop: "2vh", paddingX: '2px!important' }}>
+        <Grid container spacing={3.5}>
           {results.map((result) => {
             return (
               <Grid item key={result.id} xs={12} md={6}>

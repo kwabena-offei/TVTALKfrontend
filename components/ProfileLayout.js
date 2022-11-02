@@ -130,12 +130,12 @@ export const ProfileLayout = ({ children }) => {
         </Stack>
       </StyledContainer>
       <StyledContainer maxWidth="xl">
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: "100%", justifyContent: 'center' }}>
           <Tabs
             variant="fullWidth"
             value={currentRoute}
             onChange={handleChangeTab}
-            aria-label="Tabs where selection follows focus"
+            aria-label="Account tabs"
           >
             {Object.entries(tabs).map(([key, value]) => {
               const { id, count, title, href } = value;
@@ -147,7 +147,7 @@ export const ProfileLayout = ({ children }) => {
               );
               return (
                 <Link href={href} value={href} key={id}>
-                  <Tab value={href} label={label} />
+                  <Tab value={href} label={label} className="fullWidth-tab"/>
                 </Link>
               );
             })}
