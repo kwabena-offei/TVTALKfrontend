@@ -73,19 +73,19 @@ export default function Page(data) {
   // const { results } = favorites
   const { results } = mockData
   return (
-    <Container maxWidth="xl" sx={{ marginTop: "2vh", paddingX: '2px!important' }}>
-      <Grid container spacing={2.5}>
+    // <Container maxWidth="xl" sx={{ marginTop: "2vh", paddingX: '2px!important' }}>
+      <Grid container spacing={3}>
         {results.map((favorite) => {
 					const { preferred_image_uri: image } = favorite
           // return <li key={favorite.id}>{favorite.title} </li>;
 					return(
-						<Grid item xs={12} md={3}>
+						<Grid key={`card-twShow-favorites-${favorite.id}`} item xs={12} sm={6} md={4} lg={3}>
 							<FavoriteCard tvShow={{ ...favorite, image }} />
 						</Grid>
 					)
         })}
       </Grid>
-    </Container>
+    // </Container>
   );
 }
 

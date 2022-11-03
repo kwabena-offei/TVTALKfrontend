@@ -61,7 +61,7 @@ export const ProfileLayout = ({ children }) => {
     2: {
       id: 2,
       title: "Followers",
-      href: "",
+      href: "/profile/followers",
       count: followers_count | "0",
     },
     3: {
@@ -81,8 +81,7 @@ export const ProfileLayout = ({ children }) => {
     <>
       <div style={{ height: "9.2vh" }}>Header imitation</div>
       <StyledBGBox />
-      <StyledContainer maxWidth>
-      <StyledContainer maxWidth>
+      <StyledContainer maxWidth="xl">
         <Stack
           direction="row"
           justifyContent="flex-start"
@@ -119,9 +118,9 @@ export const ProfileLayout = ({ children }) => {
             justifyContent="flex-start"
             alignItems="flex-end"
             spacing={4}
-            // paddingBottom={5.53}
+            paddingBottom={5.53}
           >
-            <Typography variant="h3" sx={{ fontWeight: 700 }} margin={0}>
+            <Typography variant={{lg: 'h3', sm: '1rem'}} sx={{ fontWeight: 700 }} margin={0}>
               {username}
             </Typography>
             <Button variant="contained" color="primary">
@@ -130,7 +129,7 @@ export const ProfileLayout = ({ children }) => {
           </Stack>
         </Stack>
       </StyledContainer>
-      <StyledContainer maxWidth>
+      <StyledContainer maxWidth="xl">
         <Box sx={{ width: "100%", justifyContent: 'center' }}>
           <Tabs
             variant="fullWidth"
@@ -155,8 +154,7 @@ export const ProfileLayout = ({ children }) => {
           </Tabs>
         </Box>
       </StyledContainer>
-      <StyledContainer maxWidth>{children}</StyledContainer>
-      </StyledContainer>
+      <StyledContainer maxWidth="xl">{children}</StyledContainer>
     </>
   );
 };

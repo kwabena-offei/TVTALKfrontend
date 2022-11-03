@@ -6,14 +6,13 @@ const RoundedButton = styled(Button, {
   slot: "custom-styled"
 }) ({
   backgroundColor: '#090F27',
-  borderRadius: '50%',
   color: "#A5B0D6",
-  minWidth: '40px',
-  minHeight: '40px',
-  padding: '16px'
+  minWidth: '36px',
+  minHeight: '36px',
+  borderRadius: '50%'
 })
 
-const RoundedIconButton = ({icon, ...props}) => {
+const SmallRoundedIconButton = ({icon, ...props}) => {
   return (
     <RoundedButton {...props}>
       {icon}
@@ -21,4 +20,4 @@ const RoundedIconButton = ({icon, ...props}) => {
   )
 }
 
-export default RoundedIconButton;
+export default SmallRoundedIconButton;

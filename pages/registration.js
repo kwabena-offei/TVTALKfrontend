@@ -150,7 +150,7 @@ const registration = (props) => {
                                 onChange={handleChange}
                               />
                         </Stack>
-                        <Button variant='contained' color='primary'>Next</Button>
+                        <Button size="large" variant='contained' color='primary'>Next</Button>
                     </Stack>
                 </CardContent>
             </StyledCard>

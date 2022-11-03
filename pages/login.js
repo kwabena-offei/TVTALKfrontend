@@ -34,9 +34,9 @@ const login = (props) => {
                 <CardContent sx={{paddingY: 2.5}}>
                     <Stack direction='column' spacing={3}>
                         <Stack direction='column' spacing={1.25}>
-                            <Button variant='contained' color='primary' startIcon={'G'}>Continue with Google</Button>
-                            <Button variant='contained' color='secondary' startIcon={'F'}>Continue with Facebook</Button>
-                            <OutlinedButton startIcon={'A'}>Continue with Apple</OutlinedButton>
+                            <Button size="large" variant='contained' color='primary' startIcon={'G'}>Continue with Google</Button>
+                            <Button size="large" variant='contained' color='secondary' startIcon={'F'}>Continue with Facebook</Button>
+                            <OutlinedButton size="large" startIcon={'A'}>Continue with Apple</OutlinedButton>
                         </Stack>
                         <Divider><Typography fontWeight={400} color="#636D92">Or</Typography></Divider>
                         <Stack direction='column' spacing={3}>
@@ -55,7 +55,7 @@ const login = (props) => {
                               helpertext={<Link href="#" underline="none" color='primary'>Forgot Password?</Link>}
                             />
                         </Stack>
-                        <Button variant='contained' color='primary'>Login</Button>
+                        <Button size="large" variant='contained' color='primary'>Login</Button>
                     </Stack>
                 </CardContent>
             </StyledCard>

@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Card,
-  Avatar,
   CardContent,
   Typography,
   CardMedia,
@@ -9,11 +8,9 @@ import {
   Stack
 } from "@mui/material";
 import { styled } from "@mui/system";
-import MoreVertIcon from './Icons/MoreVertIcon';
 import FavoriteIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import MessagesIcon from './Icons/MessagesIcon';
 import ShareIcon from './Icons/ShareIcon';
-import IconButton from '@mui/material/IconButton';
 import dayjs from "dayjs";
 import * as relativeTime from 'dayjs/plugin/relativeTime';
 import CardHeader from './ReactionCard/CardHeader'
@@ -38,16 +35,9 @@ export const ReactionCard = (props) => {
     hashtag,
     images,
     created_at,
-    updated_at,
-    show_id,
     likes_count,
     sub_comments_count,
-    videos,
-    shares_count,
-    story_id,
-    mute_notifications,
-    status,
-    tmsId,
+    shares_count
   } = props;
 
   const reactionsInfoCounts = {

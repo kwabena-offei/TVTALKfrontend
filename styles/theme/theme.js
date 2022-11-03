@@ -5,11 +5,12 @@ const theme = createTheme({
     palette: {
         mode: 'dark',
         text: {
-          primary: "#EFF2FD"
+          primary: "#EFF2FD",
+          secondary: '#A5B0D6'
         },
         background: {
             default: "#090F27",
-            paper: "#090F27",
+            paper: "#131B3F",
         },
         divider: '#131B3F',
         primary: {
@@ -68,7 +69,7 @@ const theme = createTheme({
           root: {
             borderRadius: 25,
             textTransform: 'none',
-            padding: '1.25vh 1.5vw',
+            // padding: '1.25vh 1.5vw',
           },
         },
         variants: [

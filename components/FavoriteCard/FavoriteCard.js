@@ -1,15 +1,15 @@
 import {
   Button,
   Card,
-  Grid,
   CardContent,
   Typography,
   CardMedia,
-  Stack
+  Stack,
+  Box,
+  CardActions
 } from "@mui/material";
 import { styled } from "@mui/system";
-import IconButton from "../ReactionCard/RoundedIconButton";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import IconButton from "./FavoriteButton";
 import FavoriteIcon from '@mui/icons-material/FavoriteBorderOutlined';
 
 const StyledCard = styled(Card, {
@@ -17,7 +17,15 @@ const StyledCard = styled(Card, {
   slot: "custom-card"
 }) ({
   backgroundColor: '#131B3F',
-  borderRadius: '8px',
+  borderRadius: '6px'
+})
+
+const StyledButton = styled(Button, {
+  name: "Favorite",
+  slot: "custom-button"
+}) ({
+  paddingLeft: '1.15vw',
+  paddingRight: '1.15vw'
 })
 
 const FavoriteCard = ({ tvShow, ...props }) => {
@@ -29,34 +37,38 @@ const FavoriteCard = ({ tvShow, ...props }) => {
 
   return (
     <StyledCard key={`favorite-show-${id}`}>
-      <CardMedia component="img" image={image} height={240} />
-      <CardContent>
+      <CardMedia component="img" image={image} height={240} width={360} />
+      <CardContent sx={{paddingX: 2.5, paddingTop: 1.5, paddingBottom: 0.75}}>
         <Typography
-          gutterBottom
-          variant="h5"
+          // gutterBottom
+          variant="h6"
           component="div"
         >
           {title}
         </Typography>
-        <Stack direction="row" spacing={1}>
-          <Button
-            size="small"
+        </CardContent>
+        <CardActions sx={{paddingX: 2.5, paddingTop: 0.75, paddingBottom: 2.5}}>
+        <Stack direction="row" spacing={1.25}>
+            <StyledButton
+              size="small"
               variant="contained"
               color="primary"
               sx={{ boxShadow: 'none'}}
             >
-              Chat
-            </Button>
-            <Button
-            size="small"
+              <Typography variant='body1'>Chat</Typography>
+            </StyledButton>
+            <StyledButton
+              size="small"
               onClick={handleAbout}
               variant="dark"
             >
-              About
-            </Button>
-            <IconButton size="small" icon={<FavoriteBorderIcon />} />
+              <Typography variant='body1'>About</Typography>
+            </StyledButton>
+            <Box>
+              <IconButton size="small" icon={<FavoriteIcon fontSize="small" />} />
+            </Box>
         </Stack>
-      </CardContent>
+        </CardActions>
     </StyledCard>
   );
 }
