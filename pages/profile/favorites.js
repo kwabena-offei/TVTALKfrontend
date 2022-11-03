@@ -1,6 +1,7 @@
-import { Box, Button, Card, CardContent, CardMedia, Grid, IconButton, Typography } from '@mui/material';
+import { Grid, Container } from '@mui/material';
 import React from 'react';
 import { ProfileLayout, fetchProfile } from '../../components/ProfileLayout';
+import FavoriteCard from '../../components/FavoriteCard/FavoriteCard'
 
 const mockData = {
 	"pagination": {
@@ -68,17 +69,23 @@ export async function getServerSideProps(context) {
 
 export default function Page(data) {
   const { favorites } = data;
-  console.log("favorites", favorites);
+  console.log("data", data);
   // const { results } = favorites
   const { results } = mockData
   return (
-    <>
-      <ul>
+    <Container maxWidth="xl" sx={{ marginTop: "2vh", paddingX: '2px!important' }}>
+      <Grid container spacing={2.5}>
         {results.map((favorite) => {
-          return <li key={favorite.id}>{favorite.title} </li>;
+					const { preferred_image_uri: image } = favorite
+          // return <li key={favorite.id}>{favorite.title} </li>;
+					return(
+						<Grid item xs={12} md={3}>
+							<FavoriteCard tvShow={{ ...favorite, image }} />
+						</Grid>
+					)
         })}
-      </ul>
-    </>
+      </Grid>
+    </Container>
   );
 }
 

@@ -70,7 +70,16 @@ const theme = createTheme({
             textTransform: 'none',
             padding: '1.25vh 1.5vw',
           },
-        } 
+        },
+        variants: [
+          {
+            props: { variant: 'dark' },
+            style: {
+              backgroundColor: '#090F27',
+              color: '#919CC0'
+            }
+          },
+        ],
       },
       MuiInputBase: {
         defaultProps: {
