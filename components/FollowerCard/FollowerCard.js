@@ -14,10 +14,16 @@ const StyledCard = styled(Card, {
 })
 
 const FollowerCard = ({ id, username, image, ...props }) => {
-  const reactions = props?.reactions || '41 eactions'
-  return(
+  // Todo: edit reactions when you get the real data from api
+  const reactions = props.reactions ? `${props.reactions} reactions` : '0 reactions'
+
+  const handleClick = () => {
+    console.log('change this handle click - id:', id)
+  }
+
+  return (
     <StyledCard>
-      <Box display="flex" justifyContent="center" alignItems="center" px={2.5} pt={2.5} pb={0.25}>
+      <Box display="flex" justifyContent="center" alignItems="center" px={2.5} pt={2.5} pb={1}>
       <Avatar
         sx={{ width: 120, height: 120 }}
         aria-label={`avatar-${username}-${id}`}
@@ -27,14 +33,13 @@ const FollowerCard = ({ id, username, image, ...props }) => {
         {username}
       </Avatar>
       </Box>
-      <CardContent sx={{ textAlign: 'center'}} py={0}>
-        <Typography variant="h5">{username}</Typography>
-        <Typography variant="subtitle1" color='#919CC0'>{reactions}</Typography>
-        <Button variant="contained" color="primary">Follow</Button>
+      <CardContent sx={{ textAlign: 'center', padding: 0.5 }}>
+        <Typography variant="h5" component='div'>{username}</Typography>
+        <Typography variant="subtitle2" color='#919CC0' component='div'>{reactions}</Typography>
       </CardContent>
-      {/* <CardActions sx={{justifyContent: 'center'}}>
-        
-      </CardActions> */}
+      <CardActions sx={{justifyContent: 'center', padding: 1.25, paddingBottom: 2.5 }}>
+        <Button variant="contained" color="primary" onClick={handleClick}>Follow</Button>
+      </CardActions>
     </StyledCard>
   )
 }

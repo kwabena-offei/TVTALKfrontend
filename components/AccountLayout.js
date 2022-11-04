@@ -13,12 +13,15 @@ import { styled } from "@mui/system";
 import Link from "next/link";
 import { useRouter } from "next/router";
 // import { NavTabs } from '../../components/NavTabs'
+import DarkButton from '../components/FavoriteCard/DarkRoundedTextButton'
 
-export async function fetchProfile(context) {
-  const username = "funkparliament";
-  let res = await fetch(`https://api.tvtalk.app/users/${username}`);
-  let profile = await res.json();
-  return profile;
+export async function fetchAccount(context) {
+  const testusername = "funkparliament";
+  let res = await fetch(`https://api.tvtalk.app/users/${testusername}`);
+
+  // let res = await fetch(`https://api.tvtalk.app/profile`);
+  let account = await res.json();
+  return account;
 }
 
 const StyledBGBox = styled(Box, {
@@ -37,38 +40,38 @@ const StyledContainer = styled(Container, {
   paddingLeft: '0px!important',
   paddingRight: '0px!important'
 })
-export const ProfileLayout = ({ children }) => {
-  console.log('layout props', children)
+export const AccountLayout = ({ children }) => {
+  // console.log('layout props', children)
   const { props } = children
   const [currentTab, setCurrentTab] = useState(0);
   const router = useRouter();
   const currentRoute = router.route;
-  // const { username, image, reactions_count, favorites_count, followers_count, following_count } = props.profile;
+  const { username, image, reactions_count, favorites_count, followers_count, following_count } = props.account;
   
   const tabs = {
     0: {
       id: 0,
       title: "Reactions",
-      href: "/profile/reactions",
-      // count: reactions_count | "0",
+      href: "/account/reactions",
+      count: reactions_count | "0",
     },
     1: {
       id: 1,
       title: "Favorites",
-      href: "/profile/favorites",
-      // count: favorites_count | "0",
+      href: "/account/favorites",
+      count: favorites_count | "0",
     },
     2: {
       id: 2,
       title: "Followers",
-      href: "/profile/followers",
-      // count: followers_count | "0",
+      href: "/account/followers",
+      count: followers_count | "0",
     },
     3: {
       id: 3,
       title: "Following",
-      href: "/profile/following",
-      // count: following_count | "0",
+      href: "/account/following",
+      count: following_count | "0",
     },
   };
 
@@ -81,7 +84,7 @@ export const ProfileLayout = ({ children }) => {
     <>
       <div style={{ height: "9.2vh" }}>Header imitation</div>
       <StyledBGBox />
-      {/* <StyledContainer maxWidth="xl">
+      <StyledContainer maxWidth="xl">
         <Stack
           direction="row"
           justifyContent="flex-start"
@@ -123,12 +126,12 @@ export const ProfileLayout = ({ children }) => {
             <Typography variant='h3' sx={{ fontWeight: 700 }} margin={0}>
               {username}
             </Typography>
-            <Button variant="contained" color="primary">
-              Follow
-            </Button>
+            <DarkButton variant="outlined">
+              Edit Profile
+            </DarkButton>
           </Stack>
         </Stack>
-      </StyledContainer> */}
+      </StyledContainer>
       <StyledContainer maxWidth="xl">
         <Box sx={{ width: "100%", justifyContent: 'center' }}>
           <Tabs

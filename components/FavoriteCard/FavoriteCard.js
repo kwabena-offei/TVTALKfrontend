@@ -9,8 +9,9 @@ import {
   CardActions
 } from "@mui/material";
 import { styled } from "@mui/system";
-import IconButton from "./FavoriteButton";
+import IconButton from "./FavoriteDarkButton";
 import FavoriteIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import DarkButton from "./DarkRoundedTextButton";
 
 const StyledCard = styled(Card, {
   name: "Favorite",
@@ -57,13 +58,12 @@ const FavoriteCard = ({ tvShow, ...props }) => {
             >
               <Typography variant='body1'>Chat</Typography>
             </StyledButton>
-            <StyledButton
+            <DarkButton
               size="small"
               onClick={handleAbout}
-              variant="dark"
             >
               <Typography variant='body1'>About</Typography>
-            </StyledButton>
+            </DarkButton>
             <Box>
               <IconButton size="small" icon={<FavoriteIcon fontSize="small" />} />
             </Box>

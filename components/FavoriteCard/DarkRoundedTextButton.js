@@ -2,23 +2,22 @@ import { Button } from '@mui/material';
 import { styled } from "@mui/system";
 
 const RoundedButton = styled(Button, {
-  name: 'IconButton',
-  slot: "custom-styled"
+  name: "Favorite",
+  slot: "dark-button"
 }) ({
   backgroundColor: '#090F27',
-  borderRadius: '50%',
   color: "#A5B0D6",
-  minWidth: '40px',
-  minHeight: '40px',
-  padding: '16px'
+  paddingLeft: '1.15vw',
+  paddingRight: '1.15vw',
+  // boxShadow: 'none'
 })
 
-const RoundedIconButton = ({icon, ...props}) => {
+const DarkRoundedTextButton = ({children, ...props}) => {
   return (
     <RoundedButton variant='contained' {...props}>
-      {icon}
+      {children}
     </RoundedButton>
   )
 }
 
-export default RoundedIconButton;
+export default DarkRoundedTextButton;

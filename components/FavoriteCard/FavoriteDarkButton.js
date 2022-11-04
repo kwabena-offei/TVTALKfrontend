@@ -14,7 +14,7 @@ const RoundedButton = styled(Button, {
 
 const SmallRoundedIconButton = ({icon, ...props}) => {
   return (
-    <RoundedButton {...props}>
+    <RoundedButton variant='contained' {...props}>
       {icon}
     </RoundedButton>
   )

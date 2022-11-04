@@ -1,59 +1,14 @@
 import { Grid, Container } from '@mui/material';
 import React from 'react';
 import { ProfileLayout, fetchProfile } from '../../components/ProfileLayout';
+import { TV_TALK_API } from '../../util/constants';
 import FavoriteCard from '../../components/FavoriteCard/FavoriteCard'
-
-const mockData = {
-	"pagination": {
-		"current_page": 1,
-		"total_pages": 3,
-		"prev_page": null,
-		"next_page": 2,
-		"total_count": 69,
-		"current_per_page": 25
-	},
-	"results": [{
-		"id": 6059,
-		"tmsId": "SH003781390000",
-		"title": "Big Brother",
-		"seasonNum": 1,
-		"episodeNum": 1,
-		"shares_count": 0,
-		"likes_count": 1,
-		"comments_count": 2,
-		"stories_count": 0,
-		"activity_count": 3,
-		"popularity_score": 0,
-		"shortDescription": "Strangers, cut off from the outside world, coexist in an isolated house.",
-		"seriesId": "188043",
-		"rootId": 188043,
-		"preferred_image_uri": "http://wewe.tmsimg.com/assets/p18592610_b_v5_aa.jpg",
-		"episodeTitle": null
-	},
-  {
-		"id": 6060,
-		"tmsId": "SH003781390000",
-		"title": "Big Brother",
-		"seasonNum": 1,
-		"episodeNum": 1,
-		"shares_count": 0,
-		"likes_count": 1,
-		"comments_count": 2,
-		"stories_count": 0,
-		"activity_count": 3,
-		"popularity_score": 0,
-		"shortDescription": "Strangers, cut off from the outside world, coexist in an isolated house.",
-		"seriesId": "188043",
-		"rootId": 188043,
-		"preferred_image_uri": "http://wewe.tmsimg.com/assets/p18592610_b_v5_aa.jpg",
-		"episodeTitle": null
-	}
-]
-}
+import mockData from '../../util/MockData/favorites_mock';
 
 export async function getServerSideProps(context) {
+	// ToDo: replace username with context value
     const username = 'funkparliament'
-    let res = await fetch(`https://api.tvtalk.app/users/${username}/favorites`)
+    let res = await fetch(`${TV_TALK_API}/users/${username}/favorites`)
     console.log(res)
 
     let favorites = await res.json()
@@ -77,7 +32,6 @@ export default function Page(data) {
       <Grid container spacing={3}>
         {results.map((favorite) => {
 					const { preferred_image_uri: image } = favorite
-          // return <li key={favorite.id}>{favorite.title} </li>;
 					return(
 						<Grid key={`card-twShow-favorites-${favorite.id}`} item xs={12} sm={6} md={4} lg={3}>
 							<FavoriteCard tvShow={{ ...favorite, image }} />

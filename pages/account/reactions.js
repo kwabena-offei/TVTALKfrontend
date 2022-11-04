@@ -1,27 +1,27 @@
 import { Container, Grid } from '@mui/material';
 import React from 'react';
-import { fetchProfile, ProfileLayout } from '../../components/ProfileLayout';
+import { AccountLayout, fetchAccount } from '../../components/AccountLayout';
 import { TV_TALK_API } from '../../util/constants';
 import { ReactionCard } from '../../components/ReactionCard';
 
 export async function getServerSideProps(context) {
-    // ToDo: replace username with context value
-    const username = "funkparliament";
-    let res = await fetch(`${TV_TALK_API}/users/${username}/reactions`);
-    // console.log(res);
+    // ToDo: replace username with authorized account
+    const testUserName = "funkparliament";
+    let res = await fetch(`${TV_TALK_API}/users/${testUserName}/reactions`);
+    // let res = await fetch(`${TV_TALK_API}/profile/reactions`);
     let reactions = await res.json();
-    const profile = await fetchProfile()
-    // console.log(reactions);
+    const account = await fetchAccount()
+
     return {
       props: {
         reactions,
-        profile,
-      }, // will be passed to the page component as props
+        account,
+      }, 
     };
 }
 
 export default function Page(data) {
-  const { reactions, profile } = data;
+  const { reactions, account } = data;
   const { results } = reactions;
   return (
     <>
@@ -30,7 +30,7 @@ export default function Page(data) {
           {results.map((result) => {
             return (
               <Grid item key={result.id} xs={12} md={6}>
-                <ReactionCard {...result} profile={profile} />
+                <ReactionCard {...result} profile={account} />
               </Grid>
             );
           })}
@@ -41,5 +41,5 @@ export default function Page(data) {
 }
 
 Page.getLayout = function getLayout(page) {
-  return <ProfileLayout>{page}</ProfileLayout>;
+  return <AccountLayout>{page}</AccountLayout>;
 };
