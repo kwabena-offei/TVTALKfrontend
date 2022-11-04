@@ -4,6 +4,9 @@ import CustomSelect from '../components/CustomSelect';
 import BackButton from '../components/BackButton';
 import HeartButton from '../components/HeartButton';
 import BlueButton from '../components/BlueButton';
+import RatingButtonsGroup from '../components/RatingButtonsGroup';
+import CastSlider from '../components/CastSlider';
+import SeriesPhotoSlider from '../components/SeriesPhotosSlider';
 
 export async function getServerSideProps(context) {
     let detailsResult = await fetch(`https://api.tvtalk.app/shows/${context.query.tmsId}`)
@@ -21,7 +24,12 @@ export async function getServerSideProps(context) {
 
 const about = ({ details, photos }) => {
 
-    const { preferred_image_uri, title, longDescription, releaseYear, genres } = details;
+    const { 
+        preferred_image_uri,
+        title, longDescription,
+        releaseYear,
+        genres,
+        rating_percentage_cache } = details;
     let image = preferred_image_uri.match(/(^.*)?\?/)[1]
     const handleSeasonChange = () => {
        
@@ -31,7 +39,7 @@ const about = ({ details, photos }) => {
 
     }
 
-    console.log(details)
+    console.log(photos)
 
     return (
         <Box className="about">
@@ -82,6 +90,21 @@ const about = ({ details, photos }) => {
                     />
                     <HeartButton />
                 </Box>
+            </Box>
+            <Box sx={{ marginLeft: '194px' }}>
+                <RatingButtonsGroup
+                    love={rating_percentage_cache.love}
+                    like={rating_percentage_cache.like}
+                    dislike={rating_percentage_cache.dislike}
+                 />
+                <CastSlider
+                  cast={details.cast}
+                />
+            </Box>
+            <Box sx={{ marginLeft: '194px' }}>
+                <SeriesPhotoSlider
+                    photos={photos}
+                />
             </Box>
         </Box>
     );
