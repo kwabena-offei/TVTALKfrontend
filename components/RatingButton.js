@@ -7,7 +7,22 @@ const StyledButton = styled(Button, {})
         width: '153px',
         height: '76px',
         border: '1px solid #131B3F',
-        borderRadius: '20px'
+        borderRadius: '20px',
+        marginRight: '20px', 
+        ['@media (max-width:780px)'] : {
+            display: 'flex',
+            flexDirection: 'column',
+            marginRight: '5px',
+            width: '105px',
+            height: '100px',
+          }
+    });
+
+const StyledRating = styled(Typography, {})
+    ({
+        ['@media (max-width:780px)'] : {
+            display: 'none',
+          }
     });
 
 const RatingButton = ({ title, rating, icon, checked, onClick, sx }) => {
@@ -16,9 +31,9 @@ const RatingButton = ({ title, rating, icon, checked, onClick, sx }) => {
             {icon}
             <Box>
                 <Typography sx={{ fontSize: '16px', fontWeight: '600', textTransform: 'none' }} >{title}</Typography>
-                <Typography sx={{ fontSize: '14px', fontWeight: '400', color: '#A5B0D6', textTransform: 'none' }}>
+                <StyledRating sx={{ fontSize: '14px', fontWeight: '400', color: '#A5B0D6', textTransform: 'none' }}>
                     {rating}
-                </Typography>
+                </StyledRating>
             </Box>
         </StyledButton>
     );

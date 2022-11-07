@@ -1,7 +1,5 @@
 import React from 'react';
 import { Box, Typography, CardMedia } from '@mui/material';
-import Image from 'next/image';
-
 
 const ActorCard = ({ name, characterName }) => {
     return (
