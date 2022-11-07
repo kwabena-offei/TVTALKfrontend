@@ -3,6 +3,7 @@ import { Button } from '@mui/material';
 import { styled } from '@mui/system';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useRouter } from 'next/router'
+import { useWindowDimensions } from '../util/useWindowDimensions.js';
 
 const StyledButton = styled(Button, {})({
     backgroundColor: 'transparent',
@@ -18,7 +19,20 @@ const StyledButton = styled(Button, {})({
     top: '40px',
     position: 'absolute',
     left: '194px',
-})
+    ['@media (max-width:780px)'] : {
+        width: '36px',
+        height: '36px',
+        minWidth: '36px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        left: '20px',
+
+        '& span': {
+            marginRight: '0'
+        }
+    }
+});
 
 const BackButton = ({title}) => {
     const router = useRouter();
@@ -27,15 +41,18 @@ const BackButton = ({title}) => {
        router.back();
     };
 
+    const { isMobile } = useWindowDimensions();
+
     return (
         <StyledButton
             onClick={handleGoBack}
             startIcon={
             <ChevronLeftIcon
                 size="small"
+                sx={{ margin: 0 }}
             />}
         >
-            <span>{title}</span>
+            {!isMobile && <span>{title}</span>}
         </StyledButton>
     );
 };

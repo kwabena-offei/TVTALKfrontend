@@ -7,6 +7,61 @@ import BlueButton from '../components/BlueButton';
 import RatingButtonsGroup from '../components/RatingButtonsGroup';
 import CastSlider from '../components/CastSlider';
 import SeriesPhotoSlider from '../components/SeriesPhotosSlider';
+import { styled } from '@mui/system';
+
+const StyledHeader = styled(Box, {})
+    ({
+        height: '960px',
+        width: '100vw', 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        ['@media (max-width:780px)'] : {
+            height: '400px',
+          }
+    });
+
+const StyledDescriprion = styled(Box, {})
+    ({
+        width: '700px',
+        ['@media (max-width:780px)'] : {
+            width: '80%'
+          }
+    });
+
+const StyledSelectsBox = styled(Box, {})
+    ({
+        width: '491px',
+        ['@media (max-width:780px)'] : {
+            width: '80%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+          }
+    });
+
+const StyledBottomBox = styled(Box, {})
+    ({
+        marginLeft: '194px',
+        ['@media (max-width:780px)'] : {
+            marginLeft: '20px',
+          }
+    });
+
+const StyledDetailsBox = styled(Box, {})
+    ({
+        position: 'absolute',
+        top: '525px',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        ['@media (max-width:780px)'] : {
+            position: 'relative',
+            marginTop: '15px',
+            top: '0',
+          }
+    });
 
 export async function getServerSideProps(context) {
     let detailsResult = await fetch(`https://api.tvtalk.app/shows/${context.query.tmsId}`)
@@ -39,59 +94,69 @@ const about = ({ details, photos }) => {
 
     }
 
-    console.log(photos)
-
     return (
         <Box className="about">
-            <Box 
+            <StyledHeader 
                 className="about__header"
                 style={{ background: `url(${image})` }}
-                sx={{height: '960px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}
             >
                 <BackButton
                     title='Back'
                     />
-                <Typography 
-                sx={{ color: '#EFF2FD', zIndex: 1, fontWeight: 700 }} 
-                variant='h1'>
-                    {title}
-                </Typography>
-                <Typography 
-                    sx={{ color: '#454F75', zIndex: 1, fontSize: '20px', marginBottom: '32px' }} 
-                    variant='h1'>
-                        {`${releaseYear}/${genres.join('-')}`}
-                </Typography>
-                <Box sx={{ width: '491px', display: 'flex', gap: '29px', marginBottom: '22px' }}>
-                <CustomSelect
-                    selectList={['1', '2', '3']}
-                    label='Select Season'
-                    labelId='selectSeason'
-                    selectId='selectSeason'
-                    handleChange={handleSeasonChange}
-                 />
-                <CustomSelect
-                    selectList={['1', '2', '3']}
-                    label='Select Episode'
-                    labelId='selectEpisode'
-                    selectId='selectEpisode'
-                    handleChange={handleEpisodeChange}
-                />
-                </Box>     
-                <Box sx={{ width: '700px', zIndex: 1, textAlign: 'center' }}>
+
+                <Box
+                    sx={{ 
+                        zIndex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }} 
+                >
+                    <Typography 
+                        sx={{ color: '#EFF2FD', zIndex: 1, fontWeight: 700, textAlign: 'center' }} 
+                        variant='h1'>
+                        {title}
+                    </Typography>
+                    <Typography 
+                        sx={{ color: '#454F75', zIndex: 1, fontSize: '20px', marginBottom: '32px' }} 
+                        variant='h1'>
+                            {`${releaseYear}/${genres.join('-')}`}
+                    </Typography>
+                </Box>
+
+            </StyledHeader>
+            <StyledDetailsBox>
+                <StyledSelectsBox sx={{ display: 'flex', gap: '29px', marginBottom: '22px' }}>
+                    <CustomSelect
+                        selectList={['1', '2', '3']}
+                        label='Select Season'
+                        labelId='selectSeason'
+                        selectId='selectSeason'
+                        handleChange={handleSeasonChange}
+                    />
+                    <CustomSelect
+                        selectList={['1', '2', '3']}
+                        label='Select Episode'
+                        labelId='selectEpisode'
+                        selectId='selectEpisode'
+                        handleChange={handleEpisodeChange}
+                    />
+                </StyledSelectsBox>     
+                <StyledDescriprion sx={{  zIndex: 1, textAlign: 'center' }}>
                     <Typography 
                         sx={{ color: '#A5B0D6', fontSize: '16px', lineHeight: '29px' }}
                         variant='string'>
                             {longDescription}
                     </Typography>
-                </Box>
+                </StyledDescriprion>
                 <Box sx={{ display: 'flex', gap: '20px', marginTop: '36px' }}>
                     <BlueButton 
                         title='Chat'
                     />
                     <HeartButton />
                 </Box>
-            </Box>
-            <Box sx={{ marginLeft: '194px' }}>
+            </StyledDetailsBox>
+            <StyledBottomBox>
                 <RatingButtonsGroup
                     love={rating_percentage_cache.love}
                     like={rating_percentage_cache.like}
@@ -100,12 +165,10 @@ const about = ({ details, photos }) => {
                 <CastSlider
                   cast={details.cast}
                 />
-            </Box>
-            <Box sx={{ marginLeft: '194px' }}>
                 <SeriesPhotoSlider
                     photos={photos}
                 />
-            </Box>
+            </StyledBottomBox>
         </Box>
     );
 };

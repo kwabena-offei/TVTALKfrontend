@@ -1,8 +1,12 @@
 import React from 'react';
 import { Box, Typography, CardMedia } from '@mui/material';
 import Carousel from 'react-elastic-carousel';
+import { useWindowDimensions } from '../util/useWindowDimensions.js';
 
 const SeriesPhotoSlider = ({ photos }) => {
+
+const { isMobile } = useWindowDimensions();
+
     return (
         <Box
             sx={{ marginTop: '60px' }}
@@ -16,7 +20,13 @@ const SeriesPhotoSlider = ({ photos }) => {
                 }}>
                     {'Photos'}
                 </Typography>
-            <Carousel itemsToShow={5} itemsToScroll={2} pagination={false} itemPadding={[0, 10]}>
+            <Carousel 
+                itemsToShow={isMobile ? 2 : 5}
+                itemsToScroll={2}
+                pagination={false}
+                itemPadding={[0, 10]}
+                showArrows={!isMobile}
+            >
                 {photos?.map((photo, index) => (
                     <CardMedia
                         key={index}
