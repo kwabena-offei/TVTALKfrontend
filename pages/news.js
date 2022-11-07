@@ -2,12 +2,12 @@ import { Box, Button, Card, CardContent, CardMedia, Grid, IconButton, Typography
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import React from 'react';
 import { Carousel } from 'react-responsive-carousel';
-
+import { styled } from '@mui/system';
+import { VerticalAlignBottom } from '@mui/icons-material';
 
 
 export async function getServerSideProps(context) {
     let res = await fetch(`https://api.tvtalk.app/news`)
-    console.log(res)
     let news = await res.json()
     console.log(news)
     return {
@@ -16,31 +16,70 @@ export async function getServerSideProps(context) {
         }, // will be passed to the page component as props
     }
 }
+
+const handleReadMore = () => {
+
+}
+
+
+const StyledGrid = styled(Grid, {})({
+    width: 1480
+})
+
+const StyledTitle = styled(Typography, {
+    name: "Title", // Changes class name in the DOM 
+    slot: "title" // appends slot name to the name above in the DOM
+})({
+        fontSize: '22px',
+        fontWeight: 500,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        WebkitLineClamp: 2,
+        minHeight: 65,
+        WebkitBoxOrient: 'vertical',
+        display: '-webkit-box'
+    })
+const StyledText = styled(Typography, {})({
+        margin: '12px 0 24px 0',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        WebkitLineClamp: 3,
+        WebkitBoxOrient: 'vertical',
+        display: '-webkit-box',
+        color: '#EFF2FD',
+        fontSize: 16,
+        minHeight: 75,
+        fontWeight: 300
+})
+
+
+
 const news = ({ news }) => {
-    console.log(news)
     return (
         <>
-            <Grid container spacing={4} className='wrapper'>
+        <Box  display={'flex'} justifyContent='center'>
+      
+            <StyledGrid container spacing={4}>
                 {news.map((newsItem, ind) =>
-                    <Grid item>
+                    <Grid item xs={4} >
 
-                        <Card key={ind} sx={{ background: 'transparent', width: '400px' }}>
+                        <Card key={ind} sx={{ background: 'transparent' }}>
                             <CardMedia>
                                 <div style={{ overflow: 'hidden', height: '190px' }}>
                                     <img src={`${newsItem.image_url}?width=1000`} style={{ width: '100%' }} />
                                 </div>
                             </CardMedia>
                             <CardContent sx={{ background: '#131B3F' }}>
-                                <Typography sx={{ color: '#EFF2FD' }} gutterBottom variant="h5" component="div">
+                                <StyledTitle sx={{ color: '#EFF2FD' }} variant='string'>
                                     {newsItem.title}
-                                </Typography>
+                                </StyledTitle>
 
-                                <Typography className="news__description" sx={{ color: '#EFF2FD', fontWeight: 100, fontSize: 12, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} gutterBottom variant="string" component="div">
+                                <StyledText gutterBottom variant="string" component="div">
                                     {newsItem.description}
-                                </Typography>
+                                </StyledText>
                                 <Grid container spacing={1} style={{ marginTop: '10px' }} >
                                     <Grid item>
-                                        <Button style={{ background: '#3361FF', borderRadius: '10000px' }} variant='contained'>
+                                        <Button style={{ background: '#3361FF', borderRadius: '10000px' }} onClick={handleReadMore} variant='contained'>
                                             <Typography sx={{ color: '#EFF2FD' }} variant='string'>Read More</Typography>
                                         </Button>
 
@@ -70,12 +109,12 @@ const news = ({ news }) => {
                             </CardContent>
                         </Card>
                     </Grid>
-
-                    // </div>
-
-                    // </Grid>
                 )}
-            </Grid>
+            </StyledGrid>
+        </Box>
+ 
+        
+            
 
         </>
     );
