@@ -68,7 +68,7 @@ const StyledDetailsBox = styled(Box, {})
 const StyledTitleBox = styled(Box, {})
 ({
     position: 'absolute',
-    top: '365px',
+    top: '362px',
     ['@media (max-width:780px)'] : {
         position: 'relative',
         top: '0',
