@@ -8,6 +8,7 @@ export default class MyDocument extends Document {
    return (
      <Html lang="en">
        <Head>
+         {/* <title>TV Talk</title> */}
          {this.props.emotionStyleTags}
        </Head>
        <body>

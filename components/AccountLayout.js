@@ -7,24 +7,22 @@ import {
   Avatar,
   Stack,
   Tabs,
-  Tab
+  Tab,
+  responsiveFontSizes,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import Link from "next/link";
 import { useRouter } from "next/router";
-// import { NavTabs } from '../../components/NavTabs'
+import axios from '../services/api';
+import AppBar from '../components/AppBar';
 import DarkButton from '../components/FavoriteCard/DarkRoundedTextButton'
 
-export async function fetchAccount(context) {
-  const testusername = "funkparliament";
-  let res = await fetch(`https://api.tvtalk.app/users/${testusername}`);
-
-  // let res = await fetch(`https://api.tvtalk.app/profile`);
-  let account = await res.json();
-  return account;
+export async function fetchAccount(username) {
+  const { data: profile } = await axios.get(`/users/${username}`);
+  return profile;
 }
 
-const StyledBGBox = styled(Box, {
+const AccountTopBar = styled(Box, {
   name: "gradient",
   slot: "bg",
 })({
@@ -32,18 +30,10 @@ const StyledBGBox = styled(Box, {
   height: "18.5vh",
   background: `linear-gradient(89.18deg, #0B228D 0%, #6184FF 129.11%)`,
 });
-const StyledContainer = styled(Container, {
-  name: "WrapperTabs",
-  slot: "account"
-})({
-  marginBottom: '4vh',
-  paddingLeft: '0px!important',
-  paddingRight: '0px!important'
-})
+
 export const AccountLayout = ({ children }) => {
-  // console.log('layout props', children)
   const { props } = children
-  const [currentTab, setCurrentTab] = useState(0);
+  // const [currentTab, setCurrentTab] = useState(0);
   const router = useRouter();
   const currentRoute = router.route;
   const { username, image, reactions_count, favorites_count, followers_count, following_count } = props.account;
@@ -76,88 +66,68 @@ export const AccountLayout = ({ children }) => {
   };
 
   const handleChangeTab = (event, tabId) => {
-    // setCurrentTab(newValue);
-    console.log('handle')
+    router.push(tabId)
   };
 
   return (
     <>
-      <div style={{ height: "9.2vh" }}>Header imitation</div>
-      <StyledBGBox />
-      <StyledContainer maxWidth="xl">
-        <Stack
-          direction="row"
-          justifyContent="flex-start"
-          alignItems="flex-end"
-          spacing={4}
-        >
-          <Avatar
-            alt={`${username}_avatar`}
-            src={image}
-            sx={{
-              height: {
-                lg: "250px",
-                md: "150px",
-                sm: "100px",
-                xs: "60px",
-              },
-              width: {
-                lg: "250px",
-                md: "150px",
-                sm: "100px",
-                xs: "60px",
-              },
-              marginTop: {
-                lg: "-125px",
-                md: "-75px",
-                sm: "-50px",
-                xs: "-30px",
-              },
-              border: "10px solid #090F27",
-            }}
-          />
-          <Stack
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="flex-end"
-            spacing={4}
-            paddingBottom={5.53}
-          >
-            <Typography variant='h3' sx={{ fontWeight: 700 }} margin={0}>
-              {username}
-            </Typography>
-            <DarkButton variant="outlined">
-              Edit Profile
-            </DarkButton>
+      <AppBar />
+      <AccountTopBar />
+      <Container>
+        <Box>
+          <Stack direction="row" alignItems="center">
+            <Avatar alt="Remy Sharp" src={image} sx={{
+              width: 180,
+              height: 180,
+              marginTop: '-90px',
+              border: '8px solid #090F27'
+            }} />
+            <Typography sx={{
+              margin: '20px',
+              fontSize: '40px',
+              fontWeight: 700
+            }}>{username}</Typography>
+            <Button aria-label="message" size="small"
+              variant="contained"
+              sx={{}}
+              color="primary" >Follow</Button>
           </Stack>
-        </Stack>
-      </StyledContainer>
-      <StyledContainer maxWidth="xl">
-        <Box sx={{ width: "100%", justifyContent: 'center' }}>
+        </Box>
+        <Box sx={{
+          marginTop: '4vh'
+        }}>
           <Tabs
-            variant="fullWidth"
             value={currentRoute}
             onChange={handleChangeTab}
-            aria-label="Account tabs"
+            variant="fullWidth"
           >
             {Object.entries(tabs).map(([key, value]) => {
               const { id, count, title, href } = value;
               const label = (
-                <Stack flexDirection="row" alignItems="center" gap={1}>
-                  <Typography variant="h4">{count}</Typography>
-                  <Typography variant="h5">{title}</Typography>
+                <Stack direction="row" alignItems="center">
+                  <Typography sx={{
+                    fontSize: '28px',
+                    fontWeight: '700',
+                    marginRight: '20px'
+                  }}>{count}</Typography>
+                  <Typography sx={{
+                    fontSize: '24px',
+                    fontWeight: '500'
+                  }}>{title}</Typography>
                 </Stack>
               );
               return (
-                <Link href={href} value={href} key={id}>
-                  <Tab value={href} label={label} className="fullWidth-tab"/>
-                </Link>
+                <Tab value={href} label={label} />
               );
             })}
           </Tabs>
         </Box>
-      </StyledContainer>
-      <StyledContainer maxWidth="xl">{children}</StyledContainer>
+      </Container>
+      <Container sx={{
+        marginTop: '5vh'
+      }}>
+        {children}
+      </Container>
     </>
   );
 };

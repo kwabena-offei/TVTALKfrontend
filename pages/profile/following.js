@@ -3,17 +3,11 @@ import React from "react";
 import { ProfileLayout, fetchProfile } from "../../components/ProfileLayout";
 import { TV_TALK_API } from '../../util/constants';
 import FollowerCard from "../../components/FollowerCard/FollowerCard";
-import mockData from "../../util/MockData/followers_mock";
+import axios from '../../services/api';
 
 export async function getServerSideProps(context) {
-  // ToDo: replace username with context value
-  const username = "funkparliament";
-  let res = await fetch(`${TV_TALK_API}/users/${username}/following`);
-  console.log(res);
-
-  let following = await res.json();
+  const { data: following } = await axios.get(`/profile/following`);
   const profile = await fetchProfile();
-  console.log(following);
   return {
     props: {
       following,
@@ -22,15 +16,12 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function Page(data) {
-  const { following } = data;
-  console.log("api-data following", following);
-  // const { results } = following
-  const { results } = mockData;
+export default function Page({ following }) {
+  const { results: followingList, pagination } = following
+
   return (
-    // <Container maxWidth="xl" sx={{ marginTop: "2vh", paddingX: '2px!important' }}>
     <Grid container spacing={3.75}>
-      {results?.map((follower) => {
+      {followingList?.map((follower) => {
         return (
           <Grid key={`card-following-${follower.id}`} item lg={2}>
             <FollowerCard {...follower} />
@@ -38,7 +29,6 @@ export default function Page(data) {
         );
       })}
     </Grid>
-    // </Container>
   );
 }
 

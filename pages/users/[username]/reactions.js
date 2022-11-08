@@ -1,12 +1,15 @@
 import { Container, Grid } from '@mui/material';
 import React from 'react';
-import { fetchProfile, ProfileLayout } from '../../components/ProfileLayout';
-import ReactionCard from '../../components/ReactionCard';
-import axios from '../../services/api';
+import { ProfileLayout, fetchAccount } from '../../../components/ProfileLayout';
+import ReactionCard from '../../../components/ReactionCard';
+import axios from "../../../services/api";
 
 export async function getServerSideProps(context) {
-  const { data: reactions } = await axios(`/profile/reactions`);
-  const profile = await fetchProfile()
+  console.log('[context. req]', context.req)
+  const username = 'funkparliament'
+  const { data: reactions } = await axios.get(`/users/${username}/reactions`);
+  const profile = await fetchAccount(username);
+
   return {
     props: {
       reactions,
@@ -33,5 +36,5 @@ export default function Page({ reactions, profile }) {
 }
 
 Page.getLayout = function getLayout(page) {
-  return <ProfileLayout mode='profile'>{page}</ProfileLayout>;
+  return <ProfileLayout mode='currentUser'>{page}</ProfileLayout>;
 };

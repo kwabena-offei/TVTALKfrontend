@@ -5,6 +5,17 @@ import { ThemeProvider, CssBaseline, Box } from '@mui/material';
 import '../styles/custom.css'
 import createEmotionCache from '../util/createEmotionCache';
 import theme from '../styles/theme/theme';
+import { createGlobalStyle } from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
+    @font-face {
+    font-family: 'Gilroy';
+    src: url('/fonts/Gilroy-Regular.woff') format('woff');
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+  }
+`;
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -16,6 +27,7 @@ function MyApp(props) {
   return (
     <>
       <CacheProvider value={emotionCache}>
+        <GlobalStyle/>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Box >
@@ -25,7 +37,6 @@ function MyApp(props) {
           </Box>
         </ThemeProvider>
       </CacheProvider>
-{/* sx={{maxWidth: '1520px', margin: 'auto'}} */}
     </>
 
   )

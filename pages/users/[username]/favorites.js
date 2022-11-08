@@ -1,12 +1,13 @@
 import { Grid, Container } from '@mui/material';
 import React from 'react';
-import { ProfileLayout, fetchProfile } from '../../components/ProfileLayout';
-import FavoriteCard from '../../components/FavoriteCard/FavoriteCard'
-import axios from '../../services/api';
+import { ProfileLayout, fetchAccount } from '../../../components/ProfileLayout';
+import FavoriteCard from '../../../components/FavoriteCard/FavoriteCard'
+import axios from '../../../services/api';
 
 export async function getServerSideProps(context) {
-    const { data: favorites } = await axios.get(`/profile/favorites`)
-    const profile = await fetchProfile()
+    const username = 'funkparliament'
+    const { data: favorites } = await axios.get(`/users/${username}/favorites`)
+    const profile = await fetchAccount(username);
     return {
         props: {
           favorites,
@@ -34,5 +35,5 @@ export default function Page({ favorites }) {
 }
 
 Page.getLayout = function getLayout(page) {
-  return <ProfileLayout mode='profile'>{page}</ProfileLayout>;
+  return <ProfileLayout mode='currentUser'>{page}</ProfileLayout>;
 };
