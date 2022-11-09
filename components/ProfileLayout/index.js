@@ -6,7 +6,7 @@ import {
   Tabs,
   Tab
 } from "@mui/material";
-import { ProfileTopBar, ProfileAvatar, ProfileUsername, TabLabel, FollowButton } from "./ProfileLayout.styled";
+import { ProfileTopBar, ProfileAvatar, ProfileUsername, TabLabel, FollowButton, EditProfileButton } from "./ProfileLayout.styled";
 import { useRouter } from "next/router";
 import axios from '../../services/api';
 import AppBar from '../AppBar';
@@ -24,11 +24,10 @@ export async function fetchAccount(username) {
 export const ProfileLayout = ({ children, mode }) => {
   const { props } = children
   const router = useRouter();
-  const currentRoute = router.route;
-  console.log('current route', currentRoute)
+  const currentRoute = router.asPath;
   const { username, image, reactions_count, favorites_count, followers_count, following_count } = props.profile;
 
-  const inheritURL = mode === 'currentUser' ? `/users/${username}` :  "/profile";
+  const inheritURL = mode === 'profile' ? "/profile" : `/users/${username}`;
 
   const tabs = [
     {
@@ -66,7 +65,7 @@ export const ProfileLayout = ({ children, mode }) => {
           <Stack direction="row" alignItems="center">
             <ProfileAvatar alt={username} src={image} />
             <ProfileUsername>{username}</ProfileUsername>
-            <FollowButton />
+            { mode === 'profile' ? <EditProfileButton /> : <FollowButton />}
           </Stack>
         </Box>
         <Box sx={{

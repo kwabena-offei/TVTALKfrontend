@@ -5,8 +5,7 @@ import ReactionCard from '../../../components/ReactionCard';
 import axios from "../../../services/api";
 
 export async function getServerSideProps(context) {
-  console.log('[context. req]', context.req)
-  const username = 'funkparliament'
+  const { username } = context.query
   const { data: reactions } = await axios.get(`/users/${username}/reactions`);
   const profile = await fetchAccount(username);
 

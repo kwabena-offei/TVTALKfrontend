@@ -1,4 +1,4 @@
-import { Grid, Container } from '@mui/material';
+import { Grid } from '@mui/material';
 import React from 'react';
 import { ProfileLayout, fetchProfile } from '../../components/ProfileLayout';
 import FavoriteCard from '../../components/FavoriteCard/FavoriteCard'
@@ -18,7 +18,6 @@ export async function getServerSideProps(context) {
 export default function Page({ favorites }) {
   const { results: favoritesList, pagination } = favorites;
   return (
-    // <Container maxWidth="xl" sx={{ marginTop: "2vh", paddingX: '2px!important' }}>
       <Grid container spacing={3}>
         {favoritesList?.map((favorite) => {
 					const { preferred_image_uri: image } = favorite
@@ -29,7 +28,6 @@ export default function Page({ favorites }) {
 					)
         })}
       </Grid>
-    // </Container>
   );
 }
 

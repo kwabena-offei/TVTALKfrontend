@@ -43,10 +43,39 @@ export const FollowButton = ({...props}) => {
     <Button
       {...props}
       aria-label="follow"
-      size="small"
       variant="contained"
-      color="primary">
+      color="primary"
+      sx={{
+        paddingX: 4,
+        fontWeight: 600,
+        fontSize: '16px',
+        lineHeight: '18px',
+        height: '50px',
+      }}
+      >
       Follow
+    </Button>
+  )
+}
+
+export const EditProfileButton = ({...props}) => {
+  return (
+    <Button
+      {...props}
+      aria-label="edit-profile"
+      variant="outlined"
+      color="primary"
+      sx={{
+        backgroundColor: '#090F27',
+        border: '1px solid #131B3F',
+        paddingX: 4,
+        fontWeight: 600,
+        fontSize: '16px',
+        lineHeight: '18px',
+        height: '50px'
+      }}
+      >
+      Edit Profile
     </Button>
   )
 }

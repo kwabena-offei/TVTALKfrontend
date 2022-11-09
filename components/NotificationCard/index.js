@@ -7,7 +7,9 @@ import { CardWrapper } from "./NotificationCard.styled";
 
 
 const NotificationCard = (props) => {
-  const {children} = props;
+  const { children } = props;
+  const { actor } = children;
+  // console.log('children', children)
 
   return (
     <CardWrapper>

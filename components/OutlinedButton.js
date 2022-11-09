@@ -6,7 +6,7 @@ const StyledButton = styled(Button, {
   slot: "outlined", // appends slot name to the name above in the DOM
 })({
   backgroundColor: "#090F27",
-  borderRadius: "6vh",
+  borderRadius: 25,
   border: "1px solid #131B3F",
   "&:hover": {
     backgroundColor: "#131B3F",

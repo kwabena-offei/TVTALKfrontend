@@ -18,7 +18,6 @@ export async function getServerSideProps(context) {
 export default function Page({ reactions, profile }) {
   const { results: reactionsList, pagination } = reactions;
   return (
-    <>
       <Grid container spacing={3.5}>
         {reactionsList?.map((result) => {
           return (
@@ -28,7 +27,6 @@ export default function Page({ reactions, profile }) {
           );
         })}
       </Grid>
-    </>
   );
 }
 
