@@ -6,6 +6,7 @@ import '../styles/custom.css'
 import createEmotionCache from '../util/createEmotionCache';
 import theme from '../styles/theme/theme';
 import { createGlobalStyle } from "styled-components";
+import AppBar from '../components/AppBar';
 
 const GlobalStyle = createGlobalStyle`
     @font-face {
@@ -32,8 +33,9 @@ function MyApp(props) {
           <CssBaseline />
           <Box >
             {/* <Header /> */}
+            <AppBar />
             {getLayout(<Component {...pageProps} />)}
-            {/* <Footer /> */}
+            <Footer />
           </Box>
         </ThemeProvider>
       </CacheProvider>

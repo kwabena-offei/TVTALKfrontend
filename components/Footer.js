@@ -12,6 +12,7 @@ const StyledText = styled(Typography, {})({
 const Footer = (props) => {
     return (
         <Box
+        mt={10}
         sx={{
             display: 'flex',
             flexDirection: 'row',

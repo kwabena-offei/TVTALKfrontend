@@ -33,5 +33,5 @@ export default function Page({ following }) {
 }
 
 Page.getLayout = function getLayout(page) {
-  return <ProfileLayout>{page}</ProfileLayout>;
+  return <ProfileLayout mode='profile'>{page}</ProfileLayout>;
 };

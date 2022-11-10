@@ -9,7 +9,6 @@ import {
 import { ProfileTopBar, ProfileAvatar, ProfileUsername, TabLabel, FollowButton, EditProfileButton } from "./ProfileLayout.styled";
 import { useRouter } from "next/router";
 import axios from '../../services/api';
-import AppBar from '../AppBar';
 
 export async function fetchProfile(context) {
   const { data: profile } = await axios.get(`/profile`);
@@ -58,7 +57,6 @@ export const ProfileLayout = ({ children, mode }) => {
 
   return (
     <>
-      <AppBar />
       <ProfileTopBar />
       <Container>
         <Box>
@@ -84,7 +82,8 @@ export const ProfileLayout = ({ children, mode }) => {
       </Container>
 
       <Container sx={{
-        marginTop: '5vh'
+        marginTop: '5vh',
+        minHeight: '80vh'
       }}>
         {children}
       </Container>

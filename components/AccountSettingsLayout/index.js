@@ -1,21 +1,19 @@
 import React from "react";
-import { Container, Grid, Button, Box, Typography } from "@mui/material";
-
-import AppBar from '../AppBar';
+import { Container, Grid } from "@mui/material";
 import { SectionTitle } from "./AccountSettingsLayout.styled";
+import SideMenu from "../SideMenu";
 
-export const AccountSettingsLayout = ({ children }) => {
+export const AccountSettingsLayout = ({ children, menu }) => {
   const { props } = children
-  const { title, menu } = props
+  const { title } = props
 
   return (
     <>
-      <AppBar />
       <SectionTitle title={title}/>
-      <Container>
+      <Container sx={{minHeight: '80vh'}}>
         <Grid container columnSpacing={3.5}>
           <Grid item xs={3}>
-            {!!menu && <Box>Options menu</Box>}
+            {!!menu && <SideMenu />}
           </Grid>
           <Grid item xs={9}>
             {children}
