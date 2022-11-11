@@ -1,7 +1,7 @@
 import React from "react";
 import { AccountSettingsLayout } from "../../components/AccountSettingsLayout";
-import { EditProfileCard } from '../../components/EditProfile/'
 import { fetchProfile } from '../../components/ProfileLayout/'
+import { ChangePasswordCard } from '../../components/ChangePasswordCard'
 
 export async function getServerSideProps(context) {
   const profile = await fetchProfile()
@@ -17,7 +17,7 @@ export async function getServerSideProps(context) {
 export default function Page({profile}) {
   console.log('profile', profile)
   return (
-    <EditProfileCard profile={profile}/>
+    <ChangePasswordCard profile={profile}/>
   );
 }
 

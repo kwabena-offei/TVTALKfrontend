@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import dayjs from 'dayjs';
-import { InputLabel, MenuItem, Card, CardContent, Stack, Button, Grid, TextField } from "@mui/material";
+import { MenuItem, Card, CardContent, Stack, Button, Grid, TextField } from "@mui/material";
 import { styled } from "@mui/system";
 import bg from "../public/assets/LoginBackground.jpg";
 import { BackgroundPage } from '../components/BackgroundPage';
 import { FormInput } from '../components/FormInput';
 import { FormSelect } from '../components/FormSelect'
 import { CustomCardHeader } from "../components/Login/CustomCardHeader";
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { CalendarInput } from '../components/CalendarInput'
 
 const StyledCard = styled(Card, {
   name: "Form", // Changes class name in the DOM
@@ -19,13 +17,8 @@ const StyledCard = styled(Card, {
   borderRadius: '6px',
   padding: '2.8vh 3vw'
 });
-const StyledTextField = styled(TextField, {
-  name: 'DatePickerInput',
-  slot: "registration"
-})({
-  borderRadius: 25
-})
-const genders = [
+
+export const genders = [
   {
     id: 'male',
     title: 'Male'
@@ -40,7 +33,7 @@ const genders = [
   }
 ]
 
-const selectorItems = genders.map((gender) => { return <MenuItem key={`select-option-${gender.id}`}value={gender.id}>{gender.title}</MenuItem>});
+export const gendersOptionsList = genders.map((gender) => { return <MenuItem key={`select-option-${gender.id}`}value={gender.id}>{gender.title}</MenuItem>});
 
 const registration = (props) => {
   const now = dayjs()
@@ -120,27 +113,18 @@ const registration = (props) => {
                                 value={userData.gender}
                                 // value={genders[0].id}
                                 label="Gender"
-                                children={selectorItems}
+                                children={gendersOptionsList}
                                 onChange={handleChange}
                               />
-                              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                  <DesktopDatePicker
-                                    name='birthday'
-                                    inputFormat="MM/DD/YYYY"
-                                    value={userData.birthday}
-                                    onChange={handleDateChange}
-                                    renderInput={(params) =>
-                                      <Stack direction='column' spacing={1}>
-                                        <InputLabel htmlFor='BirthdayInput'>Date of Birth</InputLabel>
-                                        <TextField
-                                          {...params}
-                                          id='BirthdayInput'
-                                          variant='filled'
-                                        />
-                                      </Stack>
-                                    }
-                                  />
-                              </LocalizationProvider>
+                              <CalendarInput
+                                name='birthday'
+                                inputFormat="MM/DD/YYYY"
+                                value={userData.birthday}
+                                onChange={handleDateChange}
+                                inputProps={{variant: 'filled'}}
+                              >
+                                Date of Birth
+                              </CalendarInput>
                               <FormInput
                                 id='Zip Code'
                                 name='zipCode'

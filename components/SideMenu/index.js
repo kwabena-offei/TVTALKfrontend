@@ -38,7 +38,7 @@ function SideMenu() {
 
   const listMenu = (
     <div>
-      <List>
+      <List sx={{ paddingY: 6}}>
         {menuList.map((menuItem, index) => {
           const listTitle =
             currentRoute === menuItem.href ? (

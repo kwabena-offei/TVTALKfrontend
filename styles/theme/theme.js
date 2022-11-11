@@ -36,7 +36,7 @@ const theme = createTheme({
     MuiFilledInput: {
       styleOverrides: {
         root: {
-          borderRadius: 25,
+          borderRadius: 30,
           backgroundColor: '#131B3F',
           "&:before": {
             content: 'none'
@@ -53,11 +53,24 @@ const theme = createTheme({
         }
       }
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: 30
+        },
+        notchedOutline: {
+          border: '1px solid #090F27',
+          ":focus": {
+            border: '1px solid #090F27'
+          }
+        }
+      }
+    },
     MuiTextField: {
       styleOverrides: {
         root: {
-          borderRadius: 25,
-          backgroundColor: '#131B3F',
+          borderRadius: 30,
+          backgroundColor: '#090F27'
         }
       }
     },
@@ -71,7 +84,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 25,
+          borderRadius: 30,
           textTransform: 'none',
           // padding: '1.25vh 1.5vw',
         },
@@ -87,16 +100,24 @@ const theme = createTheme({
       ],
     },
     MuiInputBase: {
-      defaultProps: {
+      styleOverrides: {
         root: {
-          borderRadius: 25
+          borderRadius: 30
+        }
+      }
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none'
         }
       }
     },
     MuiSelect: {
       styleOverrides: {
         root: {
-          borderRadius: 25
+          borderRadius: 30,
+          backgroundColor: '#090F27'
         },
         icon: sx({
           color: '#3361FF',
@@ -111,17 +132,7 @@ const theme = createTheme({
           padding: '2.5vh 2vw'
         }
       }
-    },
-    MuiCssBaseline: {
-      styleOverrides: `
-          @font-face {
-            font-family: 'Gilroy';
-            font-style: normal;
-            font-display: swap;
-            font-weight: 400;
-            src: url(/public/assets/Gilroy-Regular.ttf) format('ttf');
-          }`,
-    },
+    }
   }
 })
 

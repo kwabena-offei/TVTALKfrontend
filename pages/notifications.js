@@ -16,7 +16,7 @@ export async function getServerSideProps(context) {
 
 export default function Page({ notifications }) {
   const { results: notificationsList, pagination } = notifications;
-  console.log('notifications', notifications)
+  // console.log('notifications', notifications)
   return (
     <Grid item xs={10}>
         <Stack spacing={2}>

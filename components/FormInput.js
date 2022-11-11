@@ -1,16 +1,16 @@
 import React from "react";
 import { FilledInput, FormHelperText, InputLabel, Stack } from "@mui/material";
 
-export const FormInput = (props) => {
+export const FormInput = ({ children, id, label, ...props }) => {
   return (
     <Stack direction='column' spacing={1}>
-      <InputLabel htmlFor={props.id}>{props.label}</InputLabel>
+      <InputLabel htmlFor={id}>{label}</InputLabel>
       <FilledInput
         {...props}
-        id={props.id}
+        id={id}
         disableUnderline
         fullWidth
-      >{props.children}</FilledInput>
+      >{children}</FilledInput>
       {!!props.helpertext && 
         <FormHelperText
         >

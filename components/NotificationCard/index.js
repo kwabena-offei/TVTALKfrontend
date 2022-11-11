@@ -10,6 +10,8 @@ import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
 dayjs.extend(calendar);
 
+const FOLLOW = "Follow" // ToDo: replace with notifiable_type for show Follow button
+
 const NotificationCard = (props) => {
   const { children } = props;
   const { actor, message, created_at, notifiable_type } = children;
@@ -36,7 +38,7 @@ const NotificationCard = (props) => {
             alt={`${username}_avatar`}
           />
         }
-        action={notifiable_type === "Follow" ? <FollowButton /> : ""}
+        action={notifiable_type === FOLLOW ? <FollowButton /> : ""}
         title={
           <NotificationMessageText>
             <b>{username}</b> {message.replace(username, "")}

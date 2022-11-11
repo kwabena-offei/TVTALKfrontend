@@ -7,11 +7,11 @@ const BUTTON_WIDTH = "115px";
 
 export const SectionTitle = ({ title }) => {
   return (
-    <Container>
+    <Container maxWidth="xl">
       <Stack direction="row" alignItems="center" spacing={2} sx={{ my: 5 }}>
         <ButtonBack />
         <Box sx={{ width: "100%", padding: 0, paddingRight: BUTTON_WIDTH }}>
-          <Typography fontWeight={700} fontSize={48} textAlign="center">
+          <Typography component='h1' fontWeight={700} fontSize={48} textAlign="center">
             {title}
           </Typography>
         </Box>
