@@ -7,7 +7,7 @@ import { styled, positions } from '@mui/system';
 const StyledText = styled(Typography, {})({
     color: '#EFF2FD',
     fontWeight: 500,
-    fontSize: '1.8rem',
+    fontSize: '1rem',
 })
 const Footer = (props) => {
     return (

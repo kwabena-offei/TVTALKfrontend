@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import dayjs from 'dayjs';
-import { MenuItem, Card, CardContent, Stack, Button, Grid, TextField } from "@mui/material";
+import { MenuItem, Card, CardContent, Stack, Button, Grid } from "@mui/material";
 import { styled } from "@mui/system";
 import bg from "../public/assets/LoginBackground.jpg";
 import { BackgroundPage } from '../components/BackgroundPage';
-import { FormInput } from '../components/FormInput';
+import { FormInput } from '../components/Login/FormInput';
 import { FormSelect } from '../components/FormSelect'
 import { CustomCardHeader } from "../components/Login/CustomCardHeader";
 import { CalendarInput } from '../components/CalendarInput'
@@ -63,7 +63,6 @@ const registration = (props) => {
   console.log(userData)
   return (
     <>
-        <div style={{width: '100%', height: '10vh'}}>header imitation</div>
         <BackgroundPage source={bg} alternative='main-bg' />
         <Grid container spacing={{lg: 3, md: 2}} sx={{paddingTop: 10.25}}>
           <Grid item xs={0} md={6} lg={6}/>

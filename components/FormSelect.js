@@ -7,7 +7,8 @@ const StyledSelect = styled(Select, {
   name: "Custom", // Changes class name in the DOM
   slot: "select", // appends slot name to the name above in the DOM
 })({
-  borderRadius: 25,
+  borderRadius: 30,
+  backgroundColor: '#131B3F',
 });
 
 

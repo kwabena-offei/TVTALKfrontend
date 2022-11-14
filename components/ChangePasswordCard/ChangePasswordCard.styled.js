@@ -1,13 +1,25 @@
 import { styled } from "@mui/system";
-import { Stack, CardHeader, Button, Select, InputLabel, FormHelperText, TextField, Typography, Grid } from "@mui/material";
-import { OutlinedButton } from "../OutlinedButton";
-import Link from "next/link";
+import {
+  Stack,
+  CardHeader,
+  Button,
+  InputLabel,
+  Box,
+  TextField,
+  Typography,
+  Grid,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
+import Visibility from "../Icons/VisibilityIcon";
+import VisibilityOff from "../Icons/VisibilityOffIcon";
+import { useState } from "react";
 
 export const ChangePasswordCardHeader = () => {
   return (
     <CardHeader
       action={<Actions />}
-      title={'Change Password'}
+      title={"Change Password"}
       subheader={<Subheader />}
       classes={{ action: "align-self-center" }}
       titleTypographyProps={{
@@ -33,51 +45,69 @@ export const Actions = () => {
   );
 };
 export const CancelButton = ({ ...props }) => (
-  <Button type='reset' variant="outlined" color="primary" {...props}>
+  <Button type="reset" variant="outlined" color="primary" sx={{ border: '1.5px solid #090F27' }} {...props}>
     Cancel
   </Button>
 );
 
 export const SubmitButton = ({ ...props }) => (
-  <Button type='submit' variant="contained" color="primary" {...props}>
+  <Button type="submit" variant="contained" color="primary" {...props}>
     Submit
   </Button>
 );
 
-export const Subheader = ({...props }) => (
+export const Subheader = ({ ...props }) => (
   <Typography {...props}>
     Passwords are case-sensitive and must be at least 6 characters.
   </Typography>
 );
 
-export const TextInput = ({label, id, value, children, ...props}) => {
-  return(
-    <Grid container spacing={2}>
-      <Grid item md={4}>
-        <InputLabel htmlFor={id}>{label}</InputLabel>
+export const PasswordInput = ({ label, id, value, children, ...props }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+  return (
+    <Grid container spacing={2} sx={{ marginBottom: 3 }}>
+      <Grid
+        item
+        md={4}
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: { md: "center" },
+          justifyContent: { md: "end" },
+        }}
+      >
+        <Box>
+          <InputLabel htmlFor={id}>{label}</InputLabel>
+        </Box>
       </Grid>
       <Grid item md={8}>
         <TextField
           {...props}
           id={id}
           value={value}
+          type={showPassword ? "text" : "password"}
           fullWidth
-          sx={{ marginBottom: 3}}
-        >{children}</TextField>  
+          placeholder="Password"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff color="#636D92" /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        >
+          {children}
+        </TextField>
       </Grid>
     </Grid>
-  )
-}
-
-export const SelectInput = ({label, id, children, ...props}) => {
-  return(
-    <Stack direction='column' spacing={1}>
-      <InputLabel htmlFor={id}>{label}</InputLabel>
-      <Select
-        variant='outlined'
-        {...props}
-        id={id}
-      >{children}</Select>
-    </Stack>
-  )
-}
+  );
+};

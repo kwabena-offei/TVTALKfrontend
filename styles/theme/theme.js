@@ -44,6 +44,9 @@ const theme = createTheme({
           "&:after": {
             content: 'none'
           },
+          ":focus": {
+            borderRadius: 30,
+          }
         },
         input: {
           padding: '1.25vh 1.5vw'
@@ -102,7 +105,10 @@ const theme = createTheme({
     MuiInputBase: {
       styleOverrides: {
         root: {
-          borderRadius: 30
+          borderRadius: 30,
+          ":focus": {
+            borderRadius: 30,
+          }
         }
       }
     },
@@ -117,7 +123,10 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 30,
-          backgroundColor: '#090F27'
+          backgroundColor: '#090F27',
+          ":focus": {
+            borderRadius: 30,
+          }
         },
         icon: sx({
           color: '#3361FF',
