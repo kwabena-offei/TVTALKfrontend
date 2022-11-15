@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { ProfileTopBar, ProfileAvatar, ProfileUsername, TabLabel, FollowButton, EditProfileButton } from "./ProfileLayout.styled";
+import { ProfileTopBar, ProfileAvatar, ProfileUsername, TabLabel, FollowButton, EditProfileButton, ProfileTopBarMobile, ProfileAvatarMobile, ProfileUsernameMobile } from "./ProfileLayout.styled";
 import { useRouter } from "next/router";
 import axios from '../../services/api';
 
@@ -61,13 +61,13 @@ export const ProfileLayout = ({ children, mode }) => {
 
   return (
     <>
-      <ProfileTopBar />
+      {isMobile ? <ProfileTopBarMobile /> :<ProfileTopBar />}
       <Container>
         <Box>
           <Stack direction={isMobile ? 'column' : 'row'} alignItems="center">
-            <ProfileAvatar alt={username} src={image} />
-            <ProfileUsername>{username}</ProfileUsername>
-            { mode === 'profile' ? <EditProfileButton /> : <FollowButton />}
+            { isMobile ? <ProfileAvatarMobile alt={username} src={image} /> : <ProfileAvatar alt={username} src={image} />}
+            { isMobile ? <ProfileUsernameMobile>{username}</ProfileUsernameMobile> : <ProfileUsername>{username}</ProfileUsername>}
+            { mode === 'profile' ? <EditProfileButton isMobile={isMobile} /> : <FollowButton isMobile={isMobile} />}
           </Stack>
         </Box>
         <Box sx={{

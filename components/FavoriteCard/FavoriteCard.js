@@ -12,6 +12,8 @@ import { styled } from "@mui/system";
 import IconButton from "./FavoriteDarkButton";
 import FavoriteIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import DarkButton from "./DarkRoundedTextButton";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const StyledCard = styled(Card, {
   name: "Favorite",
@@ -21,15 +23,9 @@ const StyledCard = styled(Card, {
   borderRadius: '6px'
 })
 
-const StyledButton = styled(Button, {
-  name: "Favorite",
-  slot: "custom-button"
-}) ({
-  paddingLeft: '1.15vw',
-  paddingRight: '1.15vw'
-})
-
 const FavoriteCard = ({ tvShow, ...props }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { id, image, title, tmsId } = tvShow;
 
   const handleAbout = () => {
@@ -50,19 +46,19 @@ const FavoriteCard = ({ tvShow, ...props }) => {
         </CardContent>
         <CardActions sx={{paddingX: 2.5, paddingTop: 0.75, paddingBottom: 2.5}}>
         <Stack direction="row" spacing={1.25}>
-            <StyledButton
+            <Button
               size="small"
               variant="contained"
               color="primary"
-              sx={{ boxShadow: 'none'}}
+              sx={{ boxShadow: 'none', paddingX: '1.15vw'}}
             >
-              <Typography variant='body1'>Chat</Typography>
-            </StyledButton>
+              <Typography variant={isMobile ? 'body2' : 'body1'}>Chat</Typography>
+            </Button>
             <DarkButton
               size="small"
               onClick={handleAbout}
             >
-              <Typography variant='body1'>About</Typography>
+              <Typography variant={isMobile ? 'body2' : 'body1'}>About</Typography>
             </DarkButton>
             <Box>
               <IconButton size="small" icon={<FavoriteIcon fontSize="small" />} />

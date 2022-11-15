@@ -23,6 +23,28 @@ export const ProfileUsername = styled(Typography, {})({
   fontWeight: 700
 });
 
+export const ProfileTopBarMobile = styled(Box, {
+  name: "gradient",
+  slot: "bg",
+})({
+  width: "100%",
+  height: "90px",
+  background: `linear-gradient(89.18deg, #0B228D 0%, #6184FF 129.11%)`,
+});
+
+export const ProfileAvatarMobile = styled(Avatar)({
+  width: '120px',
+  height: '120px',
+  marginTop: '-60px',
+  border: '4px solid #090F27'
+});
+
+export const ProfileUsernameMobile = styled(Typography, {})({
+  margin: '15px',
+  fontSize: '24px',
+  fontWeight: 700
+});
+
 export const TabLabel = ({ count, title, isMobile }) => {
   return (
     <Stack direction={isMobile ? 'column' : 'row'} alignItems="center">
@@ -38,7 +60,7 @@ export const TabLabel = ({ count, title, isMobile }) => {
     </Stack>
   )
 }
-export const FollowButton = ({...props}) => {
+export const FollowButton = ({isMobile, ...props}) => {
   return (
     <Button
       {...props}
@@ -46,11 +68,11 @@ export const FollowButton = ({...props}) => {
       variant="contained"
       color="primary"
       sx={{
-        paddingX: 4,
-        fontWeight: 600,
-        fontSize: '16px',
+        paddingX: isMobile ? 2.5 : 4,
+        fontWeight: isMobile ? 500 : 600,
+        fontSize: isMobile ? '14px' : '16px',
         lineHeight: '18px',
-        height: '50px',
+        height: isMobile ? '40px' : '50px'
       }}
       >
       Follow
@@ -58,7 +80,7 @@ export const FollowButton = ({...props}) => {
   )
 }
 
-export const EditProfileButton = ({...props}) => {
+export const EditProfileButton = ({isMobile, ...props}) => {
   return (
     <Button
       {...props}
@@ -67,12 +89,12 @@ export const EditProfileButton = ({...props}) => {
       color="primary"
       sx={{
         backgroundColor: '#090F27',
-        border: '1px solid #131B3F',
-        paddingX: 4,
-        fontWeight: 600,
-        fontSize: '16px',
+        border: '1.5px solid #131B3F!important',
+        paddingX: isMobile ? 2.5 : 4,
+        fontWeight: isMobile ? 500 : 600,
+        fontSize: isMobile ? '14px' : '16px',
         lineHeight: '18px',
-        height: '50px'
+        height: isMobile ? '40px' : '50px'
       }}
       >
       Edit Profile
