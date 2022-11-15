@@ -18,7 +18,7 @@ export default function Page({ notifications }) {
   const { results: notificationsList, pagination } = notifications;
   // console.log('notifications', notifications)
   return (
-    <Grid item xs={10}>
+    <Grid item xs={12} md={10}>
         <Stack spacing={2}>
           {notificationsList?.map((notification) => {
             return (

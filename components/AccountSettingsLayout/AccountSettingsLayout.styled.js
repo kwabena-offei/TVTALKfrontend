@@ -1,24 +1,39 @@
 import { styled } from "@mui/system";
-import { Box, Typography, Stack, Container, CardHeader, CardContent } from "@mui/material";
+import { Box, Typography, Stack, Container, CardHeader, CardContent, IconButton } from "@mui/material";
 import { OutlinedButton } from "../OutlinedButton";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const BUTTON_WIDTH = "115px";
 
 export const SectionTitle = ({ title }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
     <Container maxWidth="xl">
-      <Stack direction="row" alignItems="center" spacing={2} sx={{ my: 5 }}>
-        <ButtonBack />
-        <Box sx={{ width: "100%", padding: 0, paddingRight: BUTTON_WIDTH }}>
-          <Typography component='h1' fontWeight={700} fontSize={48} textAlign="center">
-            {title}
-          </Typography>
+      <Stack direction="row" alignItems="center" spacing={2} sx={{ my: isMobile ? 2 : 5 }}>
+        {isMobile ? <ButtonBackMobile /> : <ButtonBack />}
+        <Box sx={{ width: "100%", padding: 0, paddingRight: isMobile ? 0 : BUTTON_WIDTH }}>
+          { isMobile ? <MobileTitle>{title}</MobileTitle> : <DescktopTitle>{title}</DescktopTitle> }
         </Box>
       </Stack>
     </Container>
   );
 };
+
+export const MobileTitle = ({children}) => (
+  <Typography component='h1' fontWeight={600} fontSize={24} textAlign='start'>
+    {children}
+  </Typography>
+)
+
+export const DescktopTitle = ({children}) => (
+  <Typography component='h1' fontWeight={700} fontSize={48} textAlign='center'>
+    {children}
+  </Typography>
+)
+
 export const SectionSubtitle = ({ subtitle }) => {
   return (
     <CardHeader
@@ -52,6 +67,32 @@ export const ButtonBack = ({ ...props }) => {
       >
         Back
       </OutlinedButton>
+    </Box>
+  );
+};
+
+export const ButtonBackMobile = ({ ...props }) => {
+const RoundedButton = styled(IconButton, {
+  name: 'IconButton',
+  slot: "custom-styled"
+}) ({
+  width: '36px',
+  height: '36px',
+  border: '1px solid #131B3F',
+  color: '#EFF2FD',
+  fontSize: '1.25rem'
+})
+  return (
+    <Box width={36} height={36}>
+      <RoundedButton
+        variant='outlined'
+        onClick={() => {
+          console.log("back button clicked");
+        }}
+        {...props}
+      >
+        <ChevronLeftRoundedIcon fontSize="inherit" />
+      </RoundedButton>
     </Box>
   );
 };

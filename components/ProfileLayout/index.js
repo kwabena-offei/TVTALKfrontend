@@ -6,6 +6,8 @@ import {
   Tabs,
   Tab
 } from "@mui/material";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { ProfileTopBar, ProfileAvatar, ProfileUsername, TabLabel, FollowButton, EditProfileButton } from "./ProfileLayout.styled";
 import { useRouter } from "next/router";
 import axios from '../../services/api';
@@ -25,6 +27,8 @@ export const ProfileLayout = ({ children, mode }) => {
   const router = useRouter();
   const currentRoute = router.asPath;
   const { username, image, reactions_count, favorites_count, followers_count, following_count } = props.profile;
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const inheritURL = mode === 'profile' ? "/profile" : `/users/${username}`;
 
@@ -60,7 +64,7 @@ export const ProfileLayout = ({ children, mode }) => {
       <ProfileTopBar />
       <Container>
         <Box>
-          <Stack direction="row" alignItems="center">
+          <Stack direction={isMobile ? 'column' : 'row'} alignItems="center">
             <ProfileAvatar alt={username} src={image} />
             <ProfileUsername>{username}</ProfileUsername>
             { mode === 'profile' ? <EditProfileButton /> : <FollowButton />}
@@ -75,7 +79,7 @@ export const ProfileLayout = ({ children, mode }) => {
             variant="fullWidth"
           >
             {tabs.map((value, key) => 
-                <Tab key={key} value={value.href} label={<TabLabel {...value} />}></Tab>
+              <Tab key={key} value={value.href} label={<TabLabel {...value} isMobile={isMobile} />}></Tab>
             )}
           </Tabs>
         </Box>

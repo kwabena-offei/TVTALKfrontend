@@ -5,6 +5,8 @@ import {
   FollowButton,
   NotificationMessageText,
 } from "./NotificationCard.styled";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
@@ -13,6 +15,9 @@ dayjs.extend(calendar);
 const FOLLOW = "Follow" // ToDo: replace with notifiable_type for show Follow button
 
 const NotificationCard = (props) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   const { children } = props;
   const { actor, message, created_at, notifiable_type } = children;
   const { username, image } = actor;
@@ -29,10 +34,10 @@ const NotificationCard = (props) => {
   return (
     <CardWrapper>
       <CardHeader
-        sx={{ padding: 2.5 }}
+        sx={ isMobile ? { paddingX: '10px', paddingY: '15px' } : { padding: 2.5 } }
         avatar={
           <Avatar
-            sx={{ width: 60, height: 60 }}
+            sx={isMobile ? { width: 55, height: 55 } : { width: 60, height: 60 }}
             aria-label={`avatar-${username}`}
             src={image}
             alt={`${username}_avatar`}
@@ -45,10 +50,10 @@ const NotificationCard = (props) => {
           </NotificationMessageText>
         }
         subheader={time}
-        classes={{ action: "align-self-center" }}
+        classes={{ action: `align-self-center${ isMobile ? ' mr-0' : '' }` }}
         subheaderTypographyProps={{
           fontWeight: 400,
-          fontSize: 16,
+          fontSize: isMobile ? 12 : 16,
           color: "#636D92",
         }}
       />

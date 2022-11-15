@@ -46,8 +46,6 @@ const Login = (props) => {
       console.log('error', error)
     }
   };
-  
-
 
   return (
     <LoginCard>

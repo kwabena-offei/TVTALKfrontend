@@ -1,5 +1,7 @@
 import { styled } from "@mui/system";
 import { Typography, Card, Button } from "@mui/material";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export const CardWrapper = styled(Card, {
   name: "Notification",
@@ -10,13 +12,18 @@ export const CardWrapper = styled(Card, {
 })
 
 export const NotificationMessageText = ({ children }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return <Typography color='text.primary' sx={{ 
-    fontSize: 20,
+    fontSize: isMobile ? 14 : 20,
     lineHeight: '120%'
   }}>{children}</Typography>
 }
 
 export const FollowButton = ({...props}) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
     <Button
       {...props}
@@ -25,9 +32,9 @@ export const FollowButton = ({...props}) => {
       color="primary"
       size='small'
       sx={{
-        paddingX: 3,
+        paddingX: isMobile ? 2.5 : 3,
         paddingY: 1,
-        fontWeight: 600
+        fontWeight: isMobile ? 500 : 600
       }}
       >
       Follow

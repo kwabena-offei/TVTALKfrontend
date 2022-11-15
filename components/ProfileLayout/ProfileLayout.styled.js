@@ -11,8 +11,8 @@ export const ProfileTopBar = styled(Box, {
 });
 
 export const ProfileAvatar = styled(Avatar)({
-  width: 180,
-  height: 180,
+  width: '180px',
+  height: '180px',
   marginTop: '-90px',
   border: '8px solid #090F27'
 });
@@ -23,16 +23,16 @@ export const ProfileUsername = styled(Typography, {})({
   fontWeight: 700
 });
 
-export const TabLabel = ({ count, title }) => {
+export const TabLabel = ({ count, title, isMobile }) => {
   return (
-    <Stack direction="row" alignItems="center">
+    <Stack direction={isMobile ? 'column' : 'row'} alignItems="center">
       <Typography sx={{
-        fontSize: '28px',
+        fontSize: isMobile ? '18px' : '28px',
         fontWeight: '700',
-        marginRight: '20px'
+        marginRight: isMobile ? 0 : '20px'
       }}>{count}</Typography>
       <Typography sx={{
-        fontSize: '24px',
+        fontSize: isMobile ? '12px' : '24px',
         fontWeight: '500'
       }}>{title}</Typography>
     </Stack>
