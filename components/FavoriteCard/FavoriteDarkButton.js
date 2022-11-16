@@ -9,7 +9,9 @@ const RoundedButton = styled(Button, {
   color: "#A5B0D6",
   minWidth: '36px',
   minHeight: '36px',
-  borderRadius: '50%'
+  padding: '8px',
+  borderRadius: '50%',
+  boxShadow: 'none'
 })
 
 const SmallRoundedIconButton = ({icon, ...props}) => {

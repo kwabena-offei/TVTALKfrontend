@@ -48,6 +48,21 @@ export const SectionSubtitle = ({ subtitle }) => {
   );
 };
 
+
+export const SectionSubtitleMobile = ({ subtitle }) => {
+  return (
+    <CardHeader
+      title={subtitle}
+      titleTypographyProps={{
+        textAlign: "center",
+        fontWeight: 700,
+        fontSize: '1.25rem',
+        lineHeight: "120%",
+      }}
+    />
+  );
+};
+
 export const ButtonBack = ({ ...props }) => {
   return (
     <Box>
@@ -107,10 +122,29 @@ export const CasualText = ({ children }) => (
   </Typography>
 );
 
+export const CasualTextMobile = ({ children }) => (
+  <Typography
+    color="text.secondary"
+    variant="body1"
+    sx={{ fontWeight: 400, lineHeight: "180%", fontSize: '0.875rem' }}
+  >
+    {children}
+  </Typography>
+);
+
 export const SecondaryText = ({ children }) => (
   <Typography
     color="text.secondary"
     sx={{ fontSize: '1.125rem',fontWeight: 600, lineHeight: "180%" }}
+  >
+    {children}
+  </Typography>
+);
+
+export const SecondaryTextMobile = ({ children }) => (
+  <Typography
+    color="text.secondary"
+    sx={{ fontSize: '1rem',fontWeight: 600, lineHeight: "180%" }}
   >
     {children}
   </Typography>
@@ -125,7 +159,17 @@ export const SubtitleHeader = ({ children }) => (
     {children}
   </Typography>
 );
-// 
+
+export const SubtitleHeaderMobile = ({ children }) => (
+  <Typography
+    variant="h6"
+    color="text.primary"
+    sx={{ fontWeight: 600, fontSize: '1.125rem', lineHeight: "180%" }}
+  >
+    {children}
+  </Typography>
+);
+
 export const StyledCardText = ({children}) => {
   return(
     <CardContent sx={{

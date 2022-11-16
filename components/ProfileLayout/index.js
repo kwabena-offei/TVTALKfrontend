@@ -77,6 +77,7 @@ export const ProfileLayout = ({ children, mode }) => {
             value={currentRoute}
             onChange={handleChangeTab}
             variant="fullWidth"
+            textColor='secondary'
           >
             {tabs.map((value, key) => 
               <Tab key={key} value={value.href} label={<TabLabel {...value} isMobile={isMobile} />}></Tab>
@@ -86,8 +87,9 @@ export const ProfileLayout = ({ children, mode }) => {
       </Container>
 
       <Container sx={{
-        marginTop: '5vh',
-        minHeight: '80vh'
+        marginTop: isMobile ? '3vh' : '5vh',
+        minHeight: '80vh',
+        marginBottom: isMobile ? '6vh' : '8vh',
       }}>
         {children}
       </Container>

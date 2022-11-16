@@ -9,7 +9,7 @@ const RoundedButton = styled(Button, {
   color: "#A5B0D6",
   paddingLeft: '1.15vw',
   paddingRight: '1.15vw',
-  // boxShadow: 'none'
+  boxShadow: 'none'
 })
 
 const DarkRoundedTextButton = ({children, ...props}) => {

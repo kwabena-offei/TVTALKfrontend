@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import dayjs from 'dayjs';
-import { MenuItem, Card, CardContent, Stack, Button, Grid } from "@mui/material";
+import { MenuItem, Card, CardContent, Stack, Button, Grid, Box } from "@mui/material";
 import { styled } from "@mui/system";
 import bg from "../public/assets/LoginBackground.jpg";
 import { BackgroundPage } from '../components/BackgroundPage';
@@ -15,7 +15,8 @@ const StyledCard = styled(Card, {
 })({
   background: "#090F27",
   borderRadius: '6px',
-  padding: '2.8vh 3vw'
+  padding: '2.8vh 3vw',
+  marginBottom: '6vh',
 });
 
 export const genders = [
@@ -63,7 +64,13 @@ const registration = (props) => {
   console.log(userData)
   return (
     <>
-        <BackgroundPage source={bg} alternative='main-bg' />
+        <Box
+        sx={{
+          backgroundImage: `url(${bg.src})`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
         <Grid container spacing={{lg: 3, md: 2}} sx={{paddingTop: 10.25}}>
           <Grid item xs={0} md={6} lg={6}/>
           <Grid item xs={12} md={5} lg={4}>
@@ -140,6 +147,7 @@ const registration = (props) => {
             </Grid>
             <Grid item xs={0} md={1} lg={2}/>
         </Grid>
+        </Box>
     </>
   );
 };

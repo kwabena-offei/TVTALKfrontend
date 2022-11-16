@@ -3,6 +3,8 @@ import React from 'react';
 import { fetchProfile, ProfileLayout } from '../../components/ProfileLayout';
 import ReactionCard from '../../components/ReactionCard';
 import axios from '../../services/api';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export async function getServerSideProps(context) {
   const { data: reactions } = await axios(`/profile/reactions`);
@@ -16,9 +18,11 @@ export async function getServerSideProps(context) {
 }
 
 export default function Page({ reactions, profile }) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { results: reactionsList, pagination } = reactions;
   return (
-      <Grid container spacing={3.5}>
+      <Grid container spacing={isMobile ? 2.5 : 3.5}>
         {reactionsList?.map((result) => {
           return (
             <Grid item key={result.id} xs={12} md={6}>

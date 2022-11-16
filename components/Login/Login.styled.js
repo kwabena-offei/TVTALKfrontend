@@ -20,6 +20,7 @@ const StyledCard = styled(Card, {
   background: "#090F27",
   borderRadius: "6px",
   padding: "2.8vh 3vw",
+  marginBottom: '5vh'
 });
 
 export const LoginCard = ({ children }) => <StyledCard>{children}</StyledCard>;

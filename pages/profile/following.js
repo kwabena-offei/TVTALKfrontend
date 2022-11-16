@@ -1,9 +1,11 @@
-import { Grid, Container } from "@mui/material";
+import { Grid } from "@mui/material";
 import React from "react";
 import { ProfileLayout, fetchProfile } from "../../components/ProfileLayout";
-import { TV_TALK_API } from '../../util/constants';
 import FollowerCard from "../../components/FollowerCard/FollowerCard";
+import FollowerCardMobile from "../../components/FollowerCard/FollowerCardMobile";
 import axios from '../../services/api';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export async function getServerSideProps(context) {
   const { data: following } = await axios.get(`/profile/following`);
@@ -18,13 +20,15 @@ export async function getServerSideProps(context) {
 
 export default function Page({ following }) {
   const { results: followingList, pagination } = following
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <Grid container spacing={3.75}>
+    <Grid container spacing={isMobile ? 2 : 3.75}>
       {followingList?.map((follower) => {
         return (
-          <Grid key={`card-following-${follower.id}`} item lg={2}>
-            <FollowerCard {...follower} />
+          <Grid key={`card-following-${follower.id}`} item xs={12} md={3} lg={2}>
+            {isMobile ? <FollowerCardMobile {...follower} /> : <FollowerCard {...follower} />}
           </Grid>
         );
       })}

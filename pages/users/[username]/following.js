@@ -2,7 +2,10 @@ import { Grid } from "@mui/material";
 import React from "react";
 import { ProfileLayout, fetchAccount } from '../../../components/ProfileLayout';
 import FollowerCard from "../../../components/FollowerCard/FollowerCard";
+import FollowerCardMobile from "../../../components/FollowerCard/FollowerCardMobile";
 import axios from '../../../services/api';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export async function getServerSideProps(context) {
   const { username } = context.query
@@ -17,14 +20,17 @@ export async function getServerSideProps(context) {
 }
 
 export default function Page({ following }) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const { results: followingList, pagination } = following
 
   return (
-    <Grid container spacing={3.75}>
+    <Grid container spacing={isMobile ? 2 : 3.75}>
       {followingList?.map((follower) => {
         return (
-          <Grid key={`card-following-${follower.id}`} item lg={2}>
-            <FollowerCard {...follower} />
+          <Grid key={`card-following-${follower.id}`} item xs={12} md={3} lg={2}>
+            {isMobile ? <FollowerCardMobile {...follower} /> : <FollowerCard {...follower} />}
           </Grid>
         );
       })}

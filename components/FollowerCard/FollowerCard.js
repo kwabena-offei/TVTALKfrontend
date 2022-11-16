@@ -1,5 +1,7 @@
 import { Avatar, Card, CardContent, Box, Typography, CardActions, Button } from "@mui/material";
 import { styled } from "@mui/system";
+import { useState } from "react";
+import { FollowButton, UnfollowButton } from './FollowerCard.styled'
 
 const StyledCard = styled(Card, {
   name: "Follower",
@@ -16,9 +18,14 @@ const StyledCard = styled(Card, {
 const FollowerCard = ({ id, username, image, ...props }) => {
   // Todo: edit reactions when you get the real data from api
   const reactions = props.reactions ? `${props.reactions} reactions` : '0 reactions'
+  // ToDo: set isFollow when get actual data from api
+  const [isFollow, setIsFollow] = useState(false)
+  const toggleIsFollow = () => setIsFollow(!isFollow)
 
-  const handleClick = () => {
-    console.log('change this handle click - id:', id)
+  const handleClick = async () => {
+    // ToDo: add callback to endpoint
+    await console.log('change this handle click - id:', id)
+    toggleIsFollow()
   }
 
   return (
@@ -38,7 +45,7 @@ const FollowerCard = ({ id, username, image, ...props }) => {
         <Typography variant="subtitle2" color='#919CC0' component='div'>{reactions}</Typography>
       </CardContent>
       <CardActions sx={{justifyContent: 'center', padding: 1.25, paddingBottom: 2.5 }}>
-        <Button variant="contained" color="primary" onClick={handleClick}>Follow</Button>
+        {isFollow ? <UnfollowButton onClick={handleClick} /> : <FollowButton onClick={handleClick} />}
       </CardActions>
     </StyledCard>
   )

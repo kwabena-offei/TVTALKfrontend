@@ -11,13 +11,36 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useRouter } from "next/router";
 
 const pages = ['Chat By Show', 'News'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const router = useRouter();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const settings = [
+    {
+      title: 'Profile',
+      route: '/profile/reactions'
+    },
+    {
+      title: 'Notifications',
+      route: '/notifications'
+    },
+    {
+      title: 'Account Settings',
+      route: isMobile ? '/account_settings' : '/profile/edit'
+    },
+    {
+      title: 'Logout',
+      route: '/logout'
+    }
+  ];
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -30,7 +53,9 @@ function ResponsiveAppBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (key) => {
+    console.log('settings', key)
+    router.push(key);
     setAnchorElUser(null);
   };
 
@@ -148,8 +173,8 @@ function ResponsiveAppBar() {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                  <MenuItem key={setting.route} onClick={() => handleCloseUserMenu(setting.route)}>
+                    <Typography textAlign="center">{setting.title}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
