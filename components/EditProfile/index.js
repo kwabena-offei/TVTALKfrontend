@@ -3,11 +3,17 @@ import {
   EditProfileHeader,
   TextInput,
   SelectInput,
+  Actions,
 } from "./EditProfile.styled";
 import { gendersOptionsList, genders } from "../../pages/registration";
 import { CalendarInput } from "../CalendarInput";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export const EditProfileCard = ({ profile }) => {
+const theme = useTheme();
+const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const handleDateChange = () => {
     console.log("date change");
   };
@@ -28,12 +34,12 @@ export const EditProfileCard = ({ profile }) => {
   };
 
   return (
-    <Card sx={{ paddingX: 4, paddingY: 4, backgroundColor: "#131B3F" }}>
-      <EditProfileHeader profile={profile} />
-      <CardContent>
-        <Grid container columnSpacing={5}>
-          <Grid item md={6}>
-            <Stack spacing={2}>
+    <Card sx={{ paddingX: isMobile ? 0 : 4, paddingY: isMobile ? 0 : 4, backgroundColor: "#131B3F" }}>
+      <EditProfileHeader profile={profile} isMobile={isMobile} />
+      <CardContent xs={isMobile ? { paddingX: '20px' } : false }>
+        <Grid container columnSpacing={5} rowSpacing={isMobile ? 2.5 : 0 }>
+          <Grid item xs={12} md={6}>
+            <Stack spacing={isMobile ? 2.5 : 2}>
               <TextInput id="name" label="Name" />
               <TextInput id="username" label="Username" />
               <SelectInput id="gender" label="Gender" value={genders[0].id}>
@@ -51,8 +57,8 @@ export const EditProfileCard = ({ profile }) => {
               <TextInput id="email" label="Email" type="email" />
             </Stack>
           </Grid>
-          <Grid item md={6}>
-            <Stack spacing={2}>
+          <Grid item xs={12} md={6}>
+            <Stack spacing={isMobile ? 2.5 : 2}>
               <TextInput id="phone" label="Phohe" type="tel" />
               <SelectInput
                 id="cable-company"
@@ -74,6 +80,11 @@ export const EditProfileCard = ({ profile }) => {
                 label="Zip Code"
                 placeholder="Zip Code"
               />
+              { isMobile &&
+              <div>
+                <Actions sx={{ justifyContent: 'center', marginY: 1.25 }} /> 
+              </div>
+              }
             </Stack>
           </Grid>
         </Grid>

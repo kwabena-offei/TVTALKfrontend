@@ -3,10 +3,20 @@ import { Stack, CardHeader, Avatar, Button, Select, InputLabel, FormHelperText, 
 import { OutlinedButton } from "../OutlinedButton";
 import Link from "next/link";
 
-export const EditProfileHeader = ({ profile }) => {
+export const StyledActionsButton = styled(Button) ({
+  boxShadow: 'none',
+  fontSize: '1rem',
+  fontWeight: 600,
+  padding: '16px 32px',
+  borderRadius: 32,
+  height: '50px'
+})
+
+export const EditProfileHeader = ({ profile, isMobile }) => {
   const { image, username } = profile;
   return (
     <CardHeader
+      sx={isMobile ? { paddingY: '30px', paddingX: '20px' } : false }
       avatar={
         <Avatar
           sx={{ width: 80, height: 80 }}
@@ -15,7 +25,7 @@ export const EditProfileHeader = ({ profile }) => {
           alt={`${username}-photo`}
         />
       }
-      action={<Actions />}
+      action={isMobile ? false : <Actions />}
       title={username}
       subheader={<SubheaderLink href={"#"} />}
       classes={{ action: "align-self-center" }}
@@ -34,24 +44,24 @@ export const EditProfileHeader = ({ profile }) => {
   );
 };
 
-export const Actions = () => {
+export const Actions = ({...props}) => {
   return (
-    <Stack direction="row" spacing={1.5}>
+    <Stack direction="row" spacing={1.5} {...props}>
       <CancelButton />
       <SaveButton />
     </Stack>
   );
 };
 export const CancelButton = ({ ...props }) => (
-  <Button variant="outlined" color="primary" {...props}>
+  <StyledActionsButton variant="outlined" color="primary" sx={{ border: '1.5px solid #090F27' }} {...props}>
     Cancel
-  </Button>
+  </StyledActionsButton>
 );
 
 export const SaveButton = ({ ...props }) => (
-  <Button variant="contained" color="primary" {...props}>
+  <StyledActionsButton variant="contained" color="primary" {...props}>
     Save
-  </Button>
+  </StyledActionsButton>
 );
 
 export const SubheaderLink = ({ href, ...props }) => (

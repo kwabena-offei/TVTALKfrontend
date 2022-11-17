@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CardContent, Stack, Button } from "@mui/material";
+import { CardContent, Stack, Button, Link } from "@mui/material";
 import { OutlinedButton } from "../OutlinedButton";
 import { CustomCardHeader } from "../Login/CustomCardHeader";
 import {
@@ -15,7 +15,7 @@ import GoogleIcon from '../Icons/GoogleColorIcon'
 import { TV_TALK_API } from "../../util/constants";
 import axios from "axios";
 
-const Login = (props) => {
+const Login = ({isMobile}) => {
   // const [formValues, setFormValues] = useState({
   //   email: "",
   //   password: "",
@@ -48,12 +48,13 @@ const Login = (props) => {
   };
 
   return (
-    <LoginCard>
+    <LoginCard isMobile={isMobile}>
       <CustomCardHeader
         title="Log In"
         subheader="New user?"
         subheaderLink="/registration"
         subheaderLinkTitle="Create an account"
+        isMobile={isMobile}
       />
       <CardContent sx={{ paddingY: 2.5 }}>
         <Stack direction="column" spacing={3}>
@@ -64,18 +65,23 @@ const Login = (props) => {
             <AuthIconButton color="primary" startIcon={<FacebookRounded />}>
               Continue with Facebook
             </AuthIconButton>
-            <OutlinedButton size="large" sx={{ color: 'text.primary'}} startIcon={<Apple />}>
+            <OutlinedButton size="large" sx={{ color: 'text.primary', fontSize: '1rem' }} startIcon={<Apple />}>
               Continue with Apple
             </OutlinedButton>
           </Stack>
-          <OrDivider />
-          <Stack direction="column" spacing={3}>
+          <OrDivider isMobile={isMobile} />
+          <Stack direction="column" spacing={isMobile ? 2.75 : 2.5}>
             {/* <EmailInput value={formValues.email} onChange={handleChange} /> */}
             <UsernameInput value={formValues.username} onChange={handleChange} />
-            <PasswordInput
-              value={formValues.password}
-              onChange={handleChange}
-            />
+            <div>
+              <PasswordInput
+                value={formValues.password}
+                onChange={handleChange}
+              />
+              <Link href="#" underline="none" color="primary" sx={{ marginTop: 1.125, display: "flex", justifyContent: 'flex-end', fontSize: '0.875rem' }}>
+                Forgot Password?
+              </Link>   
+            </div>
           </Stack>
           <Button
             size="large"

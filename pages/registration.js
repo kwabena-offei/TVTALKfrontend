@@ -3,11 +3,12 @@ import dayjs from 'dayjs';
 import { MenuItem, Card, CardContent, Stack, Button, Grid, Box } from "@mui/material";
 import { styled } from "@mui/system";
 import bg from "../public/assets/LoginBackground.jpg";
-import { BackgroundPage } from '../components/BackgroundPage';
 import { FormInput } from '../components/Login/FormInput';
 import { FormSelect } from '../components/FormSelect'
 import { CustomCardHeader } from "../components/Login/CustomCardHeader";
 import { CalendarInput } from '../components/CalendarInput'
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const StyledCard = styled(Card, {
   name: "Form", // Changes class name in the DOM
@@ -15,8 +16,7 @@ const StyledCard = styled(Card, {
 })({
   background: "#090F27",
   borderRadius: '6px',
-  padding: '2.8vh 3vw',
-  marginBottom: '6vh',
+  padding: '2.8vh 2.25vw'
 });
 
 export const genders = [
@@ -37,6 +37,9 @@ export const genders = [
 export const gendersOptionsList = genders.map((gender) => { return <MenuItem key={`select-option-${gender.id}`}value={gender.id}>{gender.title}</MenuItem>});
 
 const registration = (props) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const now = dayjs()
   const [userData, setUserData] = useState({
     userName: '',
@@ -65,17 +68,18 @@ const registration = (props) => {
   return (
     <>
         <Box
-        sx={{
+        sx={isMobile ? {} : {
           backgroundImage: `url(${bg.src})`,
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
         }}
       >
-        <Grid container spacing={{lg: 3, md: 2}} sx={{paddingTop: 10.25}}>
+        <Grid container spacing={{lg: 3, md: 0}} sx={{paddingTop: isMobile ? 0 : 10.25}}>
           <Grid item xs={0} md={6} lg={6}/>
           <Grid item xs={12} md={5} lg={4}>
-            <StyledCard>
+            <StyledCard sx={isMobile ? {} : { marginBottom: '6vh' }}>
                 <CustomCardHeader
+                  isMobile={isMobile}
                   sx={{padding: 1.5}}
                   title='Create an account'
                   subheader='Already have an account?'
@@ -83,8 +87,8 @@ const registration = (props) => {
                   subheaderLinkTitle='Sign in'
                 />
                 <CardContent sx={{paddingY: 2.5}}>
-                    <Stack direction='column' spacing={3}>
-                        <Stack direction='column' spacing={2}>
+                    <Stack direction='column' spacing={isMobile ? 2.75 : 2.5}>
+                        <Stack direction='column' spacing={isMobile ? 2.75 : 2.5}>
                             <FormInput
                                 id='UsernameInput'
                                 name='userName'

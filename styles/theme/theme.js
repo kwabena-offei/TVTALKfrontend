@@ -49,10 +49,10 @@ const theme = createTheme({
           }
         },
         input: {
-          padding: '1.25vh 1.5vw'
+          padding: '12px 30px'
         },
         adornedEnd: {
-          paddingRight: '1.5vw'
+          paddingRight: '30px'
         }
       }
     },
@@ -60,6 +60,12 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 30
+        },
+        input: {
+          padding: '12px 30px'
+        },
+        adornedEnd: {
+          paddingRight: '30px'
         },
         notchedOutline: {
           border: '1px solid #090F27',
@@ -80,7 +86,7 @@ const theme = createTheme({
     MuiFormHelperText: {
       styleOverrides: {
         root: {
-          textAlign: 'right'
+          // textAlign: 'right'
         }
       }
     },
@@ -126,11 +132,11 @@ const theme = createTheme({
           backgroundColor: '#090F27',
           ":focus": {
             borderRadius: 30,
-          }
+          },
         },
         icon: sx({
           color: '#3361FF',
-          marginRight: '1vw'
+          marginRight: '20px'
         })
       }
     },

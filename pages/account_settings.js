@@ -6,6 +6,9 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { LoremIpsumText } from '../components/AccountSettingsLayout/LoremIpsumText'
+import { EditProfileCard } from '../components/EditProfile/';
+import { ChangePasswordCard } from '../components/ChangePasswordCard';
+import { Box, Link } from '@mui/material';
 
 export async function getServerSideProps(context) {
   const profile = await fetchProfile()
@@ -16,38 +19,39 @@ export async function getServerSideProps(context) {
     },
   };
 }
-const menuList = [
-  {
-    label: "Edit Profile",
-    id: "profile-edit",
-    content: ''
-  },
-  {
-    label: "Terms & Conditions",
-    id: "terms-and-conditions",
-    content: <LoremIpsumText subtitle="Terms & Conditions" />
-  },
-  {
-    label: "Privacy Policy",
-    id: "policy",
-    content: <LoremIpsumText subtitle="Privacy Policy" />
-  },
-  {
-    label: "Feedback",
-    id: "feedback",
-    content: <LoremIpsumText subtitle="Feedback" />
-  },
-  {
-    label: "Change Password",
-    id: "change-password",
-    content: 'Password'
-  },
-];
 
 export default function Page({profile, title}) {
-  console.log('profile', profile)
+  // console.log('profile', profile)
+  const menuList = [
+    {
+      label: "Edit Profile",
+      id: "profile-edit",
+      content: <EditProfileCard profile={profile}/>
+    },
+    {
+      label: "Terms & Conditions",
+      id: "terms-and-conditions",
+      content: <LoremIpsumText subtitle="Terms & Conditions" />
+    },
+    {
+      label: "Privacy Policy",
+      id: "policy",
+      content: <LoremIpsumText subtitle="Privacy Policy" />
+    },
+    {
+      label: "Feedback",
+      id: "feedback",
+      content: <LoremIpsumText subtitle="Feedback" />
+    },
+    {
+      label: "Change Password",
+      id: "change-password",
+      content: <ChangePasswordCard profile={profile}/>
+    },
+  ];
+
   return (
-    <>
+    <Box>
       <SectionTitle title={title} />
       <div>
         {
@@ -68,10 +72,9 @@ export default function Page({profile, title}) {
           ))
         }
       </div>
-    </>
+      <Box padding={2}>
+        <Link href='/logout' underline='none' fontSize='1.25rem' fontWeight={600}>Log Out</Link>
+      </Box>
+    </Box>
   );
 }
-
-// Page.getLayout = function getLayout(page) {
-//   return <AccountSettingsLayout menu>{page}</AccountSettingsLayout>;
-// };

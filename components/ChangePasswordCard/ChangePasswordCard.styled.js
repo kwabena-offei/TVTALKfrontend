@@ -14,6 +14,7 @@ import {
 import Visibility from "../Icons/VisibilityIcon";
 import VisibilityOff from "../Icons/VisibilityOffIcon";
 import { useState } from "react";
+import { StyledActionsButton } from '../EditProfile/EditProfile.styled'
 
 export const ChangePasswordCardHeader = () => {
   return (
@@ -36,33 +37,44 @@ export const ChangePasswordCardHeader = () => {
   );
 };
 
-export const Actions = () => {
+export const ChangePasswordCardHeaderMobile = () => {
   return (
-    <Stack direction="row" spacing={1.5}>
+    <CardHeader
+      title={<Subheader sx={{ fontSize: '1.25rem', fontWeight: 400}} />}
+      titleTypographyProps={{
+        color: "text.primary"
+      }}
+    />
+  );
+};
+
+export const Actions = ({...props}) => {
+  return (
+    <Stack direction="row" spacing={1.5} {...props}>
       <CancelButton />
       <SubmitButton />
     </Stack>
   );
 };
 export const CancelButton = ({ ...props }) => (
-  <Button type="reset" variant="outlined" color="primary" sx={{ border: '1.5px solid #090F27' }} {...props}>
+  <StyledActionsButton type="reset" variant="outlined" color="primary" sx={{ border: '1.5px solid #090F27' }} {...props}>
     Cancel
-  </Button>
+  </StyledActionsButton>
 );
 
 export const SubmitButton = ({ ...props }) => (
-  <Button type="submit" variant="contained" color="primary" {...props}>
+  <StyledActionsButton type="submit" variant="contained" color="primary" {...props}>
     Submit
-  </Button>
+  </StyledActionsButton>
 );
 
 export const Subheader = ({ ...props }) => (
   <Typography {...props}>
-    Passwords are case-sensitive and must be at least 6 characters.
+    Passwords are case-sensitive and must be at least <Typography variant="span" sx={{ fontWeight: 600 }}>6 characters</Typography>.
   </Typography>
 );
 
-export const PasswordInput = ({ label, id, value, children, ...props }) => {
+export const PasswordInput = ({ label, id, value, children, isMobile, ...props }) => {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -71,6 +83,7 @@ export const PasswordInput = ({ label, id, value, children, ...props }) => {
     <Grid container spacing={2} sx={{ marginBottom: 3 }}>
       <Grid
         item
+        xs={12}
         md={4}
         sx={{
           display: "flex",
@@ -83,7 +96,7 @@ export const PasswordInput = ({ label, id, value, children, ...props }) => {
           <InputLabel htmlFor={id}>{label}</InputLabel>
         </Box>
       </Grid>
-      <Grid item md={8}>
+      <Grid item xs={12} md={8}>
         <TextField
           {...props}
           id={id}
@@ -93,11 +106,12 @@ export const PasswordInput = ({ label, id, value, children, ...props }) => {
           placeholder="Password"
           InputProps={{
             endAdornment: (
-              <InputAdornment position="end">
+              <InputAdornment position="end" sx={{color: showPassword ? "#636D92" : '#EFF2FD'}}>
                 <IconButton
                   aria-label="toggle password visibility"
                   onClick={handleClickShowPassword}
                   edge="end"
+                  color="inherit"
                 >
                   {showPassword ? <VisibilityOff color="#636D92" /> : <Visibility />}
                 </IconButton>
