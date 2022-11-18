@@ -9,8 +9,8 @@ const StyledButton = styled(Button, {})
         border: '1px solid #131B3F',
         borderRadius: '20px',
         marginRight: '20px',
-        background: '#090F27',
         color: '#3361FF',
+        padding: '0',
         ['@media (max-width:780px)'] : {
             marginRight: '5px',
             width: '97px',
@@ -20,10 +20,12 @@ const StyledButton = styled(Button, {})
 
 const SimpleRatingButton = ({ title, icon, checked, onClick, sx }) => {
     return (
-        <StyledButton style={{ background: checked ? '#EFF2FD' : '#131B3F' }} onClick={onClick} sx={sx} >
+        <StyledButton style={{ background: checked ? '#EFF2FD' : '#090F27' }} onClick={onClick} sx={sx} >
             {icon}
             <Box>
-                <Typography sx={{ fontSize: '16px', fontWeight: '600', textTransform: 'none' }} >{title}</Typography>
+                <Typography sx={{ fontSize: '16px', fontWeight: '600', textTransform: 'none', marginLeft: '5px' }} >
+                    {title}
+                </Typography>
             </Box>
         </StyledButton>
     );

@@ -1,18 +1,22 @@
 import React from 'react';
 import { styled } from '@mui/system';
 import { Box, Typography, CardMedia } from '@mui/material';
-
+import SimpleRatingButtonsGroup from '../components/SimpleRatingButtonsGroup';
+import { useWindowDimensions } from '../util/useWindowDimensions.js';
 
 const StyledWrapper = styled(Box, {})
     ({
         width: '750px',
         height: '261px',
         background: '#131B3F',
-        display: 'flex',
+        display: 'grid',
+        gridTemplateColumns: '230px auto',
         borderRadius: '6px',
         ['@media (max-width:780px)'] : {
             width: '335px',
             height: '181px',
+            gridTemplateColumns: '96px 239px',
+            gridTemplateRows: '110px 71px',
           }
     });
 
@@ -36,7 +40,8 @@ const StyledInfoWrapper = styled(Box, {})
     marginLeft: '30px',
     ['@media (max-width:780px)'] : {
         marginTop: '10px',
-        marginLeft: '10px',
+        marginLeft: '15px',
+        height: '110px',
     }
 });
 
@@ -77,6 +82,8 @@ const StyledSecondaryText = styled(Typography, {})
 
 
 const ActorCardDetailed = ({ name, characterName, gender, birth, photo }) => {
+    const { isMobile } = useWindowDimensions();
+
     return (
         <StyledWrapper>
             <StyledPhoto
@@ -101,7 +108,7 @@ const ActorCardDetailed = ({ name, characterName, gender, birth, photo }) => {
                     {`(${characterName})`}
                 </StyledCharacter>
                 <Box
-                    sx={{ display: 'flex', marginTop: '20px' }}
+                    sx={{ display: 'flex', marginTop: '15px' }}
                 >
                     <StyledSecondaryText sx={{ fontWeight: '600', marginRight: '3px' }}>
                         {'Gender:'}
@@ -120,8 +127,18 @@ const ActorCardDetailed = ({ name, characterName, gender, birth, photo }) => {
                         {birth}
                     </StyledSecondaryText>
                 </Box>
+                {!isMobile &&    
+                    <Box sx={{ marginTop: '30px' }}>
+                        <SimpleRatingButtonsGroup />
+                    </Box>
+                }
             </StyledInfoWrapper>
-        </StyledWrapper>
+            {isMobile &&    
+                <Box sx={{ gridColumnStart: 1, gridColumnEnd: 3, marginTop: '25px', marginLeft: '10px' }}>
+                    <SimpleRatingButtonsGroup />
+                </Box>
+            }
+    </StyledWrapper>
     );
 };
 

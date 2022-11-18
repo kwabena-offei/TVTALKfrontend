@@ -1,7 +1,7 @@
 import React from 'react';
-import { Typography, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { styled } from '@mui/system';
-import RatingButton from './RatingButton';
+import SimpleRatingButton from './SimpleRatingButton';
 import HeartIcon from './HeartIcon';
 import StartIcon from './StartIcon';
 import BrokenHeartIcon from './BrokenHeartIcon';
@@ -15,20 +15,18 @@ import BrokenHeartIcon from './BrokenHeartIcon';
 
 const SimpleRatingButtonsGroup = ({ onClick }) => {
     return (
-        <Box
-            sx={{ marginTop: '60px' }}
-        >
+        <Box>
             <StyledButtonsWrapper>
-                <RatingButton
+                <SimpleRatingButton
                     icon={<HeartIcon />}
                     title='Love it'
                     checked={true}
                 />
-                <RatingButton
+                <SimpleRatingButton
                     icon={<StartIcon />}
                     title='Like it'
                 />
-                <RatingButton
+                <SimpleRatingButton
                     icon={<BrokenHeartIcon />}
                     title='Leave it'
                 />
