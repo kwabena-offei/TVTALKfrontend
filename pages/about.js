@@ -1,4 +1,5 @@
 import React from 'react';
+import { styled } from '@mui/system';
 import { Box, Typography } from '@mui/material';
 import CustomSelect from '../components/CustomSelect';
 import BackButton from '../components/BackButton';
@@ -7,7 +8,6 @@ import BlueButton from '../components/BlueButton';
 import RatingButtonsGroup from '../components/RatingButtonsGroup';
 import CastSlider from '../components/CastSlider';
 import SeriesPhotoSlider from '../components/SeriesPhotosSlider';
-import { styled } from '@mui/system';
 
 const StyledHeader = styled(Box, {})
     ({
@@ -32,11 +32,13 @@ const StyledDescriprion = styled(Box, {})
 const StyledSelectsBox = styled(Box, {})
     ({
         width: '491px',
+        marginTop: '10px',
         ['@media (max-width:780px)'] : {
             width: '80%',
             display: 'flex',
             flexDirection: 'column',
             gap: '10px',
+            marginTop: '0'
           }
     });
 
@@ -44,14 +46,14 @@ const StyledBottomBox = styled(Box, {})
     ({
         marginLeft: '194px',
         ['@media (max-width:780px)'] : {
-            marginLeft: '20px',
+            marginLeft: '18px',
           }
     });
 
 const StyledDetailsBox = styled(Box, {})
     ({
         position: 'absolute',
-        top: '525px',
+        top: '455px',
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -62,6 +64,16 @@ const StyledDetailsBox = styled(Box, {})
             top: '0',
           }
     });
+
+const StyledTitleBox = styled(Box, {})
+({
+    position: 'absolute',
+    top: '362px',
+    ['@media (max-width:780px)'] : {
+        position: 'relative',
+        top: '0',
+      }
+});
 
 export async function getServerSideProps(context) {
     let detailsResult = await fetch(`https://api.tvtalk.app/shows/${context.query.tmsId}`)
@@ -85,7 +97,8 @@ const about = ({ details, photos }) => {
         releaseYear,
         genres,
         rating_percentage_cache } = details;
-    let image = preferred_image_uri.match(/(^.*)?\?/)[1]
+    let image = preferred_image_uri.match(/(^.*)?\?/)[1];
+
     const handleSeasonChange = () => {
        
     }
@@ -95,7 +108,7 @@ const about = ({ details, photos }) => {
     }
 
     return (
-        <Box className="about">
+        <Box className="about"  sx={{ position: 'relative' }} >
             <StyledHeader 
                 className="about__header"
                 style={{ background: `url(${image})` }}
@@ -104,7 +117,7 @@ const about = ({ details, photos }) => {
                     title='Back'
                     />
 
-                <Box
+                <StyledTitleBox
                     sx={{ 
                         zIndex: 1,
                         display: 'flex',
@@ -118,11 +131,11 @@ const about = ({ details, photos }) => {
                         {title}
                     </Typography>
                     <Typography 
-                        sx={{ color: '#454F75', zIndex: 1, fontSize: '20px', marginBottom: '32px' }} 
+                        sx={{ color: '#454F75', zIndex: 1, fontSize: '20px' }} 
                         variant='h1'>
                             {`${releaseYear}/${genres.join('-')}`}
                     </Typography>
-                </Box>
+                </StyledTitleBox>
 
             </StyledHeader>
             <StyledDetailsBox>
