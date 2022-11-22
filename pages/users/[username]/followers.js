@@ -5,9 +5,10 @@ import FollowerCard from "../../../components/FollowerCard/FollowerCard";
 import FollowerCardMobile from "../../../components/FollowerCard/FollowerCardMobile";
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
-import axios from "../../../services/api";
+import useAxios from '../../../services/api';
 
 export async function getServerSideProps(context) {
+  const { axios } = useAxios(context);
   const { username } = context.query
   const { data: followers } = await axios.get(`/users/${username}/followers`);
   const profile = await fetchAccount();

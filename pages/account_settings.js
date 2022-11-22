@@ -1,4 +1,3 @@
-import { fetchProfile } from '../components/ProfileLayout/'
 import { SectionTitle } from "../components/AccountSettingsLayout/AccountSettingsLayout.styled";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -9,9 +8,13 @@ import { LoremIpsumText } from '../components/AccountSettingsLayout/LoremIpsumTe
 import { EditProfileCard } from '../components/EditProfile/';
 import { ChangePasswordCard } from '../components/ChangePasswordCard';
 import { Box, Link } from '@mui/material';
+import useAxios from '../services/api';
 
-export async function getServerSideProps(context) {
-  const profile = await fetchProfile()
+export async function getServerSideProps({ req, res }) {
+  const { axios } = useAxios({ req, res });
+  const { data: profile } = await axios.get('/profile');
+  console.log('profile', profile)
+
   return {
     props: {
       title: "Account Settings",
@@ -21,7 +24,6 @@ export async function getServerSideProps(context) {
 }
 
 export default function Page({profile, title}) {
-  // console.log('profile', profile)
   const menuList = [
     {
       label: "Edit Profile",

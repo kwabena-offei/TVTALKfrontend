@@ -1,6 +1,5 @@
 import { styled } from "@mui/system";
 import { Stack, CardHeader, Avatar, Button, Select, InputLabel, FormHelperText, TextField } from "@mui/material";
-import { OutlinedButton } from "../OutlinedButton";
 import Link from "next/link";
 
 export const StyledActionsButton = styled(Button) ({
@@ -16,7 +15,7 @@ export const EditProfileHeader = ({ profile, isMobile }) => {
   const { image, username } = profile;
   return (
     <CardHeader
-      sx={isMobile ? { paddingY: '30px', paddingX: '20px' } : false }
+      sx={isMobile ? { paddingY: '30px', paddingX: '20px' } : {} }
       avatar={
         <Avatar
           sx={{ width: 80, height: 80 }}
@@ -25,7 +24,7 @@ export const EditProfileHeader = ({ profile, isMobile }) => {
           alt={`${username}-photo`}
         />
       }
-      action={isMobile ? false : <Actions />}
+      action={isMobile ? '' : <Actions />}
       title={username}
       subheader={<SubheaderLink href={"#"} />}
       classes={{ action: "align-self-center" }}

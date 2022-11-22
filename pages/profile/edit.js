@@ -1,10 +1,11 @@
 import React from "react";
 import { AccountSettingsLayout } from "../../components/AccountSettingsLayout";
 import { EditProfileCard } from '../../components/EditProfile/'
-import { fetchProfile } from '../../components/ProfileLayout/'
+import useAxios from "../../services/api";
 
-export async function getServerSideProps(context) {
-  const profile = await fetchProfile()
+export async function getServerSideProps({ req, res }) {
+  const { axios } = useAxios({ req, res });
+  const { data: profile } = await axios.get('/profile');
   return {
     props: {
       menu: true,

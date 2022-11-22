@@ -3,13 +3,14 @@ import React from "react";
 import { ProfileLayout, fetchProfile } from "../../components/ProfileLayout";
 import FollowerCard from "../../components/FollowerCard/FollowerCard";
 import FollowerCardMobile from "../../components/FollowerCard/FollowerCardMobile";
-import axios from "../../services/api";
+import useAxios from '../../services/api';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps({ req, res }) {
+  const { axios } = useAxios({ req, res });
+  const { data: profile } = await axios.get('/profile');
   const { data: followers } = await axios.get(`/profile/followers`);
-  const profile = await fetchProfile();
   return {
     props: {
       followers,

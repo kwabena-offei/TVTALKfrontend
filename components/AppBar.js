@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
+import { deleteCookie } from "cookies-next";
 
 const pages = ['Chat By Show', 'News'];
 
@@ -54,7 +55,13 @@ function ResponsiveAppBar() {
   };
 
   const handleCloseUserMenu = (key) => {
-    console.log('settings', key)
+    if(key == '/logout') {
+      deleteCookie('token');
+      router.push('/login');
+      setAnchorElUser(null);
+      return;
+    }
+    
     router.push(key);
     setAnchorElUser(null);
   };
@@ -153,7 +160,7 @@ function ResponsiveAppBar() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt="Remy Sharp" src="https://www.fillmurray.com/300/300" />
                 </IconButton>
               </Tooltip>
               <Menu

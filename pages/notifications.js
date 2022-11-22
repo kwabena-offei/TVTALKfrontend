@@ -1,12 +1,13 @@
 import { Stack, Grid } from '@mui/material';
 import React from 'react';
-import axios from "../services/api";
+import useAxios from "../services/api";
 import NotificationCard from '../components/NotificationCard';
 import { AccountSettingsLayout } from '../components/AccountSettingsLayout';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps({ req, res }) {
+  const { axios } = useAxios({ req, res });
   const { data: notifications } = await axios(`/notifications`);
   return {
     props: {

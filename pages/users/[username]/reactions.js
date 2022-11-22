@@ -2,11 +2,12 @@ import { Container, Grid } from '@mui/material';
 import React from 'react';
 import { ProfileLayout, fetchAccount } from '../../../components/ProfileLayout';
 import ReactionCard from '../../../components/ReactionCard';
-import axios from "../../../services/api";
+import useAxios from '../../../services/api';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 export async function getServerSideProps(context) {
+  const { axios } = useAxios(context);
   const { username } = context.query
   const { data: reactions } = await axios.get(`/users/${username}/reactions`);
   const profile = await fetchAccount(username);

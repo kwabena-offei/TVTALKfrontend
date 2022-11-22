@@ -10,14 +10,10 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ProfileTopBar, ProfileAvatar, ProfileUsername, TabLabel, FollowButton, EditProfileButton, ProfileTopBarMobile, ProfileAvatarMobile, ProfileUsernameMobile } from "./ProfileLayout.styled";
 import { useRouter } from "next/router";
-import axios from '../../services/api';
-
-export async function fetchProfile(context) {
-  const { data: profile } = await axios.get(`/profile`);
-  return profile;
-}
+import useAxios from '../../services/api';
 
 export async function fetchAccount(username) {
+  const { axios } = useAxios()
   const { data: profile } = await axios.get(`/users/${username}`);
   return profile;
 }

@@ -1,10 +1,12 @@
 import React from "react";
 import { AccountSettingsLayout } from "../../components/AccountSettingsLayout";
-import { fetchProfile } from '../../components/ProfileLayout/'
-import { ChangePasswordCard } from '../../components/ChangePasswordCard'
+import { ChangePasswordCard } from '../../components/ChangePasswordCard';
+import useAxios from '../../services/api';
 
-export async function getServerSideProps(context) {
-  const profile = await fetchProfile()
+export async function getServerSideProps({ req, res }) {
+  const { axios } = useAxios({ req, res });
+  const { data: profile } = await axios.get('/profile');
+
   return {
     props: {
       menu: true,
@@ -14,10 +16,10 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function Page({profile}) {
+export default function Page({ profile }) {
   console.log('profile', profile)
   return (
-    <ChangePasswordCard profile={profile}/>
+    <ChangePasswordCard profile={profile} />
   );
 }
 

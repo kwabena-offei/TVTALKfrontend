@@ -2,17 +2,18 @@ import { Grid } from '@mui/material';
 import React from 'react';
 import { ProfileLayout, fetchProfile } from '../../components/ProfileLayout';
 import FavoriteCard from '../../components/FavoriteCard/FavoriteCard'
-import axios from '../../services/api';
+import useAxios from '../../services/api';
 
-export async function getServerSideProps(context) {
-    const { data: favorites } = await axios.get(`/profile/favorites`)
-    const profile = await fetchProfile()
-    return {
-        props: {
-          favorites,
-          profile
-        }
-    }
+export async function getServerSideProps({ req, res }) {
+  const { axios } = useAxios({ req, res });
+  const { data: profile } = await axios.get('/profile');
+  const { data: favorites } = await axios.get(`/profile/favorites`)
+  return {
+      props: {
+        favorites,
+        profile
+      }
+  }
 }
 
 export default function Page({ favorites }) {

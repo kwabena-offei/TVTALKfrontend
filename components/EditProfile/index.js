@@ -36,12 +36,12 @@ const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   return (
     <Card sx={{ paddingX: isMobile ? 0 : 4, paddingY: isMobile ? 0 : 4, backgroundColor: "#131B3F" }}>
       <EditProfileHeader profile={profile} isMobile={isMobile} />
-      <CardContent xs={isMobile ? { paddingX: '20px' } : false }>
+      <CardContent xs={isMobile ? { paddingX: '20px' } : {} }>
         <Grid container columnSpacing={5} rowSpacing={isMobile ? 2.5 : 0 }>
           <Grid item xs={12} md={6}>
             <Stack spacing={isMobile ? 2.5 : 2}>
-              <TextInput id="name" label="Name" />
-              <TextInput id="username" label="Username" />
+              <TextInput id="name" label="Name"/>
+              <TextInput id="username" label="Username" value={profile.username} />
               <SelectInput id="gender" label="Gender" value={genders[0].id}>
                 {gendersOptionsList}
               </SelectInput>

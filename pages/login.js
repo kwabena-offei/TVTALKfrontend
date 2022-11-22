@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { Grid, Box } from "@mui/material";
 import bg from "../public/assets/LoginBackground.jpg";
-import { BackgroundPage } from "../components/BackgroundPage";
 import Login from "../components/Login";
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 const login = (props) => {
-const theme = useTheme();
-const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  console.log(bg)
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   return (
     <>
       <Box
@@ -36,3 +34,9 @@ const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 };
 
 export default login;
+
+export async function getServerSideProps(context) {
+  return {
+    props: {},
+  }
+}

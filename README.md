@@ -2,7 +2,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+1. Create `.env.local` file based on `.env.sample` and fill with real values
+
+2. Run the development server:
 
 ```bash
 npm run dev

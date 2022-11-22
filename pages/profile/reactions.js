@@ -1,14 +1,15 @@
 import { Container, Grid } from '@mui/material';
 import React from 'react';
-import { fetchProfile, ProfileLayout } from '../../components/ProfileLayout';
+import { ProfileLayout } from '../../components/ProfileLayout';
 import ReactionCard from '../../components/ReactionCard';
-import axios from '../../services/api';
+import useAxios from '../../services/api';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps({ req, res }) {
+  const { axios } = useAxios({ req, res });
   const { data: reactions } = await axios(`/profile/reactions`);
-  const profile = await fetchProfile()
+  const { data: profile } = await axios.get('/profile');
   return {
     props: {
       reactions,

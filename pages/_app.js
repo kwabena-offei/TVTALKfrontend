@@ -20,15 +20,14 @@ const GlobalStyle = createGlobalStyle`
 
 const clientSideEmotionCache = createEmotionCache();
 
-function MyApp(props) {
+function App(props) {
 
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const getLayout = Component.getLayout || ((page) => page)
-
   return (
     <>
       <CacheProvider value={emotionCache}>
-        <GlobalStyle/>
+        <GlobalStyle />
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Box >
@@ -44,11 +43,4 @@ function MyApp(props) {
   )
 }
 
-// MyApp.getInitialProps = async (appContext) => {
-//   // calls page's `getInitialProps` and fills `appProps.pageProps`
-//   const appProps = await App.getInitialProps(appContext);
-
-//   return { ...appProps }
-// }
-
-export default MyApp
+export default App
