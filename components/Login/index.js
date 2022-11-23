@@ -70,85 +70,83 @@ const Login = (props) => {
       // -- redirect user to profile page --
       router.push('/profile/reactions');
     } catch (error) {
-      setErrorMessage('casualLogin', error.response.statusText)
+      // -- show modal with error message in case of error from API --
       handleOpenErrorMessage('casualLogin', error.response.statusText)
-      // console.log('error', error.response.statusText)
     }
   };
 
   // -- callback function for handling google auth --
   const handleResponseGoogle = async (googleResponse) => {
-    console.log('handleResponseGoogle', googleResponse.tokenId)
-
-    // -- send request to API and exchange google token with local token --
-    const apiResponse = await axios.post(`${TV_TALK_API}/auth/login_social`, {
-      google_token: googleResponse.tokenId,
-    });
-
-    // -- show modal with error message in case of error from API --
-    if (apiResponse.error) {
-      // TODO: add modal
-      setErrorMessage(error.response.statusText)
+    try {
+      // -- send request to API and exchange google token with local token --
+      const apiResponse = await axios.post(`${TV_TALK_API}/auth/login_social`, {
+        google_token: googleResponse.tokenId,
+      });
+       // -- set cookie with token --
+      setCookie('token', apiResponse.data.token);
+      // -- redirect user to profile page --
+      router.push('/profile/reactions');
+    } catch (error) {
+      // -- show modal with error message in case of error from API --
       handleOpenErrorMessage('Google')
-      console.log('error', apiResponse.error)
+      // console.log('error', apiResponse.error)
       return false;
     }
-    // -- set cookie with token --
-    setCookie('token', apiResponse.data.token);
-    // -- redirect user to profile page --
-    router.push('/profile/reactions');
   }
 
   // -- callback function for handling facebook auth --
   const handleResponseFacebook = async (facebookResponse) => {
+    
     console.log('facebookResponse', facebookResponse)
     // -- create boolean variable that is true is facebook response status is unknown --
     const userDidNotCompleteFacebookLogin = facebookResponse.status === 'unknown';
 
     if (userDidNotCompleteFacebookLogin) {
       // TODO: write handler for this case too
+      handleOpenErrorMessage('Facebook', "You are not complete the auth via Facebook.")
       return;
     }
+    try {
+      // -- send request to API and exchange google token with local token --
+      const apiResponse = await axios.post(`${TV_TALK_API}/auth/login_social`, {
+        facebook_token: facebookResponse.accessToken,
+        facebook_id: facebookResponse.userID,
+      });
 
-    // -- send request to API and exchange google token with local token --
-    const apiResponse = await axios.post(`${TV_TALK_API}/auth/login_social`, {
-      facebook_token: facebookResponse.accessToken,
-      facebook_id: facebookResponse.userID,
-    });
+      // -- set cookie with token --
+      setCookie('token', apiResponse.data.token);
+      // -- redirect user to profile page --
+      router.push('/profile/reactions');
 
-    // -- show modal with error message in case of error from API --
-    if (apiResponse.error) {
-      // TODO: add modal
+    } catch (error) {
+      // -- show modal with error message in case of error from API --
+      handleOpenErrorMessage('Facebook')
       return false;
     }
-
-    // -- set cookie with token --
-    setCookie('token', apiResponse.data.token);
-    // -- redirect user to profile page --
-    router.push('/profile/reactions');
   }
 
   // -- callback function for handling apple auth --
   const handleSuccessResponseApple = async (appleResponse) => {
     console.log('apple response: ', appleResponse);
+    try {
+      // -- send request to API and exchange apple token with local token --
+      const apiResponse = await axios.post(`${TV_TALK_API}/auth/apple`, appleResponse);
 
-    // -- send request to API and exchange apple token with local token --
-    const apiResponse = await axios.post(`${TV_TALK_API}/auth/apple`, appleResponse);
-
-    // -- show modal with error message in case of error from API --
-    if (apiResponse.error) {
-      // TODO: show error message in toast/modal
+      // -- set cookie with token --
+      setCookie('token', apiResponse.data.token);
+      // -- redirect user to profile page --
+      router.push('/profile/reactions');
+      
+    } catch (error) {
+      // -- show modal with error message in case of error from API --
+      handleOpenErrorMessage('Apple')
       return false;
     }
-
-    // -- set cookie with token --
-    setCookie('token', apiResponse.data.token);
-    // -- redirect user to profile page --
-    router.push('/profile/reactions');
   }
 
   const handleErrorResponseApple = (event) => {
-    // TODO: add error handler here
+    // -- show modal with error message in case of error from apple auth --
+    handleOpenErrorMessage('Apple', event.error.replaceAll('_', ' '))
     console.log('apple event', event.error)
   }
 
