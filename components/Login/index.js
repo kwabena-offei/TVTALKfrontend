@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CardContent, Stack, Button, Link } from "@mui/material";
+import { CardContent, Stack, Button, Link, Typography } from "@mui/material";
 import { OutlinedButton } from "../OutlinedButton";
 import { CustomCardHeader } from "../Login/CustomCardHeader";
 import { useRouter } from "next/router";
@@ -20,6 +20,7 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import AppleLogin from 'react-apple-signin-auth';
 import { setCookie } from "cookies-next";
 import getConfig from 'next/config';
+import { ModalError } from './ModalError'
 
 // -- get next.js config from environment variables (next.config.js) --
 const { publicRuntimeConfig } = getConfig();
@@ -31,6 +32,25 @@ const Login = (props) => {
     username: "",
     password: "",
   });
+
+  const [errorMessage, setErrorMessage] = useState('')
+  const [openErrorMessage, setOpenErrorMessage] = useState(false);
+  const handleOpenErrorMessage = (providerName, errorMessage) => {
+    if (errorMessage) {
+      setErrorMessage(errorMessage)
+    } else {
+      setErrorMessage(`Unable to log in via ${providerName}. Please try another method.`)
+    }
+    setOpenErrorMessage(true);
+  };
+
+  const handleCloseErrorMessage = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenErrorMessage(false);
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -50,13 +70,15 @@ const Login = (props) => {
       // -- redirect user to profile page --
       router.push('/profile/reactions');
     } catch (error) {
-      console.log('error', error)
+      setErrorMessage('casualLogin', error.response.statusText)
+      handleOpenErrorMessage('casualLogin', error.response.statusText)
+      // console.log('error', error.response.statusText)
     }
   };
 
   // -- callback function for handling google auth --
   const handleResponseGoogle = async (googleResponse) => {
-    console.log('handleResponseGoogle', googleResponse)
+    console.log('handleResponseGoogle', googleResponse.tokenId)
 
     // -- send request to API and exchange google token with local token --
     const apiResponse = await axios.post(`${TV_TALK_API}/auth/login_social`, {
@@ -65,8 +87,10 @@ const Login = (props) => {
 
     // -- show modal with error message in case of error from API --
     if (apiResponse.error) {
-      console.log('google auth error', apiResponse.error)
       // TODO: add modal
+      setErrorMessage(error.response.statusText)
+      handleOpenErrorMessage('Google')
+      console.log('error', apiResponse.error)
       return false;
     }
     // -- set cookie with token --
@@ -209,6 +233,11 @@ const Login = (props) => {
           </Button>
         </Stack>
       </CardContent>
+      <ModalError
+        loginError={errorMessage}
+        handleClose={handleCloseErrorMessage}
+        open={openErrorMessage}
+      />
     </LoginCard>
   );
 };

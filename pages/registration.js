@@ -114,7 +114,7 @@ const registration = (props) => {
                               type="password"
                               value={userData.password}
                               placeholder='Enter Password'
-                              endAdornment={'eye'}
+                              // endAdornment={'eye'}
                               onChange={handleChange}
                             />
                             <FormSelect

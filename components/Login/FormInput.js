@@ -10,7 +10,7 @@ export const FormInput = ({ children, id, label, ...props }) => {
         id={id}
         fullWidth
         variant="filled"
-        FormHelperTextProps={{ sx: { marginRight: 0 } }}
+        // FormHelperTextProps={{ sx: { textAlign: 'center'} }}
       >
         {children}
       </TextField>
