@@ -9,6 +9,10 @@ import { CustomCardHeader } from "../components/Login/CustomCardHeader";
 import { CalendarInput } from '../components/CalendarInput'
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { TV_TALK_API } from "../util/constants";
+import axios from "axios";
+import { setCookie } from "cookies-next";
+import { useRouter } from "next/router";
 
 const StyledCard = styled(Card, {
   name: "Form", // Changes class name in the DOM
@@ -39,14 +43,15 @@ export const gendersOptionsList = genders.map((gender) => { return <MenuItem key
 const registration = (props) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const router = useRouter();
 
   const now = dayjs()
   const [userData, setUserData] = useState({
-    userName: '',
+    username: '',
     email: '',
     password: '',
     gender: '',
-    birthday: now,
+    birthday: now.toJSON(),
     zipCode: ''
   })
 
@@ -64,7 +69,19 @@ const registration = (props) => {
       birthday: change.toJSON()
     })
   }
-  console.log(userData)
+
+  const onSubmit = async () => {
+    console.log('submit values', userData)
+    try {
+      // -- send user/password to API --
+      const { data: { token } } = await axios.post(`${TV_TALK_API}/users`, userData);
+      setCookie('token', token);
+      // -- redirect user to profile page --
+      router.push('/profile/reactions');
+    } catch (error) {
+      console.log('registration error', error)
+    }
+  }
   return (
     <>
         <Box
@@ -90,12 +107,12 @@ const registration = (props) => {
                     <Stack direction='column' spacing={isMobile ? 2.75 : 2.5}>
                         <Stack direction='column' spacing={isMobile ? 2.75 : 2.5}>
                             <FormInput
-                                id='UsernameInput'
-                                name='userName'
-                                label="Username"
+                                id='usernameInput'
+                                name='username'
+                                label="username"
                                 type="text"
-                                value={userData.userName}
-                                placeholder='Username'
+                                value={userData.username}
+                                placeholder='username'
                                 onChange={handleChange}
                               />
                             <FormInput
@@ -144,7 +161,7 @@ const registration = (props) => {
                                 onChange={handleChange}
                               />
                         </Stack>
-                        <Button size="large" variant='contained' color='primary'>Next</Button>
+                        <Button onClick={onSubmit} size="large" variant='contained' color='primary'>Next</Button>
                     </Stack>
                 </CardContent>
             </StyledCard>
