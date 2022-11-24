@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { Typography, SnackbarContent } from '@mui/material';
 
-export const ModalError = ({ loginError, handleClose, open }) => {
+export const ModalError = ({ errorMessage, handleClose, open, registration }) => {
   const action = (
     <React.Fragment>
       <IconButton
@@ -20,8 +20,8 @@ export const ModalError = ({ loginError, handleClose, open }) => {
 
   const message = (
     <React.Fragment>
-      <Typography variant='h5'>Login Error</Typography>
-      <Typography variant='subtitle1'>{loginError}</Typography>
+      <Typography variant='h5'>{registration ? 'Registration Error' : 'Login Error'}</Typography>
+      <Typography variant='subtitle1'>{errorMessage}</Typography>
     </React.Fragment>
   );
 

@@ -71,7 +71,8 @@ const Login = (props) => {
       router.push('/profile/reactions');
     } catch (error) {
       // -- show modal with error message in case of error from API --
-      handleOpenErrorMessage('casualLogin', error.response.statusText)
+      const { statusText } = error?.response
+      handleOpenErrorMessage('casualLogin', statusText)
     }
   };
 
@@ -232,7 +233,7 @@ const Login = (props) => {
         </Stack>
       </CardContent>
       <ModalError
-        loginError={errorMessage}
+        errorMessage={errorMessage}
         handleClose={handleCloseErrorMessage}
         open={openErrorMessage}
       />

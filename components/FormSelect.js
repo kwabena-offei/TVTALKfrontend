@@ -1,29 +1,33 @@
 import React from "react";
-import { Select, InputLabel, Stack } from "@mui/material";
+import { Select, InputLabel, Stack, FormHelperText } from "@mui/material";
 // import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { styled } from "@mui/system";
 
-const StyledSelect = styled(Select, {
-  name: "Custom", // Changes class name in the DOM
-  slot: "select", // appends slot name to the name above in the DOM
-})({
-  borderRadius: 30,
-  backgroundColor: '#131B3F',
-});
 
-
-export const FormSelect = (props) => {
+export const FormSelect = ({inputProps, ...props}) => {
   return (
     <Stack direction='column' spacing={1}>
-      <InputLabel htmlFor={props.id}>{props.label}</InputLabel>
-      <StyledSelect
+      <InputLabel htmlFor={props.id} sx={{color: "#EFF2FD"}}>{props.label}</InputLabel>
+      <Select
+        sx={{
+          borderRadius: 30,
+          backgroundColor: '#131B3F',
+        }}
         variant='filled'
         {...props}
+        renderValue={(selected) => {
+          if (selected.length === 0) {
+            return <span>{props?.placeholder}</span>;
+          }
+
+          return selected
+        }}
         id={props.id}
         // IconComponent={() => <KeyboardArrowDownRoundedIcon color="primary" sx={{marginRight: '1.5vw'}}/>}
         disableUnderline
         fullWidth
-      >{props.children}</StyledSelect>
+      >{props.children}</Select>
+      {inputProps.helperText && <FormHelperText>{inputProps.helperText}</FormHelperText>}
     </Stack>
   )
 }

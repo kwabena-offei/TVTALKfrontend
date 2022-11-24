@@ -14,11 +14,13 @@ import MenuItem from '@mui/material/MenuItem';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
-import { deleteCookie } from "cookies-next";
+import { deleteCookie, hasCookie } from "cookies-next";
+import { LoginButton } from './LoginButton'
 
 const pages = ['Chat By Show', 'News'];
 
 function ResponsiveAppBar() {
+  const cookie = hasCookie('token')
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const router = useRouter();
@@ -54,14 +56,17 @@ function ResponsiveAppBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = (key) => {
+  const handleCloseUserMenu = (key, reason) => {
     if(key == '/logout') {
       deleteCookie('token');
       router.push('/login');
       setAnchorElUser(null);
       return;
     }
-    
+    if(reason == 'backdropClick') {
+      setAnchorElUser(null);
+      return;
+    }
     router.push(key);
     setAnchorElUser(null);
   };
@@ -71,6 +76,7 @@ function ResponsiveAppBar() {
       <AppBar position="static">
         <Container maxWidth="xl" sx={{
           backgroundColor: '#090F27',
+          paddingY: { md: 2 }
         }}>
           <Toolbar disableGutters sx={{
             backgroundColor: '#090F27',
@@ -157,7 +163,8 @@ function ResponsiveAppBar() {
               ))}
             </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
+            {cookie
+            ? <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="https://www.fillmurray.com/300/300" />
@@ -186,6 +193,7 @@ function ResponsiveAppBar() {
                 ))}
               </Menu>
             </Box>
+            : <LoginButton />}
           </Toolbar>
         </Container>
       </AppBar>
