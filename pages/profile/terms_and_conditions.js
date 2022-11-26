@@ -1,13 +1,13 @@
 import React from "react";
 import { Card } from "@mui/material";
-import { AccountSettingsLayout } from "../components/AccountSettingsLayout";
+import { AccountSettingsLayout } from "../../components/AccountSettingsLayout";
 import {
   CasualText,
   SecondaryText,
   SubtitleHeader,
   SectionSubtitle,
   StyledCardText,
-} from "../components/AccountSettingsLayout/AccountSettingsLayout.styled";
+} from "../../components/AccountSettingsLayout/AccountSettingsLayout.styled";
 
 export async function getServerSideProps(context) {
   return {

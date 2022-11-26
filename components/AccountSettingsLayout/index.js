@@ -10,7 +10,7 @@ export const AccountSettingsLayout = ({ children, menu }) => {
   return (
     <>
       <SectionTitle title={title}/>
-      <Container sx={{ minHeight: '80vh', marginBottom: '5vh' }} maxWidth='xl'>
+      <Container sx={{ marginBottom: '5vh' }} maxWidth='xl'>
         <Grid container columnSpacing={3.5}>
           <Grid item xs={12} md={2.5}>
             {!!menu && <SideMenu />}

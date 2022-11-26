@@ -116,110 +116,120 @@ const registration = (props) => {
   }
 
   return (
-    <>
-        <Box
-        sx={isMobile ? {} : {
-          backgroundImage: `url(${bg.src})`,
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
-        <Container maxWidth='xl' sx={isMobile ? {paddingX: 0} : {}}>
-        <Grid container sx={{paddingTop: isMobile ? 0 : 10.25}}>
-          <Grid item xs={0} md={6}/>
+    <Box
+      sx={
+        isMobile
+          ? {}
+          : {
+              backgroundImage: `url(${bg.src})`,
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              flexGrow: 1,
+            }
+      }
+    >
+      <Container maxWidth="xl" sx={isMobile ? { paddingX: 0 } : {}}>
+        <Grid container sx={{ paddingTop: isMobile ? 0 : 10.25 }}>
+          <Grid item xs={0} md={6} />
           <Grid item xs={12} md={5}>
-            <StyledCard sx={isMobile ? {} : { marginBottom: '6vh' }}>
-                <CustomCardHeader
-                  isMobile={isMobile}
-                  sx={{padding: 1.5}}
-                  title='Create an account'
-                  subheader='Already have an account?'
-                  subheaderLink='/login'
-                  subheaderLinkTitle='Sign in'
-                />
-                <CardContent sx={{paddingY: 2.5}}>
-                    <Stack direction='column' spacing={isMobile ? 2.75 : 2.5}>
-                        <Stack direction='column'>
-                            <FormInput
-                                id='usernameInput'
-                                required={true}
-                                error={errors.username?.length > 0}
-                                name='username'
-                                label="Username"
-                                type="text"
-                                value={userData.username}
-                                placeholder='username'
-                                onChange={handleChange}
-                                helperText={errors.username?.[0] || ' '}
-                              />
-                            <FormInput
-                                id='EmailInput'
-                                required={true}
-                                error={errors.email?.length > 0}
-                                name='email'
-                                label="Email"
-                                type="email"
-                                value={userData.email}
-                                placeholder='example@mail.com'
-                                onChange={handleChange}
-                                helperText={errors.email?.[0] || ' '}
-                              />
-                            <PasswordInput
-                              required={true}
-                              error={errors.password?.length > 0}
-                              value={userData.password}
-                              onChange={handleChange}
-                              helperText={errors.password?.[0] || ' '}
-                            />
-                            <FormSelect
-                                id="GenderInput"
-                                name='gender'
-                                value={userData.gender}
-                                placeholder='Choose Gender'
-                                label="Gender"
-                                displayEmpty
-                                children={gendersOptionsList}
-                                onChange={handleChange}
-                                inputProps={{ helperText: " "}}
-                              />
-                              <CalendarInput
-                                name='birthday'
-                                inputFormat="MM/DD/YYYY"
-                                placeholder='mm/dd/yyyy'
-                                value={userData.birthday}
-                                onChange={handleDateChange}
-                                inputProps={{variant: 'filled', helperText: " "}}
-                                labelProps={{sx: {color: "#EFF2FD"}}}
-                                isMobile={isMobile}
-                              >
-                                Date of Birth
-                              </CalendarInput>
-                              <FormInput
-                                id='Zip Code'
-                                name='zipCode'
-                                value={userData.zipCode}
-                                label="Zip Code"
-                                placeholder='Zip Code'
-                                helperText=" "
-                                onChange={handleChange}
-                              />
-                        </Stack>
-                        <Button onClick={onSubmit} size="large" variant='contained' color='primary'>Next</Button>
-                    </Stack>
-                </CardContent>
+            <StyledCard sx={isMobile ? {} : { marginBottom: "6vh" }}>
+              <CustomCardHeader
+                isMobile={isMobile}
+                sx={{ padding: 1.5 }}
+                title="Create an account"
+                subheader="Already have an account?"
+                subheaderLink="/login"
+                subheaderLinkTitle="Sign in"
+              />
+              <CardContent sx={{ paddingY: 2.5 }}>
+                <Stack direction="column" spacing={isMobile ? 2.75 : 2.5}>
+                  <Stack direction="column">
+                    <FormInput
+                      id="usernameInput"
+                      required={true}
+                      error={errors.username?.length > 0}
+                      name="username"
+                      label="Username"
+                      type="text"
+                      value={userData.username}
+                      placeholder="username"
+                      onChange={handleChange}
+                      helperText={errors.username?.[0] || " "}
+                    />
+                    <FormInput
+                      id="EmailInput"
+                      required={true}
+                      error={errors.email?.length > 0}
+                      name="email"
+                      label="Email"
+                      type="email"
+                      value={userData.email}
+                      placeholder="example@mail.com"
+                      onChange={handleChange}
+                      helperText={errors.email?.[0] || " "}
+                    />
+                    <PasswordInput
+                      required={true}
+                      error={errors.password?.length > 0}
+                      value={userData.password}
+                      onChange={handleChange}
+                      helperText={errors.password?.[0] || " "}
+                    />
+                    <FormSelect
+                      id="GenderInput"
+                      name="gender"
+                      value={userData.gender}
+                      placeholder="Choose Gender"
+                      label="Gender"
+                      displayEmpty
+                      children={gendersOptionsList}
+                      onChange={handleChange}
+                      inputProps={{ helperText: " " }}
+                    />
+                    <CalendarInput
+                      name="birthday"
+                      inputFormat="MM/DD/YYYY"
+                      placeholder="mm/dd/yyyy"
+                      value={userData.birthday}
+                      onChange={handleDateChange}
+                      inputProps={{ variant: "filled", helperText: " " }}
+                      labelProps={{ sx: { color: "#EFF2FD" } }}
+                      isMobile={isMobile}
+                    >
+                      Date of Birth
+                    </CalendarInput>
+                    <FormInput
+                      id="Zip Code"
+                      name="zipCode"
+                      value={userData.zipCode}
+                      label="Zip Code"
+                      placeholder="Zip Code"
+                      helperText=" "
+                      onChange={handleChange}
+                    />
+                  </Stack>
+                  <Button
+                    onClick={onSubmit}
+                    size="large"
+                    variant="contained"
+                    color="primary"
+                  >
+                    Next
+                  </Button>
+                </Stack>
+              </CardContent>
             </StyledCard>
-            </Grid>
-            <Grid item xs={0} md={1}/>
+          </Grid>
+          <Grid item xs={0} md={1} />
         </Grid>
-        </Container>
-        <ModalError
-          registration
-          errorMessage="Sorry, something went wrong. Please try again later."
-          handleClose={handleCloseErrorMessage}
-          open={openErrorMessage}
-        />
-        </Box>
-    </>
+      </Container>
+      <ModalError
+        registration
+        errorMessage="Sorry, something went wrong. Please try again later."
+        handleClose={handleCloseErrorMessage}
+        open={openErrorMessage}
+      />
+    </Box>
   );
 };
 

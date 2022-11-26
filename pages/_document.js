@@ -30,7 +30,7 @@ MyDocument.getInitialProps = async (ctx) => {
    originalRenderPage({
      enhanceApp: (App) =>
        function EnhanceApp(props) {
-         return <App emotionCache={cache} {...props} />;
+         return <App emotionCache={cache} ctx={ctx} {...props} />;
        },
    });
 

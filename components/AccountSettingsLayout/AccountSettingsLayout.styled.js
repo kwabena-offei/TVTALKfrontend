@@ -4,16 +4,18 @@ import { OutlinedButton } from "../OutlinedButton";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useRouter } from 'next/router';
 
 const BUTTON_WIDTH = "115px";
 
 export const SectionTitle = ({ title }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const router = useRouter();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   return (
     <Container maxWidth="xl">
       <Stack direction="row" alignItems="center" spacing={2} sx={{ my: isMobile ? 2 : 5 }}>
-        {isMobile ? <ButtonBackMobile /> : <ButtonBack />}
+        {isMobile ? <ButtonBackMobile onClick={() => router.push('/profile')} /> : <ButtonBack onClick={() => router.push('/profile/reactions')} />}
         <Box sx={{ width: "100%", padding: 0, paddingRight: isMobile ? 0 : BUTTON_WIDTH }}>
           { isMobile ? <MobileTitle>{title}</MobileTitle> : <DescktopTitle>{title}</DescktopTitle> }
         </Box>
@@ -67,9 +69,6 @@ export const ButtonBack = ({ ...props }) => {
   return (
     <Box>
       <OutlinedButton
-        onClick={() => {
-          console.log("back button clicked");
-        }}
         sx={{
           fontWeight: 600,
           lineHeight: "18px",
@@ -101,9 +100,6 @@ const RoundedButton = styled(IconButton, {
     <Box width={36} height={36}>
       <RoundedButton
         variant='outlined'
-        onClick={() => {
-          console.log("back button clicked");
-        }}
         {...props}
       >
         <ChevronLeftRoundedIcon fontSize="inherit" />

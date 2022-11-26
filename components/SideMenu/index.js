@@ -8,27 +8,31 @@ import {
   PrimaryMenuLabel,
   SecondaryMenuLabel,
 } from "./SideMenu.styled";
+import { useTheme } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 
 function SideMenu() {
   const router = useRouter();
   const currentRoute = router.asPath;
+  const theme = useTheme();
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
 
   const menuList = [
     {
       label: "Edit Profile",
-      href: "/profile/edit",
+      href: '/profile',
     },
     {
       label: "Terms & Conditions",
-      href: "/terms_and_conditions",
+      href: "/profile/terms_and_conditions",
     },
     {
       label: "Privacy Policy",
-      href: "/policy",
+      href: "/profile/policy",
     },
     {
       label: "Feedback",
-      href: "/feedback",
+      href: "/profile/feedback",
     },
     {
       label: "Change Password",
@@ -38,13 +42,13 @@ function SideMenu() {
 
   const listMenu = (
     <div>
-      <List sx={{ paddingY: 6}}>
+      <List sx={{ paddingY: 6 }}>
         {menuList.map((menuItem, index) => {
           const listTitle =
             currentRoute === menuItem.href ? (
-              <PrimaryMenuLabel label={menuItem.label} />
+              <PrimaryMenuLabel label={menuItem.label} isTablet={isTablet} />
             ) : (
-              <SecondaryMenuLabel label={menuItem.label} />
+              <SecondaryMenuLabel label={menuItem.label} isTablet={isTablet} />
             );
           return (
             <ListItem key={menuItem.label} disablePadding>

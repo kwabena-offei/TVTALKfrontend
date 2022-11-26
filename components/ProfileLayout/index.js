@@ -84,7 +84,6 @@ export const ProfileLayout = ({ children, mode }) => {
 
       <Container sx={{
         marginTop: isMobile ? '3vh' : '5vh',
-        minHeight: '80vh',
         marginBottom: isMobile ? '6vh' : '8vh',
       }}>
         {children}

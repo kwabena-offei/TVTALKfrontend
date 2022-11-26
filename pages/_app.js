@@ -22,7 +22,7 @@ const clientSideEmotionCache = createEmotionCache();
 
 function App(props) {
 
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  const { Component, emotionCache = clientSideEmotionCache, pageProps, ctx } = props;
   const getLayout = Component.getLayout || ((page) => page)
   return (
     <>
@@ -30,9 +30,15 @@ function App(props) {
         <GlobalStyle />
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Box >
+          <Box
+          sx={{
+            display: 'flex',
+            minHeight: '100vh',
+            flexDirection: 'column'
+          }}
+          >
             {/* <Header /> */}
-            <AppBar />
+            <AppBar context={ctx} />
             {getLayout(<Component {...pageProps} />)}
             <Footer />
           </Box>

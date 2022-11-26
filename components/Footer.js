@@ -22,7 +22,10 @@ const Footer = (props) => {
             backgroundColor: '#131B3F',
             width: '100%',
             bottom: 0,
-            top: 'auto'
+            top: 'auto',
+            marginTop: 'auto',
+            flexGrow: 0,
+            flexShrink: 0
         }}
         >
             <StyledText>
