@@ -1,8 +1,79 @@
 import React from 'react';
-import { useRouter } from 'next/router'
-import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { styled } from '@mui/system';
+import { Box, Typography } from '@mui/material';
+import CustomSelect from '../components/CustomSelect';
+import BackButton from '../components/BackButton';
+import HeartButton from '../components/HeartButton';
+import BlueButton from '../components/BlueButton';
+import RatingButtonsGroup from '../components/RatingButtonsGroup';
+import CastSlider from '../components/CastSlider';
+import SeriesPhotoSlider from '../components/SeriesPhotosSlider';
 
+const StyledHeader = styled(Box, {})
+    ({
+        height: '960px',
+        width: '100vw', 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        ['@media (max-width:780px)'] : {
+            height: '400px',
+          }
+    });
 
+const StyledDescriprion = styled(Box, {})
+    ({
+        width: '700px',
+        ['@media (max-width:780px)'] : {
+            width: '80%'
+          }
+    });
+
+const StyledSelectsBox = styled(Box, {})
+    ({
+        width: '491px',
+        marginTop: '10px',
+        ['@media (max-width:780px)'] : {
+            width: '80%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+            marginTop: '0'
+          }
+    });
+
+const StyledBottomBox = styled(Box, {})
+    ({
+        marginLeft: '194px',
+        ['@media (max-width:780px)'] : {
+            marginLeft: '18px',
+          }
+    });
+
+const StyledDetailsBox = styled(Box, {})
+    ({
+        position: 'absolute',
+        top: '455px',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        ['@media (max-width:780px)'] : {
+            position: 'relative',
+            marginTop: '15px',
+            top: '0',
+          }
+    });
+
+const StyledTitleBox = styled(Box, {})
+({
+    position: 'absolute',
+    top: '362px',
+    ['@media (max-width:780px)'] : {
+        position: 'relative',
+        top: '0',
+      }
+});
 
 export async function getServerSideProps(context) {
     let detailsResult = await fetch(`https://api.tvtalk.app/shows/${context.query.tmsId}`)
@@ -17,38 +88,100 @@ export async function getServerSideProps(context) {
         }, // will be passed to the page component as props
     }
 }
+
 const about = ({ details, photos }) => {
-    console.log(photos)
-    const { preferred_image_uri, title, longDescription } = details;
-    let image = preferred_image_uri.match(/(^.*)?\?/)[1]
-    const handleChange = () => {
+
+    const { 
+        preferred_image_uri,
+        title, longDescription,
+        releaseYear,
+        genres,
+        rating_percentage_cache } = details;
+    let image = preferred_image_uri.match(/(^.*)?\?/)[1];
+
+    const handleSeasonChange = () => {
+       
+    }
+
+    const handleEpisodeChange = () => {
 
     }
 
     return (
-        <Box className="about">
-            <Box className="about__header" style={{ background: `url(${image})` }}>
-                <Typography style={{ color: 'white', zIndex: 1 }} variant='h1'>{title}</Typography>
-                
-                {/* <FormControl style={{zIndex: 1}}>
-                    <InputLabel id="demo-simple-select-label">Age</InputLabel>
-                    <Select
-                        style={{background: 'white'}}
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={age}
-                        label="Age"
-                        onChange={handleChange}
-                    >
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                </FormControl> */}
-                <Box sx={{ width: '700px', zIndex: 1 }}>
-                    <Typography style={{ color: 'white' }} variant='string'>{longDescription}</Typography>
+        <Box className="about"  sx={{ position: 'relative' }} >
+            <StyledHeader 
+                className="about__header"
+                style={{ background: `url(${image})` }}
+            >
+                <BackButton
+                    title='Back'
+                    />
+
+                <StyledTitleBox
+                    sx={{ 
+                        zIndex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }} 
+                >
+                    <Typography 
+                        sx={{ color: '#EFF2FD', zIndex: 1, fontWeight: 700, textAlign: 'center' }} 
+                        variant='h1'>
+                        {title}
+                    </Typography>
+                    <Typography 
+                        sx={{ color: '#454F75', zIndex: 1, fontSize: '20px' }} 
+                        variant='h1'>
+                            {`${releaseYear}/${genres.join('-')}`}
+                    </Typography>
+                </StyledTitleBox>
+
+            </StyledHeader>
+            <StyledDetailsBox>
+                <StyledSelectsBox sx={{ display: 'flex', gap: '29px', marginBottom: '22px' }}>
+                    <CustomSelect
+                        selectList={['1', '2', '3']}
+                        label='Select Season'
+                        labelId='selectSeason'
+                        selectId='selectSeason'
+                        handleChange={handleSeasonChange}
+                    />
+                    <CustomSelect
+                        selectList={['1', '2', '3']}
+                        label='Select Episode'
+                        labelId='selectEpisode'
+                        selectId='selectEpisode'
+                        handleChange={handleEpisodeChange}
+                    />
+                </StyledSelectsBox>     
+                <StyledDescriprion sx={{  zIndex: 1, textAlign: 'center' }}>
+                    <Typography 
+                        sx={{ color: '#A5B0D6', fontSize: '16px', lineHeight: '29px' }}
+                        variant='string'>
+                            {longDescription}
+                    </Typography>
+                </StyledDescriprion>
+                <Box sx={{ display: 'flex', gap: '20px', marginTop: '36px' }}>
+                    <BlueButton 
+                        title='Chat'
+                    />
+                    <HeartButton />
                 </Box>
-            </Box>
+            </StyledDetailsBox>
+            <StyledBottomBox>
+                <RatingButtonsGroup
+                    love={rating_percentage_cache.love}
+                    like={rating_percentage_cache.like}
+                    dislike={rating_percentage_cache.dislike}
+                 />
+                <CastSlider
+                  cast={details.cast}
+                />
+                <SeriesPhotoSlider
+                    photos={photos}
+                />
+            </StyledBottomBox>
         </Box>
     );
 };
