@@ -8,6 +8,7 @@ export default class MyDocument extends Document {
    return (
      <Html lang="en">
        <Head>
+         {/* <title>TV Talk</title> */}
          {this.props.emotionStyleTags}
        </Head>
        <body>
@@ -29,7 +30,7 @@ MyDocument.getInitialProps = async (ctx) => {
    originalRenderPage({
      enhanceApp: (App) =>
        function EnhanceApp(props) {
-         return <App emotionCache={cache} {...props} />;
+         return <App emotionCache={cache} ctx={ctx} {...props} />;
        },
    });
 
