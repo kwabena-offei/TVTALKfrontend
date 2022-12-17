@@ -30,7 +30,7 @@ const theme = createTheme({
       main: '#A5B0D6',
       dark: '#131B3F',
       contrastText: '#090F27',
-    }
+    },
   },
   components: {
     MuiFilledInput: {
@@ -83,7 +83,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 30,
-          backgroundColor: 'background.default'
+          backgroundColor: "#090F27"
         }
       }
     },
@@ -133,14 +133,14 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 30,
-          backgroundColor: 'background.default',
+          backgroundColor: "#090F27",
           ":focus": {
             borderRadius: 30,
           },
         },
         icon: sx({
           color: 'primary.main',
-          marginRight: '20px'
+          marginRight: '1.25rem'
         })
       }
     },
