@@ -44,42 +44,46 @@ const theme = createTheme({
           "&:after": {
             content: 'none'
           },
-          ":focus": {
+          "&:focus": {
             borderRadius: 30,
           }
         },
         input: {
-          padding: '12px 30px'
+          padding: '0.75rem 1.875rem',
+          "&:focus": {
+            borderRadius: 30,
+          }
         },
         adornedEnd: {
-          paddingRight: '30px'
+          paddingRight: '1.875rem'
         }
       }
     },
     MuiOutlinedInput: {
       styleOverrides: {
-        root: {
-          borderRadius: 30
-        },
-        input: {
-          padding: '12px 30px'
-        },
-        adornedEnd: {
-          paddingRight: '30px'
-        },
-        notchedOutline: {
-          border: '1px solid #090F27',
-          ":focus": {
-            border: '1px solid #090F27'
-          }
-        }
+      //   root: {
+      //     borderRadius: 30
+      //   },
+        // input: {
+        //   paddingLeft: '1.875rem',
+        //   paddingRight: '1.875rem',
+        // },
+        // adornedEnd: {
+        //   paddingRight: '1.875rem',
+        // },
+      //   notchedOutline: {
+      //     border: '1px solid #090F27',
+      //     ":focus": {
+      //       border: '1px solid #090F27'
+      //     }
+      //   }
       }
     },
     MuiTextField: {
       styleOverrides: {
         root: {
           borderRadius: 30,
-          backgroundColor: '#090F27'
+          backgroundColor: 'background.default'
         }
       }
     },
@@ -129,13 +133,13 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 30,
-          backgroundColor: '#090F27',
+          backgroundColor: 'background.default',
           ":focus": {
             borderRadius: 30,
           },
         },
         icon: sx({
-          color: '#3361FF',
+          color: 'primary.main',
           marginRight: '20px'
         })
       }

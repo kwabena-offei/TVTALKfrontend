@@ -99,6 +99,12 @@ export const PasswordInput = ({ label, id, value, children, isMobile, ...props }
       <Grid item xs={12} md={8}>
         <TextField
           {...props}
+          variant="filled"
+          sx={{
+            '.MuiInputBase-root': {
+                bgcolor: 'background.default'
+            }
+          }}
           id={id}
           value={value}
           type={showPassword ? "text" : "password"}

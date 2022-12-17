@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { FormControl, Select, MenuItem, InputLabel, useTheme } from "@mui/material";
+import { FormControl, Select, MenuItem, InputLabel, useTheme, TextField } from "@mui/material";
 import { styled } from "@mui/system";
 
 const StyledInputLabel = styled(InputLabel, {})({
   fontWeight: 400,
   fontSize: '1rem',
   color: '#eff2fd'
+})
+const StyledSelect = styled(Select, {}) ({
+  border: '1.5px solid #cacaca'
 })
 
 const OutlinedSelect = ({ label, id, selectList, ...props }) => {

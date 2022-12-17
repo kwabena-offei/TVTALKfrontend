@@ -50,7 +50,12 @@ const isMobile = useMediaQuery(theme.breakpoints.down('md'));
                 inputFormat="MM/DD/YYYY"
                 value={"02/24/2022"}
                 onChange={handleDateChange}
-                inputProps={{ variant: "outlined" }}
+                inputProps={{ variant: 'filled', sx: {
+                  '.MuiInputBase-root': {
+                      bgcolor: theme.palette.background.default
+                    }
+                  }
+                }}
               >
                 Birthday
               </CalendarInput>
