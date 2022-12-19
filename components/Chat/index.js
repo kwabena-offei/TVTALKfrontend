@@ -12,6 +12,7 @@ import {
 import { MenuSelects } from './MenuSelects';
 import { MainContent } from './MainContent';
 import { useRouter } from "next/router";
+import NewPostCard from "./NewPostCard";
 
 export const ChatHeader = ({ show }) => {
   const theme = useTheme();
@@ -51,21 +52,59 @@ export const ChatHeader = ({ show }) => {
   )
 }
 
-export const ChatContent = ({show, comments}) => {
+export const ChatContent = ({show, comments, profile}) => {
   const theme = useTheme();
-  // const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMd = useMediaQuery(theme.breakpoints.between('md', 'lg'))
 
+  const layout = {
+    display: 'flex',
+    flexDirection: isMobile ? 'column' : 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+    marginBottom: isMobile ? 2.5 : 5
+  }
+  const desktopContentStart = {
+    flexBasis: isMobile ? 170 : 231,
+    flexGrow: 0,
+    flexShrink: 0
+  }
+  const contentEnd = {
+    flexBasis: (isMobile || isMd) ? 0 : 231,
+    flexGrow: 0,
+    flexShrink: 1
+  }
+  const contentMiddle = {
+    flexGrow: 1,
+    flexShrink: 0
+  }
   return(
     <Container>
-      <Grid container columnSpacing={3.5}>
-        <Grid item xs={12} md={3}>
-          <MenuSelects />
-        </Grid>
-        <Grid item xs={12} md={6}>
+      <Box
+        sx={layout}
+      >
+        <Box sx={isMobile ? { ...desktopContentStart, marginBottom: 2.5 } : desktopContentStart}>
+          <MenuSelects />  
+        </Box>
+        <Container
+          sx={{flexBasis: isMobile ? 135 : 231, ...contentMiddle}}
+          disableGutters={isMobile}
+        >
+          <NewPostCard isMobile={isMobile} {...profile}/>
+        </Container>
+        <Box sx={contentEnd}/>
+      </Box>
+      <Box
+        sx={layout}
+      >
+        <Box
+        sx={isMobile ? { flexGrow: 0 } : desktopContentStart}
+        />
+        <Container sx={{ flexBasis: isMobile ? 135 : 231, ...contentMiddle }} disableGutters={isMobile}>
           <MainContent />
-        </Grid>
-        <Grid item xs={0} md={3} />
-      </Grid>
+        </Container>
+        <Box sx={isMobile ? { flexGrow: 0 } : contentEnd}/>
+      </Box>
     </Container>
   )
 }

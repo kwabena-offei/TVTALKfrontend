@@ -1,13 +1,14 @@
 import React from "react";
-import { FormControl, Select, MenuItem, InputLabel, OutlinedInput } from "@mui/material";
+import { FormControl, Select, MenuItem, InputLabel } from "@mui/material";
 import { styled } from "@mui/system";
 
 const StyledInputLabel = styled(InputLabel, {})({
   fontWeight: 400,
   fontSize: '1rem',
+  lineHeight: '1em',
   color: '#eff2fd',
-  paddingLeft: '1.875rem',
-  paddingRight: '1.875rem',
+  paddingLeft: '1rem',
+  paddingRight: '1rem',
   '&.MuiFormLabel-root': {
     '&.MuiInputLabel-root': {
     '&.Mui-focused': {
@@ -42,7 +43,9 @@ const OutlinedSelect = (props) => {
         labelId={`${id}-label`}
         id={id}
         value={value}
-        sx={{ paddingX: '.875rem' }}
+        sx={{ paddingX: '1rem', height: '50px', '.MuiSvgIcon-root ': {
+          marginRight: '1rem',
+        }}}
         onChange={handleChange}
       >
         {selectList.map((item, index) => (
