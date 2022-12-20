@@ -31,6 +31,10 @@ const theme = createTheme({
       dark: '#131B3F',
       contrastText: '#090F27',
     },
+    darkSecondary: {
+      main: '#090F27',
+      contrastText: '#A5B0D6'
+    }
   },
   components: {
     MuiFilledInput: {

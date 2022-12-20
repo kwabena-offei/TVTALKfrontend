@@ -1,0 +1,130 @@
+import {
+  Box,
+  Button,
+  Card
+} from "@mui/material";
+import { OutlinedButton } from "../../OutlinedButton";
+import { styled } from "@mui/system";
+import CameraIcon from "../../Icons/CameraIcon";
+import GaleryIcon from "../../Icons/GaleryIcon";
+import HashtagIcon from "../../Icons/HashtagIcon";
+import VideoIcon from "../../Icons/VideoIcon";
+import GifIcon from "../../Icons/GifIcon";
+import SendIcon from "../../Icons/SendIcon";
+
+export const StyledCard = styled(
+  Card,
+  {}
+)({
+  borderRadius: "6px",
+  backgroundColor: "#131B3F",
+});
+
+export const buttonDesktopStyle = {
+  height: "50px",
+  padding: "1rem 2rem",
+};
+
+export const buttonMobileStyle = {
+  height: "40px",
+  padding: "1rem",
+};
+
+export const stackStyle = {
+  flexDirection: "row",
+  justifyItems: "flex-start",
+  alignItems: "stretch"
+};
+
+const RoundedButton = styled(Button, {}) ({
+  maxWidth: '40px',
+  minWidth: '20px',
+  maxHeight: '40px',
+  minHeight: '20px',
+  borderRadius: '50%',
+  padding: '1rem',
+  boxShadow: 'none',
+  '& .MuiSvgIcon-root': {
+    fontSize: '1rem'
+  }
+})
+
+export const RoundedIconButton = ({icon, ...props}) => {
+  return (
+    <Box width={40} height={40}>
+      <RoundedButton variant='contained' sx={{ backgroundColor: 'background.default' }} {...props}>
+        {icon}
+      </RoundedButton>  
+    </Box>
+  )
+}
+
+export const PostIconButton = ({icon, ...props}) => {
+  return (
+    <Box width={40} height={40} ml='auto!important'>
+      <RoundedButton variant='contained' {...props}>
+        {icon}
+      </RoundedButton>  
+    </Box>
+  )
+}
+
+export const DesktopCardActions = ({
+  onAddHashtag,
+  onAddPhotosVideo,
+  onAddGif,
+  onPost,
+}) => {
+  return (
+    <>
+      <OutlinedButton sx={buttonDesktopStyle} onClick={onAddHashtag}>
+        Add #
+      </OutlinedButton>
+      <OutlinedButton sx={buttonDesktopStyle} onClick={onAddPhotosVideo}>
+        Add photos/videos
+      </OutlinedButton>
+      <OutlinedButton sx={buttonDesktopStyle} onClick={onAddGif}>
+        Add GIF
+      </OutlinedButton>
+      <Box ml="auto!important">
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            marginLeft: "auto!important",
+            boxShadow: "none",
+            ...buttonDesktopStyle,
+          }}
+          onClick={onPost}
+        >
+          Post
+        </Button>
+      </Box>
+      
+    </>
+  );
+};
+
+export const MobileCardActions = ({
+  onAddHashtag,
+  onAddPhoto,
+  onTakeShot,
+  onAddVideo,
+  onAddGif,
+  onPost,
+}) => {
+  return (
+    <>
+      <RoundedIconButton color='darkSecondary' onClick={onAddHashtag} icon={<HashtagIcon />} />
+      <RoundedIconButton color='darkSecondary' onClick={onAddPhoto} icon={<GaleryIcon />}/>
+      <RoundedIconButton color='darkSecondary' onClick={onTakeShot} icon={<CameraIcon />}/>
+      <RoundedIconButton color='darkSecondary' onClick={onAddVideo} icon={<VideoIcon />} />
+      <RoundedIconButton color='darkSecondary' onClick={onAddGif} icon={<GifIcon />} />
+      <PostIconButton
+        color="primary"
+        onClick={onPost}
+        icon={<SendIcon />}
+        />
+    </>
+  );
+};

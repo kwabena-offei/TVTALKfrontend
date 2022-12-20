@@ -57,30 +57,46 @@ export const ChatContent = ({show, comments, profile}) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isMd = useMediaQuery(theme.breakpoints.between('md', 'lg'))
 
-  const layout = {
-    display: 'flex',
-    flexDirection: isMobile ? 'column' : 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'stretch',
-    marginBottom: isMobile ? 2.5 : 5
-  }
-  const desktopContentStart = {
-    flexBasis: isMobile ? 170 : 231,
-    flexGrow: 0,
-    flexShrink: 0
-  }
-  const contentEnd = {
-    flexBasis: (isMobile || isMd) ? 0 : 231,
-    flexGrow: 0,
-    flexShrink: 1
-  }
-  const contentMiddle = {
-    flexGrow: 1,
-    flexShrink: 0
-  }
+  // const layout = {
+  //   display: 'flex',
+  //   flexDirection: isMobile ? 'column' : 'row',
+  //   justifyContent: 'flex-start',
+  //   alignItems: 'stretch',
+  //   marginBottom: isMobile ? 2.5 : 5
+  // }
+  // const desktopContentStart = {
+  //   flexBasis: isMobile ? 170 : 231,
+  //   flexGrow: 0,
+  //   flexShrink: 0
+  // }
+  // const contentEnd = {
+  //   flexBasis: (isMobile || isMd) ? 0 : 231,
+  //   flexGrow: 0,
+  //   flexShrink: 1
+  // }
+  // const contentMiddle = {
+  //   flexGrow: 1,
+  //   flexShrink: 0
+  // }
   return(
     <Container>
-      <Box
+      <Grid container alignItems={isMobile ? 'flex-start' : 'stretch'} gap={2.75}>
+        <Grid item xs={12} md={3} lg={2.5}>
+          <MenuSelects />  
+        </Grid>
+        <Grid item xs={12} md={8.5} lg={7}>
+          <NewPostCard isMobile={isMobile} {...profile}/>
+        </Grid>
+        <Grid item xs={0} lg={2.5}/>
+      </Grid>
+      <Grid container gap={2.75} mt={2.75}>
+        <Grid item xs={12} md={3} lg={2.5} />
+        <Grid item xs={12} md={8.5} lg={7}>
+          <MainContent />
+        </Grid>
+        <Grid item xs={0} lg={2.5} />
+      </Grid>
+      {/* <Box
         sx={layout}
       >
         <Box sx={isMobile ? { ...desktopContentStart, marginBottom: 2.5 } : desktopContentStart}>
@@ -104,7 +120,7 @@ export const ChatContent = ({show, comments, profile}) => {
           <MainContent />
         </Container>
         <Box sx={isMobile ? { flexGrow: 0 } : contentEnd}/>
-      </Box>
+      </Box> */}
     </Container>
   )
 }
