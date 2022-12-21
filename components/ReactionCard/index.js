@@ -10,14 +10,13 @@ import dayjs from "dayjs";
 import * as relativeTime from 'dayjs/plugin/relativeTime';
 import CardHeader from './CardHeader'
 import InfoCountWithIcon from './InfoCountWithIcon'
-import RoundedButton from './RoundedIconButton'
 import {
   CardWrapper,
   ReactionCardHashtags,
   ReactionCardText,
   ReactionCardActions,
   ReactionCardMedia,
-  mobileIconButtonProps,
+  ActionButton,
   cardActionsMobileProps
 } from './ReactionCard.styled';
 import { useTheme } from '@mui/material/styles';
@@ -25,21 +24,21 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 dayjs.extend(relativeTime)
 
-const ReactionCard = (props) => {
+const ReactionCard = ({
+  profile,
+  id,
+  text,
+  hashtag,
+  images,
+  created_at,
+  likes_count,
+  sub_comments_count,
+  shares_count,
+  commentsMode
+}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const {
-    profile,
-    id,
-    text,
-    hashtag,
-    images,
-    created_at,
-    likes_count,
-    sub_comments_count,
-    shares_count
-  } = props;
+  const isMobileAndTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   const reactionsInfoCounts = {
     likes: {
@@ -68,23 +67,31 @@ const ReactionCard = (props) => {
           <ReactionCardMedia image={images[0]} />
         )}
       </CardContent>
-      <ReactionCardActions sx={isMobile ? cardActionsMobileProps : ''}>
+      <ReactionCardActions sx={isMobile ? cardActionsMobileProps : {}}>
         <Stack direction="row" spacing={1.25}>
           {Object.entries(reactionsInfoCounts).map(([key, value]) => { return (<InfoCountWithIcon isMobile={isMobile} key={key} {...value} />) })}
         </Stack>
         <Stack direction="row" spacing={1.25}>
-          <RoundedButton
-            sx={isMobile ? mobileIconButtonProps : ''}
+          <ActionButton
+            withTitleMode={commentsMode}
+            title='Like'
+            isMobile={isMobileAndTablet}
             onClick={() => { console.log("click add to favorites - id:", id) }}
-            aria-label="add to favorites"
+            aria-label="Like"
             icon={<FavoriteIcon fontSize='inherit' />}
           />
-          <RoundedButton
-            sx={isMobile ? mobileIconButtonProps : ''}
-            aria-label="message" icon={<MessagesIcon fontSize='inherit' />} />
-          <RoundedButton
-            sx={isMobile ? mobileIconButtonProps : ''}
-            aria-label="share" icon={<ShareIcon fontSize='inherit' />} />
+          <ActionButton
+            withTitleMode={commentsMode}
+            title='Comment'
+            isMobile={isMobileAndTablet}
+            aria-label="Comment"
+            icon={<MessagesIcon fontSize='inherit' />} />
+          <ActionButton
+            withTitleMode={commentsMode}
+            title="Share"
+            isMobile={isMobileAndTablet}
+            aria-label="Share"
+            icon={<ShareIcon fontSize='inherit' />} />
         </Stack>
       </ReactionCardActions>
     </CardWrapper>

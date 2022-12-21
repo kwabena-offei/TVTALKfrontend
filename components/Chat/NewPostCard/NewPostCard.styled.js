@@ -22,12 +22,12 @@ export const StyledCard = styled(
 
 export const buttonDesktopStyle = {
   height: "50px",
-  padding: "1rem 2rem",
+  padding: "1em 2em",
 };
 
 export const buttonMobileStyle = {
   height: "40px",
-  padding: "1rem",
+  padding: "1em",
 };
 
 export const stackStyle = {
@@ -42,7 +42,7 @@ const RoundedButton = styled(Button, {}) ({
   maxHeight: '40px',
   minHeight: '20px',
   borderRadius: '50%',
-  padding: '1rem',
+  padding: '1em',
   boxShadow: 'none',
   '& .MuiSvgIcon-root': {
     fontSize: '1rem'

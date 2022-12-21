@@ -1,5 +1,7 @@
 import { styled } from "@mui/system";
 import { Typography, Card, CardActions, CardMedia } from "@mui/material";
+import { OutlinedButton } from "../OutlinedButton";
+import RoundedIconButton from './RoundedIconButton';
 
 export const CardWrapper = styled(Card, {
   name: "Reaction",
@@ -17,7 +19,9 @@ export const ReactionCardText = ({ children, isMobile }) => {
   return (
     <Typography
       color="#EFF2FD"
-      sx={{ fontSize: isMobile ? "1rem" : "1.5rem", lineHeight: "180%" }}
+      variant="body1"
+      as='pre'
+      sx={{ fontSize: isMobile ? "1rem" : "1.5rem", lineHeight: "180%", whiteSpace: 'break-spaces' }}
     >
       {children}
     </Typography>
@@ -41,10 +45,27 @@ export const ReactionCardMedia = ({ image }) => {
   );
 };
 
-export const mobileIconButtonProps = {
-  minWidth: "36px",
-  minHeight: "36px",
-};
+export const ActionButton = ({ isMobile, withTitleMode, title, icon, onClick, ...props }) => {
+  if (!isMobile && withTitleMode) {
+    return (
+      <OutlinedButton
+        sx={{
+          height: "50px",
+          padding: "1em 2em",
+          fontSize: '1rem',
+          ...props.sx
+        }}
+        onClick={onClick}
+        startIcon={icon}
+        {...props}
+      >
+        {title}
+      </OutlinedButton>
+    )
+  }
+  return <RoundedIconButton onClick={onClick} icon={icon} {...props} />;
+}
+
 export const cardActionsMobileProps = {
   paddingX: 2,
   paddingTop: 1,

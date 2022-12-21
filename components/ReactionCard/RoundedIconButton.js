@@ -12,7 +12,11 @@ const RoundedButton = styled(Button, {
   minHeight: '40px',
   padding: '8px',
   fontSize: '1.25rem',
-  boxShadow: 'none'
+  boxShadow: 'none',
+  ['@media (max-width:780px)'] : {
+    minWidth: "36px",
+    minHeight: "36px",
+  }
 })
 
 const RoundedIconButton = ({icon, ...props}) => {

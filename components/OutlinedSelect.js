@@ -7,8 +7,8 @@ const StyledInputLabel = styled(InputLabel, {})({
   fontSize: '1rem',
   lineHeight: '1em',
   color: '#eff2fd',
-  paddingLeft: '1rem',
-  paddingRight: '1rem',
+  paddingLeft: '1em',
+  paddingRight: '1em',
   '&.MuiFormLabel-root': {
     '&.MuiInputLabel-root': {
     '&.Mui-focused': {
@@ -43,8 +43,8 @@ const OutlinedSelect = (props) => {
         labelId={`${id}-label`}
         id={id}
         value={value}
-        sx={{ paddingX: '1rem', height: '50px', '.MuiSvgIcon-root ': {
-          marginRight: '1rem',
+        sx={{ paddingX: '1em', height: '50px', '.MuiSvgIcon-root ': {
+          marginRight: '1em',
         }}}
         onChange={handleChange}
       >
