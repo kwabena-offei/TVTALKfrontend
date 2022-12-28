@@ -1,8 +1,8 @@
 import React from "react";
-import useAxios from "../services/api";
+import useAxios from "../../../services/api";
 import axios from "axios";
-import { TV_TALK_API } from "../util/constants";
-import { ChatHeader, ChatContent } from "../components/Chat";
+import { TV_TALK_API } from "../../../util/constants";
+import { ChatHeader, ChatContent } from "../../../components/Chat";
 
 export async function getServerSideProps(context) {
   const { tmsId } = context.query;

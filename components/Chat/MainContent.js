@@ -7,6 +7,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 function MainContent ({comments}) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  console.log('comments', comments)
 
   return(
     <>

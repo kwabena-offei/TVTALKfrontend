@@ -21,6 +21,7 @@ import {
 } from './ReactionCard.styled';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useRouter } from "next/router";
 
 dayjs.extend(relativeTime)
 
@@ -34,11 +35,14 @@ const ReactionCard = ({
   likes_count,
   sub_comments_count,
   shares_count,
-  commentsMode
+  tmsId,
+  commentsMode,
+  withoutActions
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isMobileAndTablet = useMediaQuery(theme.breakpoints.down('md'));
+  const router = useRouter()
 
   const reactionsInfoCounts = {
     likes: {
@@ -57,17 +61,31 @@ const ReactionCard = ({
   const timeAgo = dayjs(created_at).fromNow()
   // ToDo: research for hashtag format and provide link-view for it
   const { username, image } = profile;
+  // -- navigate user to current comment page --
+  const openCommentPage = () => {
+
+    console.warn('router', router)
+    router.push({
+      pathname: '/chat/[tmsId]/comments/[id]/replies',
+      query: {
+        tmsId: tmsId,
+        id: id
+      }
+    })
+  }
   return (
-    <CardWrapper>
+    <CardWrapper sx={withoutActions ? { paddingBottom: 2 } : {} }>
       <CardHeader isMobile={isMobile} userData={{ id, username, image, timeAgo }} />
       <CardContent sx={isMobile ? { paddingX: 2, paddingY: 1 } : { paddingX: 3.75, paddingY: 2.5 }}>
         <ReactionCardHashtags>{hashtag}</ReactionCardHashtags>
-        <ReactionCardText isMobile={isMobile}>{text}</ReactionCardText>
+        <ReactionCardText onClick={openCommentPage} isMobile={isMobile} sx={isMobile ? { paddingBottom: 1 } : { paddingBottom: 2.5 }}>{text}</ReactionCardText>
         {!!images && !!images.length && (
           <ReactionCardMedia image={images[0]} />
         )}
       </CardContent>
-      <ReactionCardActions sx={isMobile ? cardActionsMobileProps : {}}>
+      {withoutActions
+      ? null
+      : <ReactionCardActions sx={isMobile ? cardActionsMobileProps : {}}>
         <Stack direction="row" spacing={1.25}>
           {Object.entries(reactionsInfoCounts).map(([key, value]) => { return (<InfoCountWithIcon isMobile={isMobile} key={key} {...value} />) })}
         </Stack>
@@ -93,7 +111,7 @@ const ReactionCard = ({
             aria-label="Share"
             icon={<ShareIcon fontSize='inherit' />} />
         </Stack>
-      </ReactionCardActions>
+      </ReactionCardActions>}
     </CardWrapper>
   );
 };

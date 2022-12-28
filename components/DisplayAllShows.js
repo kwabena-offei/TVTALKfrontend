@@ -26,7 +26,7 @@ const DisplayAllShows = ({ shows }) => {
     }
     const handleChat = (tmsId, title) => {
 
-        router.push({ pathname: '/chat', query: { tmsId: tmsId } })
+        router.push({ pathname: '/chat/[tmsId]', query: { tmsId: tmsId } })
     }
 
     return (

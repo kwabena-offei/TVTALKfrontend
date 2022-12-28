@@ -15,13 +15,14 @@ export const ReactionCardHashtags = ({ children }) => {
   return <Typography color="#3361FF">{children}</Typography>;
 };
 
-export const ReactionCardText = ({ children, isMobile }) => {
+export const ReactionCardText = ({ children, isMobile, ...props }) => {
   return (
     <Typography
       color="#EFF2FD"
       variant="body1"
       as='pre'
-      sx={{ fontSize: isMobile ? "1rem" : "1.5rem", lineHeight: "180%", whiteSpace: 'break-spaces' }}
+      sx={{ fontSize: isMobile ? "1rem" : "1.5rem", lineHeight: "180%", whiteSpace: 'break-spaces', ...props.sx }}
+      {...props}
     >
       {children}
     </Typography>
