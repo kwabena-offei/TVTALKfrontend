@@ -2,15 +2,17 @@ import React from "react";
 import {
   Box,
   Container,
+  Stack,
   Tabs,
-  Tab
+  Tab,
+  Typography
 } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { TabLabel } from "../../ProfileLayout/ProfileLayout.styled";
+import { TabLabel } from "./CommentLayout.styled";
 import { useRouter } from "next/router";
 import ReactionCard from "../../ReactionCard";
-import { ButtonBack } from "../Chat.styled"
+import { ButtonBack, ButtonBackMobile } from "../Chat.styled"
 import Grid from "@mui/material/Unstable_Grid2";
 
 export const CommentLayout = ({ children }) => {
@@ -20,7 +22,8 @@ export const CommentLayout = ({ children }) => {
   const currentRoute = router.asPath;
   const { tmsId, id, replies, likes, shares } = props.comment;
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobileOrTablet = useMediaQuery(theme.breakpoints.down('md'))
 
   const inheritURL = `/chat/${tmsId}/comments/${id}`;
 
@@ -49,23 +52,28 @@ export const CommentLayout = ({ children }) => {
   return (
     <>
       <Container maxWidth='xl' sx={{ marginTop: 8 }}>
-        <Grid container columnSpacing={3}>
+        <Grid container>
           <Grid xs={12} md={2}>
-            <ButtonBack />
+            {isMobileOrTablet
+            ? <Stack direction='row' spacing={3} alignItems='center' sx={{mb: '30px'}}>
+                <ButtonBackMobile />
+                <Typography fontSize={30} fontWeight={600}>{comment.user.username}'s Post</Typography>
+              </Stack>
+            : <ButtonBack />}
           </Grid>
 
-          <Grid xs={12} md={8}>
-              <ReactionCard profile={comment.user} {...comment} commentsMode withoutActions/>
+          <Grid xs={12} md={8} sx={{ pb: { xs:'40px', md: '60px' } }}>
+            <ReactionCard profile={comment.user} {...comment} commentsMode withoutActions/>
           </Grid>
           <Grid xs={0} md={2} />
         </Grid>
       </Container>
-      <Container maxWidth='xl'>
-        <Grid container columnSpacing={3}>
+      <Container maxWidth='xl' disableGutters={isMobile}>
+        <Grid container>
           <Grid xs={0} md={2}/>
           <Grid xs={12} md={8}>
-              <Box sx={{
-                marginTop: '4vh'
+            <Box sx={{
+                marginY: isMobile ? 1.25 : 2.5
               }}>
                 <Tabs
                   value={currentRoute}
@@ -74,7 +82,7 @@ export const CommentLayout = ({ children }) => {
                   textColor='secondary'
                 >
                   {tabs.map((value, key) => 
-                    <Tab key={key} value={value.href} label={<TabLabel {...value} isMobile={isMobile} />}></Tab>
+                    <Tab sx={{ padding: '1em 2em'}} key={key} value={value.href} label={<TabLabel {...value} isMobile={isMobile} />}></Tab>
                   )}
                 </Tabs>
               </Box>
@@ -82,9 +90,8 @@ export const CommentLayout = ({ children }) => {
           <Grid xs={0} md={2} />
         </Grid>
       </Container>
-
       <Container maxWidth='xl'>
-        <Grid container columnSpacing={3}>
+        <Grid container>
           <Grid xs={0} md={2}/>
           <Grid xs={12} md={8}>
             {children}

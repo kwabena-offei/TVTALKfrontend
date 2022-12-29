@@ -78,7 +78,7 @@ const ReactionCard = ({
       <CardHeader isMobile={isMobile} userData={{ id, username, image, timeAgo }} />
       <CardContent sx={isMobile ? { paddingX: 2, paddingY: 1 } : { paddingX: 3.75, paddingY: 2.5 }}>
         <ReactionCardHashtags>{hashtag}</ReactionCardHashtags>
-        <ReactionCardText onClick={openCommentPage} isMobile={isMobile} sx={isMobile ? { paddingBottom: 1 } : { paddingBottom: 2.5 }}>{text}</ReactionCardText>
+        <ReactionCardText onClick={openCommentPage} isMobile={isMobile}>{text}</ReactionCardText>
         {!!images && !!images.length && (
           <ReactionCardMedia image={images[0]} />
         )}

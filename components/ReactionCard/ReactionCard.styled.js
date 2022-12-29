@@ -21,7 +21,12 @@ export const ReactionCardText = ({ children, isMobile, ...props }) => {
       color="#EFF2FD"
       variant="body1"
       as='pre'
-      sx={{ fontSize: isMobile ? "1rem" : "1.5rem", lineHeight: "180%", whiteSpace: 'break-spaces', ...props.sx }}
+      sx={{
+        fontSize: isMobile ? "1rem" : "1.5rem",
+        lineHeight: "180%",
+        whiteSpace: 'break-spaces',
+        paddingBottom: isMobile ? 1 : 2.5,
+      }}
       {...props}
     >
       {children}
