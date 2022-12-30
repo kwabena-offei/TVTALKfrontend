@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import useAxios from '../../../../../services/api'
 import { TV_TALK_API } from "../../../../../util/constants";
 import CommentCard from '../../../../../components/Chat/CommentCard'
 import { CommentLayout } from "../../../../../components/Chat/CommentLayout";
@@ -12,9 +13,14 @@ export async function getServerSideProps(context) {
   const { data: subComments } = await axios.get(
     `${TV_TALK_API}/sub_comments?comment_id=${id}`
   );
+  const { axios: myAxios } = useAxios(context);
+  const { data: profile } = await myAxios.get('/profile');
+
+  // ToDo: create logic with unauthorized user for profile props
 
   return {
     props: {
+      profile,
       show,
       comment,
       subComments
@@ -23,7 +29,6 @@ export async function getServerSideProps(context) {
 }
 
 export default function Page({ subComments }) {
-  console.log('subComments', subComments)
   const { results: comments } = subComments;
   return (
     <>
@@ -37,5 +42,5 @@ export default function Page({ subComments }) {
 };
 
 Page.getLayout = function getLayout(page) {
-  return <CommentLayout>{page}</CommentLayout>;
+  return <CommentLayout replay>{page}</CommentLayout>;
 };

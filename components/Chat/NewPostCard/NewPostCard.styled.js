@@ -59,13 +59,27 @@ export const RoundedIconButton = ({icon, ...props}) => {
   )
 }
 
-export const PostIconButton = ({icon, ...props}) => {
+export const PostIconButton = ({...props}) => {
   return (
-    <Box width={40} height={40} ml='auto!important'>
-      <RoundedButton variant='contained' {...props}>
-        {icon}
-      </RoundedButton>  
-    </Box>
+    <RoundedButton variant='contained' {...props}>
+      <SendIcon />
+    </RoundedButton>
+  )
+}
+export const PostButton = ({ onClick, title, sx }) => {
+  return (
+    <Button
+      variant="contained"
+      color="primary"
+      sx={{
+        boxShadow: "none",
+        ...buttonDesktopStyle,
+        ...sx
+      }}
+      onClick={onClick}
+    >
+      {title}
+    </Button>
   )
 }
 
@@ -87,18 +101,7 @@ export const DesktopCardActions = ({
         Add GIF
       </OutlinedButton>
       <Box ml="auto!important">
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{
-            marginLeft: "auto!important",
-            boxShadow: "none",
-            ...buttonDesktopStyle,
-          }}
-          onClick={onPost}
-        >
-          Post
-        </Button>
+        <PostButton onClick={onPost} title='Post' />
       </Box>
       
     </>
@@ -120,11 +123,12 @@ export const MobileCardActions = ({
       <RoundedIconButton color='darkSecondary' onClick={onTakeShot} icon={<CameraIcon />}/>
       <RoundedIconButton color='darkSecondary' onClick={onAddVideo} icon={<VideoIcon />} />
       <RoundedIconButton color='darkSecondary' onClick={onAddGif} icon={<GifIcon />} />
-      <PostIconButton
-        color="primary"
-        onClick={onPost}
-        icon={<SendIcon />}
-        />
+      <Box width={40} height={40} ml='auto!important'>
+        <PostIconButton
+          color="primary"
+          onClick={onPost}
+          />  
+      </Box>
     </>
   );
 };

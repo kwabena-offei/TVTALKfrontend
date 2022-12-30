@@ -12,6 +12,9 @@ export async function getServerSideProps(context) {
     `${TV_TALK_API}/comments?tms_id=${tmsId}`
   );
   const { data: profile } = await myAxios.get('/profile')
+
+  // ToDo: create logic with unauthorized user for profile props
+
   return {
     props: {
       show,
