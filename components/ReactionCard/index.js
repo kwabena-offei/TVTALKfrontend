@@ -73,9 +73,13 @@ const ReactionCard = ({
       }
     })
   }
+  const openMenu = () => {
+    console.log("click action settings - id:", id);
+  }
+
   return (
     <CardWrapper sx={withoutActions ? { paddingBottom: 2 } : {} }>
-      <CardHeader isMobile={isMobile} userData={{ id, username, image, timeAgo }} />
+      <CardHeader isMobile={isMobile} userData={{ id, username, image, timeAgo }} action={openMenu} />
       <CardContent sx={isMobile ? { paddingX: 2, paddingY: 1 } : { paddingX: 3.75, paddingY: 2.5 }}>
         <ReactionCardHashtags>{hashtag}</ReactionCardHashtags>
         <ReactionCardText onClick={openCommentPage} isMobile={isMobile}>{text}</ReactionCardText>
