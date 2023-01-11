@@ -48,8 +48,8 @@ export const steps = {
   },
 
   final: {
-    text: `
-    Thank you for helping keep the TV Talk community safe and fun for everyone. Remember, we don't reveal who submitted reports to the person who posted the photo, video or content.
+    text: `Thank you for helping keep the TV Talk community safe and fun for everyone. Remember, we don't reveal who submitted reports to the person who posted the photo, video or content.
+
     Our team will review the post and if it violates our Community Guidelines or Terms of Use, we'll remove it.
     `,
     action: 'idle'

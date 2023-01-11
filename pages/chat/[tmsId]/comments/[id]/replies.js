@@ -34,7 +34,7 @@ export default function Page({ subComments }) {
     <>
       {comments.map((comment) => (
         <Box sx={{py: {xs: 1.25, md: 2.5}}} key={`${comment.tmsId}-${comment.id}`}>
-          <CommentCard profile={comment.user} {...comment} />
+          <CommentCard profile={comment.user} {...comment} commentType='SubComment'/>
         </Box>
       ))}
     </>

@@ -29,6 +29,7 @@ const CommentCard = ({
   created_at,
   tmsId,
   withoutActions,
+  commentType
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -53,6 +54,7 @@ const CommentCard = ({
       <CardHeader
         isMobile={isMobile}
         userData={{ id, username, image, timeAgo }}
+        commentType={commentType}
       />
       <CardContent
         sx={

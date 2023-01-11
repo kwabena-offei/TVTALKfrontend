@@ -1,13 +1,13 @@
 import React, { useState, useRef } from "react";
 import { List } from "@mui/material";
-import { ReportStep, FinalStep } from "./Report.styled";
+import { ReportStep, FinalStep, Subtitle } from "./Report.styled";
 import { steps } from "./constants";
 
-export default function ReportSteps({ id, url }) {
+export default function ReportSteps({ id, url, commentType }) {
   const [currentStep, setCurrentStep] = useState('start')
-  const handleNextStep = (key, value) => {
+  const handleNextStep = (value) => {
     if (value.action === 'update_type') {
-      report.current.reportable_type = key
+      report.current.reportable_type = commentType
     }
     if (value.action === 'update_message') {
       report.current.message = value.text
@@ -23,25 +23,33 @@ export default function ReportSteps({ id, url }) {
       url: url
     }
   )
-  console.log('report', report)
-  const handleValues = () => console.log('final');
+
+  const handleValues = () => console.log('final', report);
 
   return (
     <>
-    { currentStep === 'final'
-      ? <FinalStep onClick={handleValues} text={steps.final.text} />
-      : <List as='div'>
-        {Object.entries(steps[currentStep]).map(([key, value]) => {
-          console.log('key', key, value)
-          return (
-          <ReportStep
-            key={key}
-            text={value.text}
-            onClick={() => handleNextStep(key, value)}
-            />)
-        })}
-      </List>
-    }
+      {currentStep === "final" ? (
+        <>
+          <Subtitle>Thanks for reporting this</Subtitle>
+          <FinalStep onClick={handleValues} text={steps.final.text} />
+        </>
+      ) : (
+        <>
+          <Subtitle>Why are you reporting this account?</Subtitle>
+          <List as="div">
+            {Object.entries(steps[currentStep]).map(([key, value]) => {
+              console.log("key", key, value);
+              return (
+                <ReportStep
+                  key={key}
+                  text={value.text}
+                  onClick={() => handleNextStep(value)}
+                />
+              );
+            })}
+          </List>
+        </>
+      )}
     </>
   );
 }

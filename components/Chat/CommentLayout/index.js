@@ -63,7 +63,7 @@ export const CommentLayout = ({ children, replay }) => {
           </Grid>
 
           <Grid xs={12} md={8} sx={{ pb: { xs:'40px', md: '60px' } }}>
-            <ReactionCard profile={comment.user} {...comment} commentsMode withoutActions/>
+            <ReactionCard profile={comment.user} {...comment} commentType='Comment' commentsMode withoutActions/>
           </Grid>
           <Grid xs={0} md={2} />
         </Grid>

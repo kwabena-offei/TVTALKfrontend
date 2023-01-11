@@ -1,11 +1,9 @@
 import React from "react";
 import { CardHeader, Avatar } from "@mui/material";
-import MoreVertIcon from "../Icons/MoreVertIcon";
-import IconButton from "@mui/material/IconButton";
 import { cardHeaderMobileProps } from './ReactionCard.styled'
 import { ActionsMenu } from './PopupActions'
 
-const ReactionsCardHeader = ({ userData, isMobile, action, ...props }) => {
+const ReactionsCardHeader = ({ userData, isMobile, commentType, ...props }) => {
   const { id, username, image, timeAgo } = userData;
   return (
     <CardHeader
@@ -23,14 +21,7 @@ const ReactionsCardHeader = ({ userData, isMobile, action, ...props }) => {
         </Avatar>
       }
       action={
-        <ActionsMenu id={id} />
-        // <IconButton
-        //   sx={{ fontSize: '1.125rem', color: '#A5B0D6' }}
-        //   onClick={action}
-        //   aria-label="settings"
-        // >
-        //   <MoreVertIcon fontSize='inherit' />
-        // </IconButton>
+        <ActionsMenu id={id} commentType={commentType} />
       }
       title={username}
       subheader={timeAgo}

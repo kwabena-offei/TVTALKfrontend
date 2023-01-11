@@ -4,24 +4,19 @@ import MoreVertIcon from "../../Icons/MoreVertIcon";
 import AttachmentIcon from "../../Icons/AttachmentIcon";
 import { CloseRounded } from "@mui/icons-material";
 import ShareIcon from "../../Icons/ShareIcon";
-import ReportIcon from "../../Icons/ReportIcon";
 import UnfollowIcon from "../../Icons/UnfollowIcon";
 import { StyledMenu } from "./PopupActions.styled";
 import Report from "../Report";
 
-export const ActionsMenu = ({ id }) => {
+export const ActionsMenu = ({ id, commentType }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
-    console.log("current target id", id);
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
-  // const handleReport = () => {
-  //   // handleClose()
-  // }
 
   return (
     <>
@@ -36,10 +31,11 @@ export const ActionsMenu = ({ id }) => {
         <MoreVertIcon fontSize="inherit" />
       </IconButton>
       <StyledMenu
+        keepMounted
         id={`card-custom-menu-${id}`}
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        // onClose={handleClose}
       >
         <MenuItem onClick={handleClose} disableRipple>
           <ShareIcon />
@@ -49,11 +45,7 @@ export const ActionsMenu = ({ id }) => {
           <AttachmentIcon />
           Copy Link
         </MenuItem>
-        <Report handleClose={handleClose} id={id} />
-        {/* <MenuItem onClick={handleReport} disableRipple>
-          <ReportIcon />
-          Report
-        </MenuItem> */}
+        <Report handleClose={handleClose} id={id} commentType={commentType}/>
         <MenuItem onClick={handleClose} disableRipple>
           <UnfollowIcon />
           Unfollow
