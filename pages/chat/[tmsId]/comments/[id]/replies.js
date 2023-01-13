@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import useAxios from '../../../../../services/api'
+import { isAuthenticated } from '../../../../../services/isAuth'
 import { TV_TALK_API } from "../../../../../util/constants";
 import CommentCard from '../../../../../components/Chat/CommentCard'
 import { CommentLayout } from "../../../../../components/Chat/CommentLayout";
@@ -14,13 +15,15 @@ export async function getServerSideProps(context) {
     `${TV_TALK_API}/sub_comments?comment_id=${id}`
   );
   const { axios: myAxios } = useAxios(context);
-  const { data: profile } = await myAxios.get('/profile');
 
-  // ToDo: create logic with unauthorized user for profile props
+  // -- If User is not authorized profile data will return null and isAuth will be false --
+  const isAuth = isAuthenticated(context)
+  const { data: profile } = isAuth ? await myAxios.get('/profile') : { data: null }
 
   return {
     props: {
       profile,
+      isAuth,
       show,
       comment,
       subComments
@@ -42,5 +45,5 @@ export default function Page({ subComments }) {
 };
 
 Page.getLayout = function getLayout(page) {
-  return <CommentLayout replay>{page}</CommentLayout>;
+  return <CommentLayout isAuth={page.props.isAuth} replay>{page}</CommentLayout>;
 };

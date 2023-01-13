@@ -27,28 +27,17 @@ const CommentCard = ({
   text,
   images,
   created_at,
-  tmsId,
   withoutActions,
   commentType
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const router = useRouter();
+  // Todo: redirect for reply on subComment?
 
   const timeAgo = dayjs(created_at).fromNow();
 
   const { username, image } = profile;
-  // -- navigate user to current comment page --
-  const openCommentPage = () => {
-    console.warn("router", router);
-    router.push({
-      pathname: "/chat/[tmsId]/comments/[id]/replies",
-      query: {
-        tmsId: tmsId,
-        id: id,
-      },
-    });
-  };
   return (
     <CardWrapper sx={withoutActions ? { paddingBottom: 2 } : {}}>
       <CardHeader
@@ -63,7 +52,7 @@ const CommentCard = ({
             : { paddingX: 3.75, paddingTop: 0 }
         }
       >
-        <CardText onClick={openCommentPage} isMobile={isMobile}>
+        <CardText isMobile={isMobile}>
           {text}
         </CardText>
         {images.length ? <ReactionCardMedia image={images[0]} /> : null}

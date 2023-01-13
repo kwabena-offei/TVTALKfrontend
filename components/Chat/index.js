@@ -53,7 +53,7 @@ export const ChatHeader = ({ show }) => {
   )
 }
 
-export const ChatContent = ({ comments, profile}) => {
+export const ChatContent = ({ comments, profile }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isNotLarge = useMediaQuery(theme.breakpoints.down("lg"));
@@ -69,7 +69,7 @@ export const ChatContent = ({ comments, profile}) => {
           <MenuSelects />
         </Grid>
         <Grid xs={12} md={9} lg={7}>
-          <NewPostCard isMobile={isMobile} {...profile} />
+          <NewPostCard isMobile={isMobile} profile={profile} />
         </Grid>
         <Grid lg={2.5} sx={isNotLarge ? { display: "none" } : {}} />
       </Grid>

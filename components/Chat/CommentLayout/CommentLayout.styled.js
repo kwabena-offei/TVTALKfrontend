@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { AuthContext } from "../../../util/AuthContext";
 import {
   Avatar,
   Box,
@@ -56,38 +58,43 @@ export const ReplayInputWrapper = ({children, isMobile}) => (
 )
 
 export const ReplayDesktopInput = ({ profile, onPost}) => {
+  const isAuth = useContext(AuthContext);
+  const { image, username } = isAuth ? profile : { image: '', username: '' };
   return (
     <>
       <Avatar
-        src={profile.image}
-        alt={profile.username}
+        src={image}
+        alt={username}
         sx={{
           width: '60px',
           height: '60px'
         }}
       />
         <InputBase
+          readOnly={!isAuth}
           variant='standard'
-          placeholder="What’s on your mind?"
+          placeholder={ isAuth ? "What's on your mind?" : "Only authorized users can reply."}
           sx={{ fontSize: '1.25rem' }}
           fullWidth
         />
-      <PostButton onClick={onPost} title='Reply' sx={{ fontSize: '1rem' }} />
+      <PostButton disabled={!isAuth} onClick={onPost} title='Reply' sx={{ fontSize: '1rem' }} />
     </>
   )
 }
 
 
 export const ReplayMobileInput = ({ profile, onPost}) => {
+  const isAuth = useContext(AuthContext);
   return (
     <>
       <InputBase
         variant='standard'
-        placeholder="What’s on your mind?"
+        readOnly={!isAuth}
+        placeholder={ isAuth ? "What's on your mind?" : "Only authorized users can reply."}
         sx={{ fontSize: '1rem', paddingX: 1.25 }}
         fullWidth
       />
-      <PostIconButton onClick={onPost} />
+      <PostIconButton onClick={onPost} disabled={!isAuth} />
     </>
   )
 }

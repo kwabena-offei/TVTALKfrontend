@@ -1,8 +1,12 @@
 import { Avatar, CardActions, CardHeader, InputBase } from "@mui/material";
 import { StyledCard, stackStyle, DesktopCardActions, MobileCardActions } from "./NewPostCard.styled";
+import { useContext } from "react";
+import { AuthContext } from '../../../util/AuthContext'
 
 const NewPostCard = (props) => {
-  const { image, isMobile } = props;
+  const { isMobile, profile } = props;
+  const isAuth = useContext(AuthContext);
+  const { image } = profile | ''
   const size = isMobile ? 50 : 60;
 
   const onAddHashtag = (event) => {console.log('onAddHashtag', event.target.value)}  
@@ -18,17 +22,18 @@ const NewPostCard = (props) => {
     <StyledCard>
       <CardHeader
         avatar={
-          <Avatar src={image} alt="avatar" sx={{ width: size, height: size }} />
+          <Avatar src={image} alt="User-avatar" sx={{ width: size, height: size }} />
         }
         sx={{ px: isMobile ? 2.5 : 5 , pt: isMobile ? 1.875 : 3.75 }}
         title={
-          <InputBase fullWidth placeholder="Say something..."/>
+          <InputBase readOnly={!isAuth} fullWidth placeholder={ isAuth ? "Say something..." : "Only authorized users can add comments."}/>
         }
       />
       <CardActions
         sx={isMobile ? { ...stackStyle, px: 2.5, pb: 1.875 } : { ...stackStyle, px: 5, pb: 3.75 }}
       >{ isMobile
         ? <MobileCardActions
+          isAuth={isAuth}
           onAddHashtag={onAddHashtag}
           onAddPhoto={onAddPhoto}
           onTakeShot={onTakeShot}
@@ -37,6 +42,7 @@ const NewPostCard = (props) => {
           onPost={onPost}
           />
         : <DesktopCardActions
+          isAuth={isAuth}
           onAddHashtag={onAddHashtag}
           onAddPhotosVideo={onAddPhotosVideo}
           onAddGif={onAddGif}

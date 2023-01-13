@@ -48,29 +48,31 @@ const ReactionCard = ({
   const reactionsInfoCounts = {
     likes: {
       count: likes_count,
-      icon: <FavoriteIcon color="primary" fontSize="inherit"/>
+      icon: <FavoriteIcon color="primary" fontSize="inherit"/>,
+      route: 'likes'
     },
     comments: {
       count: sub_comments_count,
-      icon: <MessagesIcon color="primary" fontSize="inherit"/>
+      icon: <MessagesIcon color="primary" fontSize="inherit"/>,
+      route: 'replies'
     },
     shares: {
       count: shares_count,
-      icon: <ShareIcon color="primary" fontSize="inherit"/>
+      icon: <ShareIcon color="primary" fontSize="inherit"/>,
+      route: 'shares'
     }
   }
   const timeAgo = dayjs(created_at).fromNow()
   // ToDo: research for hashtag format and provide link-view for it
   const { username, image } = profile;
   // -- navigate user to current comment page --
-  const openCommentPage = () => {
-
-    console.warn('router', router)
+  const openCommentPage = (route) => {
     router.push({
-      pathname: '/chat/[tmsId]/comments/[id]/replies',
+      pathname: '/chat/[tmsId]/comments/[id]/[page]',
       query: {
         tmsId: tmsId,
-        id: id
+        id: id,
+        page: route
       }
     })
   }
@@ -80,7 +82,7 @@ const ReactionCard = ({
       <CardHeader isMobile={isMobile} userData={{ id, username, image, timeAgo }} commentType={commentType} />
       <CardContent sx={isMobile ? { paddingX: 2, paddingY: 1 } : { paddingX: 3.75, paddingY: 2.5 }}>
         <ReactionCardHashtags>{hashtag}</ReactionCardHashtags>
-        <ReactionCardText onClick={openCommentPage} isMobile={isMobile}>{text}</ReactionCardText>
+        <ReactionCardText isMobile={isMobile}>{text}</ReactionCardText>
         {!!images && !!images.length && (
           <ReactionCardMedia image={images[0]} />
         )}
@@ -89,7 +91,7 @@ const ReactionCard = ({
       ? null
       : <ReactionCardActions sx={isMobile ? cardActionsMobileProps : {}}>
         <Stack direction="row" spacing={1.25}>
-          {Object.entries(reactionsInfoCounts).map(([key, value]) => { return (<InfoCountWithIcon isMobile={isMobile} key={key} {...value} />) })}
+          {Object.entries(reactionsInfoCounts).map(([key, value]) => { return (<InfoCountWithIcon isMobile={isMobile} key={key} {...value} navigation={() => openCommentPage(value.route)} />) })}
         </Stack>
         <Stack direction="row" spacing={1.25}>
           <ActionButton

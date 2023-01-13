@@ -14,8 +14,9 @@ import { useRouter } from "next/router";
 import ReactionCard from "../../ReactionCard";
 import { ButtonBack, ButtonBackMobile } from "../Chat.styled"
 import Grid from "@mui/material/Unstable_Grid2";
+import { AuthContext } from "../../../util/AuthContext";
 
-export const CommentLayout = ({ children, replay }) => {
+export const CommentLayout = ({ children, replay, isAuth }) => {
   const { props } = children;
   const { comment, profile } = props;
   const router = useRouter();
@@ -50,7 +51,7 @@ export const CommentLayout = ({ children, replay }) => {
   };
 
   return (
-    <>
+    <AuthContext.Provider value={isAuth}>
       <Container maxWidth='xl' sx={{ marginTop: { xs: 1, md: 8 }, paddingX: 2.5 }}>
         <Grid container>
           <Grid xs={12} md={2}>
@@ -108,6 +109,6 @@ export const CommentLayout = ({ children, replay }) => {
           </ReplayInputWrapper>
         : null
       }
-    </>
+    </AuthContext.Provider>
   );
 };

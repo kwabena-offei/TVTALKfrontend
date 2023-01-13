@@ -66,7 +66,7 @@ export const PostIconButton = ({...props}) => {
     </RoundedButton>
   )
 }
-export const PostButton = ({ onClick, title, sx }) => {
+export const PostButton = ({ onClick, title, sx, ...props }) => {
   return (
     <Button
       variant="contained"
@@ -77,6 +77,7 @@ export const PostButton = ({ onClick, title, sx }) => {
         ...sx
       }}
       onClick={onClick}
+      {...props}
     >
       {title}
     </Button>
@@ -88,20 +89,21 @@ export const DesktopCardActions = ({
   onAddPhotosVideo,
   onAddGif,
   onPost,
+  isAuth
 }) => {
   return (
     <>
-      <OutlinedButton sx={buttonDesktopStyle} onClick={onAddHashtag}>
+      <OutlinedButton sx={buttonDesktopStyle} onClick={onAddHashtag}disabled={!isAuth}>
         Add #
       </OutlinedButton>
-      <OutlinedButton sx={buttonDesktopStyle} onClick={onAddPhotosVideo}>
+      <OutlinedButton sx={buttonDesktopStyle} onClick={onAddPhotosVideo}disabled={!isAuth}>
         Add photos/videos
       </OutlinedButton>
-      <OutlinedButton sx={buttonDesktopStyle} onClick={onAddGif}>
+      <OutlinedButton sx={buttonDesktopStyle} onClick={onAddGif}disabled={!isAuth}>
         Add GIF
       </OutlinedButton>
       <Box ml="auto!important">
-        <PostButton onClick={onPost} title='Post' />
+        <PostButton onClick={onPost} title='Post' disabled={!isAuth} />
       </Box>
       
     </>
@@ -115,19 +117,20 @@ export const MobileCardActions = ({
   onAddVideo,
   onAddGif,
   onPost,
+  isAuth
 }) => {
   return (
     <>
-      <RoundedIconButton color='darkSecondary' onClick={onAddHashtag} icon={<HashtagIcon />} />
-      <RoundedIconButton color='darkSecondary' onClick={onAddPhoto} icon={<GaleryIcon />}/>
-      <RoundedIconButton color='darkSecondary' onClick={onTakeShot} icon={<CameraIcon />}/>
-      <RoundedIconButton color='darkSecondary' onClick={onAddVideo} icon={<VideoIcon />} />
-      <RoundedIconButton color='darkSecondary' onClick={onAddGif} icon={<GifIcon />} />
+      <RoundedIconButton color='darkSecondary' onClick={onAddHashtag} icon={<HashtagIcon />} disabled={!isAuth}/>
+      <RoundedIconButton color='darkSecondary' onClick={onAddPhoto} icon={<GaleryIcon />}disabled={!isAuth}/>
+      <RoundedIconButton color='darkSecondary' onClick={onTakeShot} icon={<CameraIcon />}disabled={!isAuth}/>
+      <RoundedIconButton color='darkSecondary' onClick={onAddVideo} icon={<VideoIcon />} disabled={!isAuth}/>
+      <RoundedIconButton color='darkSecondary' onClick={onAddGif} icon={<GifIcon />} disabled={!isAuth}/>
       <Box width={40} height={40} ml='auto!important'>
         <PostIconButton
           color="primary"
           onClick={onPost}
-          />  
+          disabled={!isAuth}/>  
       </Box>
     </>
   );
