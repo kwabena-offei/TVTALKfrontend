@@ -6,10 +6,7 @@ import PrimaryButton from "../../PrimaryButton";
 
 const BUTTON_SIZE = "2em";
 
-export const StyledDialog = styled(
-  Dialog,
-  {}
-)({
+export const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialog-paper": {
     minWidth: 320,
     maxWidth: 685,
@@ -31,9 +28,10 @@ export const StyledDialog = styled(
   "& .MuiDialogContentText-root": {
     fontWeight: 400,
     fontSize: '1rem',
-    lineHeight: '180%'
+    lineHeight: '180%',
+    color: theme.palette.text.primary
   }
-});
+}));
 
 
 export const Title = styled(Typography)(({ theme }) => ({

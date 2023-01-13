@@ -1,19 +1,27 @@
 import React, { useState, useRef } from "react";
-import { List } from "@mui/material";
-import { ReportStep, FinalStep, Subtitle } from "./Report.styled";
+import { List, Box, DialogContent, DialogTitle } from "@mui/material";
+import { ReportStep, FinalStep, Subtitle, BackArrow } from "./Report.styled";
 import { steps } from "./constants";
 
-export default function ReportSteps({ id, url, commentType }) {
+export default function ReportSteps({ id, url, commentType, onClose }) {
   const [currentStep, setCurrentStep] = useState('start')
-  const handleNextStep = (value) => {
+  const handleNextStep = (key, value) => {
     if (value.action === 'update_type') {
-      report.current.reportable_type = commentType
+      report.current.reportable_type = key
     }
     if (value.action === 'update_message') {
       report.current.message = value.text
     }
     setCurrentStep(value.next_step)
   };
+  const handlePreviousStep = () => {
+    if (steps[currentStep].prev_step === 'key') {
+      setCurrentStep(report.current.reportable_type)
+    }
+    if (currentStep === report.current.reportable_type) {
+      setCurrentStep('start')
+    }
+  }
 
   const report = useRef(
     {
@@ -24,32 +32,45 @@ export default function ReportSteps({ id, url, commentType }) {
     }
   )
 
-  const handleValues = () => console.log('final', report);
+  const handleValues = () => {
+    console.log('final', report.current)
+    if (report.current.reportable_type === 'Comment') {
+      report.current.reportable_type = commentType
+      console.log('inside', report.current)
+    }
+    onClose()
+  };
 
   return (
     <>
-      {currentStep === "final" ? (
-        <>
-          <Subtitle>Thanks for reporting this</Subtitle>
-          <FinalStep onClick={handleValues} text={steps.final.text} />
-        </>
-      ) : (
-        <>
-          <Subtitle>Why are you reporting this account?</Subtitle>
-          <List as="div">
-            {Object.entries(steps[currentStep]).map(([key, value]) => {
-              console.log("key", key, value);
-              return (
-                <ReportStep
-                  key={key}
-                  text={value.text}
-                  onClick={() => handleNextStep(value)}
-                />
-              );
-            })}
-          </List>
-        </>
-      )}
+      <Box>
+        <BackArrow onClick={currentStep === 'start' ? onClose : handlePreviousStep} />
+        <DialogTitle>Report</DialogTitle>
+      </Box>
+      <DialogContent>
+        {currentStep === "final" ? (
+          <>
+            <Subtitle>Thanks for reporting this</Subtitle>
+            <FinalStep onClick={handleValues} text={steps.final.text} />
+          </>
+        ) : (
+          <>
+            <Subtitle>Why are you reporting this account?</Subtitle>
+            <List as="div">
+              {Object.entries(steps[currentStep]).map(([key, value]) => {
+                console.log("key", key, value);
+                return (
+                  <ReportStep
+                    key={key}
+                    text={value.text}
+                    onClick={() => handleNextStep(key, value)}
+                  />
+                );
+              })}
+            </List>
+          </>
+        )}
+      </DialogContent>
     </>
   );
 }

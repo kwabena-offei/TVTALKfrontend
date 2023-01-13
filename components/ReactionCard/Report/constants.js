@@ -52,6 +52,7 @@ export const steps = {
 
     Our team will review the post and if it violates our Community Guidelines or Terms of Use, we'll remove it.
     `,
+    prev_step: 'key',
     action: 'idle'
   }
 };

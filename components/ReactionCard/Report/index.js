@@ -27,10 +27,10 @@ const Report = ({ handleClose, id, commentType }) => {
         Report
       </MenuItem>
       <StyledDialog open={open} onClose={handleCloseModal} fullWidth>
-        <ReportTitle onClick={handleCloseModal}/>
-        <DialogContent>
-          <ReportSteps id={id} commentType={commentType} url={url}/>
-        </DialogContent>
+        {/* <ReportTitle onClick={handleCloseModal}/> */}
+        {/* <DialogContent> */}
+          <ReportSteps id={id} commentType={commentType} url={url} onClose={handleCloseModal}/>
+        {/* </DialogContent> */}
       </StyledDialog>
     </>
   );
