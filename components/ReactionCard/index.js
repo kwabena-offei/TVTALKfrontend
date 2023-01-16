@@ -25,21 +25,23 @@ import { useRouter } from "next/router";
 
 dayjs.extend(relativeTime)
 
-const ReactionCard = ({
-  profile,
-  id,
-  text,
-  hashtag,
-  images,
-  created_at,
-  likes_count,
-  sub_comments_count,
-  shares_count,
-  tmsId,
-  commentsMode,
-  withoutActions,
-  commentType
-}) => {
+const ReactionCard = (props) => {
+  const {
+    profile,
+    id,
+    text,
+    hashtag,
+    images,
+    created_at,
+    likes_count,
+    sub_comments_count,
+    shares_count,
+    tmsId,
+    commentsMode,
+    withoutActions,
+    commentType
+  } = props;
+  // console.log('Reaction Card props', props)
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isMobileAndTablet = useMediaQuery(theme.breakpoints.down('md'));

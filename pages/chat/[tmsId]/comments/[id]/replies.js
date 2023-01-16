@@ -8,11 +8,13 @@ import { CommentLayout } from "../../../../../components/Chat/CommentLayout";
 import { Box } from "@mui/material";
 
 export async function getServerSideProps(context) {
-  const { tmsId, id } = context.query;
+  const { tmsId, id, type } = context.query;
+  const comment_type = type === 'SubComment' ? 'sub_' : ''
+  console.log('context.query', context.query)
   const { data: show } = await axios.get(`${TV_TALK_API}/shows/${tmsId}`);
-  const { data: comment } = await axios.get(`${TV_TALK_API}/comments/${id}`)
+  const { data: comment } = await axios.get(`${TV_TALK_API}/${comment_type}comments/${id}`)
   const { data: subComments } = await axios.get(
-    `${TV_TALK_API}/sub_comments?comment_id=${id}`
+    `${TV_TALK_API}/sub_comments?${comment_type}comment_id=${id}`
   );
   const { axios: myAxios } = useAxios(context);
 

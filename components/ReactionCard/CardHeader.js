@@ -1,7 +1,8 @@
 import React from "react";
 import { CardHeader, Avatar } from "@mui/material";
 import { cardHeaderMobileProps } from './ReactionCard.styled'
-import { ActionsMenu } from './PopupActions'
+import { ActionsMenuDesktop } from './PopupActions/ActionsMenuDesktop'
+import { ActionsMenuMobile } from "./PopupActions/ActionsMenuMobile";
 
 const ReactionsCardHeader = ({ userData, isMobile, commentType, ...props }) => {
   const { id, username, image, timeAgo } = userData;
@@ -21,7 +22,7 @@ const ReactionsCardHeader = ({ userData, isMobile, commentType, ...props }) => {
         </Avatar>
       }
       action={
-        <ActionsMenu id={id} commentType={commentType} />
+        isMobile ? <ActionsMenuMobile id={id} commentType={commentType} /> : <ActionsMenuDesktop id={id} commentType={commentType} />
       }
       title={username}
       subheader={timeAgo}

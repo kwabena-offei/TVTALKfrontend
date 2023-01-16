@@ -33,7 +33,20 @@ const CommentCard = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const router = useRouter();
-  // Todo: redirect for reply on subComment?
+
+  // -- Redirect for reply on subComment 
+  const onReply = () => {
+    // Todo: uncomment, when backend data fixed
+
+    // router.push({
+    //   pathname: '/chat/[tmsId]/comments/[id]/replies',
+    //   query: {
+    //     tmsId: router.query.tmsId,
+    //     id: id,
+    //     type: commentType
+    //   }
+    // })
+  }
 
   const timeAgo = dayjs(created_at).fromNow();
 
@@ -76,6 +89,7 @@ const CommentCard = ({
           <ActionButton
             title="Reply"
             aria-label="Reply"
+            onClick={onReply}
             icon={<MessagesIcon fontSize="inherit" />}
           />
           <ActionButton

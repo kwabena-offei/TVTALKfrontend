@@ -22,6 +22,7 @@ export const CommentLayout = ({ children, replay, isAuth }) => {
   const router = useRouter();
   const currentRoute = router.asPath;
   const { tmsId, id, sub_comments_count, likes_count, shares_count } = comment;
+  console.log('comment', comment)
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isMobileOrTablet = useMediaQuery(theme.breakpoints.down('md'))
@@ -58,7 +59,7 @@ export const CommentLayout = ({ children, replay, isAuth }) => {
             {isMobileOrTablet
             ? <Stack direction='row' spacing={1.875} alignItems='center' sx={{mb: '30px'}}>
                 <ButtonBackMobile />
-                <Typography fontSize={24} fontWeight={600}>{comment.user.username}'s Post</Typography>
+                <Typography fontSize={24} fontWeight={600}>{comment?.user?.username}'s Post</Typography>
               </Stack>
             : <ButtonBack />}
           </Grid>
