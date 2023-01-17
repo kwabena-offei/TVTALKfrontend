@@ -4,6 +4,7 @@ import { TV_TALK_API } from "../../../../../util/constants";
 import { CommentLayout } from "../../../../../components/Chat/CommentLayout";
 import LikeCard from "../../../../../components/Chat/LikeCard";
 import Grid from "@mui/material/Unstable_Grid2";
+import { EmptyDataFeedback } from "../../../../../components/Chat/EmptyDataFeedback";
 
 export async function getServerSideProps(context) {
   const { id } = context.query;
@@ -20,13 +21,16 @@ export default function Page({ comment }) {
   const { likes: likesList } = comment
   return (
     <>
-      <Grid container spacing={2.5}>
-        {likesList.map((like) => (
-          <Grid xs={12} md={6} key={like.username}>
-            <LikeCard data={like} />
+      { likesList.length
+        ? <Grid container spacing={2.5}>
+            {likesList.map((like) => (
+                <Grid xs={12} md={6} key={like.username}>
+                  <LikeCard data={like} />
+                </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
+        : <EmptyDataFeedback type={'likes'} />
+      }
     </>
   );
 };

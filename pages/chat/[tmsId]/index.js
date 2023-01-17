@@ -8,6 +8,7 @@ import { AuthContext } from '../../../util/AuthContext'
 
 export async function getServerSideProps(context) {
   const { tmsId } = context.query;
+  console.log('tmsId', tmsId)
   const { axios: myAxios } = useAxios(context)
   const { data: show } = await axios.get(`${TV_TALK_API}/shows/${tmsId}`);
   const { data: comments } = await axios.get(
@@ -28,6 +29,7 @@ export async function getServerSideProps(context) {
 }
 
 const chat = ({ show, comments, profile, isAuth }) => {
+  console.log('comments', comments)
   return (
     <>
       <ChatHeader show={show} />

@@ -41,7 +41,7 @@ export const ListActions = ({ handleClose, commentType, id }) => {
         <CloseRounded />
         Cancel
       </MenuItem>
-      <MenuItem onClick={() => router.push(copyLink)}>reply</MenuItem>
+      {/* <MenuItem onClick={() => router.push(copyLink)}>reply</MenuItem> */}
     </>
   )
 };

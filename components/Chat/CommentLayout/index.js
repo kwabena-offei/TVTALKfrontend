@@ -48,7 +48,11 @@ export const CommentLayout = ({ children, replay, isAuth }) => {
   ];
 
   const handleChangeTab = (event, tabId) => {
-    router.push(tabId);
+    router.replace(tabId);
+  };
+
+  const handleGoBack = () => {
+    router.back();
   };
 
   return (
@@ -58,10 +62,10 @@ export const CommentLayout = ({ children, replay, isAuth }) => {
           <Grid xs={12} md={2}>
             {isMobileOrTablet
             ? <Stack direction='row' spacing={1.875} alignItems='center' sx={{mb: '30px'}}>
-                <ButtonBackMobile />
+                <ButtonBackMobile onClick={handleGoBack} />
                 <Typography fontSize={24} fontWeight={600}>{comment?.user?.username}'s Post</Typography>
               </Stack>
-            : <ButtonBack />}
+            : <ButtonBack onClick={handleGoBack}/>}
           </Grid>
 
           <Grid xs={12} md={8} sx={{ pb: { xs:'40px', md: '60px' } }}>
@@ -92,7 +96,7 @@ export const CommentLayout = ({ children, replay, isAuth }) => {
           <Grid xs={0} md={2} />
         </Grid>
       </Container>
-      <Container maxWidth='xl' sx={{ mb: { xs: 5, md: 7.5 }, paddingX: 2.5 }}>
+      <Container maxWidth='xl' sx={{ mb: { xs: 5, md: 7.5 }, paddingX: 2.5, flexGrow: 1 }}>
         <Grid container>
           <Grid xs={0} md={2}/>
           <Grid xs={12} md={8}>

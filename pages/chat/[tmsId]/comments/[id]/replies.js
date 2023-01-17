@@ -6,6 +6,7 @@ import { TV_TALK_API } from "../../../../../util/constants";
 import CommentCard from '../../../../../components/Chat/CommentCard'
 import { CommentLayout } from "../../../../../components/Chat/CommentLayout";
 import { Box } from "@mui/material";
+import { EmptyDataFeedback } from "../../../../../components/Chat/EmptyDataFeedback";
 
 export async function getServerSideProps(context) {
   const { tmsId, id, type } = context.query;
@@ -37,11 +38,14 @@ export default function Page({ subComments }) {
   const { results: comments } = subComments;
   return (
     <>
-      {comments.map((comment) => (
-        <Box sx={{py: {xs: 1.25, md: 2.5}}} key={`${comment.tmsId}-${comment.id}`}>
-          <CommentCard profile={comment.user} {...comment} commentType='SubComment'/>
-        </Box>
-      ))}
+      { comments.length
+        ? comments.map((comment) => (
+            <Box sx={{py: {xs: 1.25, md: 2.5}}} key={`${comment.tmsId}-${comment.id}`}>
+              <CommentCard profile={comment.user} {...comment} commentType='SubComment'/>
+            </Box>
+          ))
+        : <EmptyDataFeedback type={'replies'}/>
+      }
     </>
   );
 };

@@ -4,6 +4,7 @@ import { TV_TALK_API } from "../../../../../util/constants";
 import { CommentLayout } from "../../../../../components/Chat/CommentLayout";
 import LikeCard from "../../../../../components/Chat/LikeCard";
 import Grid from "@mui/material/Unstable_Grid2";
+import { EmptyDataFeedback } from "../../../../../components/Chat/EmptyDataFeedback";
 
 export async function getServerSideProps(context) {
   const { id } = context.query;
@@ -20,13 +21,16 @@ export default function Page({ comment }) {
   const { shares: sharesList } = comment;
   return (
     <>
-      <Grid container spacing={2.5}>
-        {sharesList.map((share) => (
-          <Grid xs={12} md={6} key={share.username}>
-            <LikeCard data={share} />
+      { sharesList.length
+        ? <Grid container spacing={2.5}>
+            {sharesList.map((share) => (
+              <Grid xs={12} md={6} key={share.username}>
+                <LikeCard data={share} />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
+        : <EmptyDataFeedback type={'shares'} text={'No one had share this yet.'} />
+      }
     </>
   );
 };
