@@ -39,9 +39,10 @@ const ReactionCard = (props) => {
     tmsId,
     commentsMode,
     withoutActions,
-    commentType
+    commentType,
+    header
   } = props;
-  // console.log('Reaction Card props', props)
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isMobileAndTablet = useMediaQuery(theme.breakpoints.down('md'));
@@ -80,8 +81,8 @@ const ReactionCard = (props) => {
   }
 
   return (
-    <CardWrapper sx={withoutActions ? { paddingBottom: 2 } : {} }>
-      <CardHeader isMobile={isMobile} userData={{ id, username, image, timeAgo }} commentType={commentType} />
+    <CardWrapper sx={withoutActions ? { paddingBottom: 2 } : {} } id={id}>
+      <CardHeader isMobile={isMobile} userData={{ id, username, image, timeAgo }} header={header} commentType={commentType} tmsId={tmsId}/>
       <CardContent sx={isMobile ? { paddingX: 2, paddingY: 1 } : { paddingX: 3.75, paddingY: 2.5 }}>
         <ReactionCardHashtags>{hashtag}</ReactionCardHashtags>
         <ReactionCardText isMobile={isMobile}>{text}</ReactionCardText>

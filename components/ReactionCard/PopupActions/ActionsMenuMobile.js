@@ -5,7 +5,7 @@ import { StyledDrawer } from "./PopupActions.styled";
 import { ListActions } from "./ListActions";
 
 
-export const ActionsMenuMobile = ({ id, commentType }) => {
+export const ActionsMenuMobile = ({ id, commentType, tmsId, header }) => {
 
   const [state, setState] = useState(false);
 
@@ -31,7 +31,7 @@ export const ActionsMenuMobile = ({ id, commentType }) => {
         open={state}
         onClose={toggleDrawer}
       >
-        <ListActions handleClose={toggleDrawer} id={id} commentType={commentType} />
+        <ListActions handleClose={toggleDrawer} id={id} commentType={commentType} tmsId={tmsId} header={header}/>
       </StyledDrawer>
     </>
   );

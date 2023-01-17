@@ -24,9 +24,11 @@ dayjs.extend(relativeTime);
 const CommentCard = ({
   profile,
   id,
+  tmsId,
   text,
   images,
   created_at,
+  header,
   withoutActions,
   commentType
 }) => {
@@ -52,11 +54,13 @@ const CommentCard = ({
 
   const { username, image } = profile;
   return (
-    <CardWrapper sx={withoutActions ? { paddingBottom: 2 } : {}}>
+    <CardWrapper sx={withoutActions ? { paddingBottom: 2 } : {}} id={id}>
       <CardHeader
         isMobile={isMobile}
         userData={{ id, username, image, timeAgo }}
         commentType={commentType}
+        tmsId={tmsId}
+        header={header}
       />
       <CardContent
         sx={

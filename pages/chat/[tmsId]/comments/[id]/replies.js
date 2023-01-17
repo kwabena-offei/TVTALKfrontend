@@ -29,19 +29,21 @@ export async function getServerSideProps(context) {
       isAuth,
       show,
       comment,
-      subComments
+      subComments,
+      route: 'replies'
     }, // will be passed to the page component as props
   };
 }
 
 export default function Page({ subComments }) {
-  const { results: comments } = subComments;
+  const { results: sub_comments } = subComments;
+
   return (
     <>
-      { comments.length
-        ? comments.map((comment) => (
+      { sub_comments.length
+        ? sub_comments.map((comment) => (
             <Box sx={{py: {xs: 1.25, md: 2.5}}} key={`${comment.tmsId}-${comment.id}`}>
-              <CommentCard profile={comment.user} {...comment} commentType='SubComment'/>
+              <CommentCard profile={comment.user} tmsId={comment.tmsId} {...comment} header={false} commentType='SubComment'/>
             </Box>
           ))
         : <EmptyDataFeedback type={'replies'}/>

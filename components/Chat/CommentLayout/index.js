@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Container,
@@ -18,37 +18,41 @@ import { AuthContext } from "../../../util/AuthContext";
 
 export const CommentLayout = ({ children, replay, isAuth }) => {
   const { props } = children;
-  const { comment, profile } = props;
+  const { comment, profile, route } = props;
   const router = useRouter();
-  const currentRoute = router.asPath;
+  const currentRoute = route || 'likes'
   const { tmsId, id, sub_comments_count, likes_count, shares_count } = comment;
-  console.log('comment', comment)
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isMobileOrTablet = useMediaQuery(theme.breakpoints.down('md'))
 
-  const inheritURL = `/chat/${tmsId}/comments/${id}`;
-
   const tabs = [
     {
       title: "Likes",
-      href:  `${inheritURL}/likes`,
+      href:  'likes',
       count: likes_count | "0",
     },
     {
       title: "Replies",
-      href: `${inheritURL}/replies`,
+      href: 'replies',
       count: sub_comments_count | "0",
     },
     {
       title: "Shares",
-      href: `${inheritURL}/shares`,
+      href: 'shares',
       count: shares_count | "0",
     }
   ];
 
   const handleChangeTab = (event, tabId) => {
-    router.replace(tabId);
+    router.replace({
+      pathname: '/chat/[tmsId]/comments/[id]/[page]',
+      query: {
+        tmsId: tmsId,
+        id: id,
+        page: tabId
+      }
+    });
   };
 
   const handleGoBack = () => {
@@ -69,7 +73,7 @@ export const CommentLayout = ({ children, replay, isAuth }) => {
           </Grid>
 
           <Grid xs={12} md={8} sx={{ pb: { xs:'40px', md: '60px' } }}>
-            <ReactionCard profile={comment.user} {...comment} commentType='Comment' commentsMode withoutActions/>
+            <ReactionCard profile={comment.user} {...comment} commentType='Comment' header={true} commentsMode withoutActions/>
           </Grid>
           <Grid xs={0} md={2} />
         </Grid>

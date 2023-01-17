@@ -8,10 +8,9 @@ import Report from "../Report";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-export const ListActions = ({ handleClose, commentType, id }) => {
+export const ListActions = ({ handleClose, commentType, id, tmsId, header }) => {
   const router = useRouter()
-  const { tmsId }= router.query
-  const copyLink = `/chat/${tmsId}/comments/${id}/replies`
+  const copyLink = header ? router.asPath : `${router.asPath}#${id}`
 
   const handleCopyLink = async () => {
     //Todo: decide how to create url for copy

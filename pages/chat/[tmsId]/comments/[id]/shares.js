@@ -12,7 +12,8 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      comment
+      comment,
+      route: 'shares'
     }, // will be passed to the page component as props
   };
 }

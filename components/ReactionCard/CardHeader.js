@@ -4,7 +4,7 @@ import { cardHeaderMobileProps } from './ReactionCard.styled'
 import { ActionsMenuDesktop } from './PopupActions/ActionsMenuDesktop'
 import { ActionsMenuMobile } from "./PopupActions/ActionsMenuMobile";
 
-const ReactionsCardHeader = ({ userData, isMobile, commentType, ...props }) => {
+const ReactionsCardHeader = ({ userData, isMobile, commentType, tmsId, header, ...props }) => {
   const { id, username, image, timeAgo } = userData;
   return (
     <CardHeader
@@ -22,7 +22,7 @@ const ReactionsCardHeader = ({ userData, isMobile, commentType, ...props }) => {
         </Avatar>
       }
       action={
-        isMobile ? <ActionsMenuMobile id={id} commentType={commentType} /> : <ActionsMenuDesktop id={id} commentType={commentType} />
+        isMobile ? <ActionsMenuMobile id={id} commentType={commentType} tmsId={tmsId} header={header}/> : <ActionsMenuDesktop id={id} commentType={commentType} tmsId={tmsId} header={header} />
       }
       title={username}
       subheader={timeAgo}
