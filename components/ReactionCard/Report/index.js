@@ -1,12 +1,10 @@
 import React, { useState, useContext } from "react";
-import { DialogContent, MenuItem } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import ReportIcon from "../../Icons/ReportIcon";
-import { ReportTitle, StyledDialog } from "./Report.styled";
+import { StyledDialog } from "./Report.styled";
 import ReportSteps from "./ReportSteps";
 import { useRouter } from "next/router";
 import { AuthContext } from "../../../util/AuthContext";
-// import { useTheme } from '@mui/material/styles';
-// import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Report = ({ handleClose, id, commentType }) => {
   const isAuth = useContext(AuthContext)
@@ -14,9 +12,9 @@ const Report = ({ handleClose, id, commentType }) => {
   const handleOpen = () => {
     setOpen(true);
   };
-  const handleCloseModal = () => {
+  const handleCloseModal = (event) => {
     setOpen(false);
-    handleClose();
+    handleClose(event);
   };
   const url = useRouter().asPath
 
@@ -27,10 +25,7 @@ const Report = ({ handleClose, id, commentType }) => {
         Report
       </MenuItem>
       <StyledDialog open={open} onClose={handleCloseModal} fullWidth>
-        {/* <ReportTitle onClick={handleCloseModal}/> */}
-        {/* <DialogContent> */}
-          <ReportSteps id={id} commentType={commentType} url={url} onClose={handleCloseModal}/>
-        {/* </DialogContent> */}
+        <ReportSteps id={id} commentType={commentType} url={url} onClose={handleCloseModal}/>
       </StyledDialog>
     </>
   );

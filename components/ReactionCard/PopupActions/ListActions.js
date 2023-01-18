@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { MenuItem } from "@mui/material";
 import AttachmentIcon from "../../Icons/AttachmentIcon";
 import { CloseRounded } from "@mui/icons-material";
@@ -6,20 +6,38 @@ import ShareIcon from "../../Icons/ShareIcon";
 import UnfollowIcon from "../../Icons/UnfollowIcon";
 import Report from "../Report";
 import { useRouter } from "next/router";
-import Link from "next/link";
+import { TV_TALK_HOST, TV_TALK_HOST_LOCAL } from "../../../util/constants";
+import { copyToClipboard } from '../../../util/helpers';
+import getConfig from 'next/config';
+import { AuthContext } from "../../../util/AuthContext";
 
 export const ListActions = ({ handleClose, commentType, id, tmsId, header }) => {
   const router = useRouter()
-  const copyLink = header ? router.asPath : `${router.asPath}#${id}`
+  const { publicRuntimeConfig } = getConfig();
+  const isAuth = useContext(AuthContext);
 
-  const handleCopyLink = async () => {
-    //Todo: decide how to create url for copy
-    console.log('commentType', commentType, copyLink)
-    // handleClose()
+  const baseUrl = publicRuntimeConfig.API_ENV === 'development' ? TV_TALK_HOST_LOCAL : TV_TALK_HOST;
+  const copyLink = header ? `${baseUrl}${router.asPath}` : `${baseUrl}${router.asPath}#${id}`
+
+  const handleShare = async (event) => {
+    // Todo: add share logic
+    handleClose(event)
   }
+  const handleCopyLink = async (event) => {
+    await copyToClipboard(copyLink);
+    handleClose(event)
+  }
+  const handleUnfollow = async (event) => {
+    // Todo: find api endpoint to change the status of following
+    if (isAuth) {
+      console.log('you can do this')
+    }
+    handleClose(event)
+  }
+
   return (
     <>
-      <MenuItem onClick={handleClose} disableRipple>
+      <MenuItem onClick={handleShare} disableRipple>
         <ShareIcon />
         Share to...
       </MenuItem>
@@ -28,7 +46,7 @@ export const ListActions = ({ handleClose, commentType, id, tmsId, header }) => 
         Copy Link
       </MenuItem>
       <Report handleClose={handleClose} id={id} commentType={commentType} />
-      <MenuItem onClick={handleClose} disableRipple>
+      <MenuItem onClick={handleUnfollow} disableRipple disabled={!isAuth}>
         <UnfollowIcon />
         Unfollow
       </MenuItem>

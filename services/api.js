@@ -6,7 +6,6 @@ import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 
 const useAxios = (context) => {
-  console.log('get cookies', getCookies({ req: context.req, res: context.res }))
   const cookies = context ? getCookies({ req: context.req, res: context.res }) : getCookies();
 
   const instance = axios.create({
