@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Box, Typography, Stack } from "@mui/material";
 import Grid from '@mui/material/Unstable_Grid2';
 import { useTheme } from "@mui/material/styles";
@@ -14,6 +14,7 @@ import { MenuSelects } from './MenuSelects';
 import MainContent from './MainContent';
 import { useRouter } from "next/router";
 import NewPostCard from "./NewPostCard";
+import SearchGif from "./AddGiff";
 
 export const ChatHeader = ({ show }) => {
   const theme = useTheme();
@@ -57,6 +58,8 @@ export const ChatContent = ({ comments, profile }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isNotLarge = useMediaQuery(theme.breakpoints.down("lg"));
+  const router = useRouter()
+  const { tmsId } = router.query
 
   return (
     <Container maxWidth="xl">
@@ -69,7 +72,7 @@ export const ChatContent = ({ comments, profile }) => {
           <MenuSelects />
         </Grid>
         <Grid xs={12} md={9} lg={7}>
-          <NewPostCard isMobile={isMobile} profile={profile} />
+          <NewPostCard isMobile={isMobile} profile={profile} show_id={tmsId} />
         </Grid>
         <Grid lg={2.5} sx={isNotLarge ? { display: "none" } : {}} />
       </Grid>
