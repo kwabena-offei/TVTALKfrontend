@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Box,
   CardContent,
   Stack
 } from "@mui/material";
@@ -33,6 +34,7 @@ const ReactionCard = (props) => {
     hashtag,
     images,
     created_at,
+    created_at_formatted,
     likes_count,
     sub_comments_count,
     shares_count,
@@ -65,7 +67,7 @@ const ReactionCard = (props) => {
       route: 'shares'
     }
   }
-  const timeAgo = dayjs(created_at).fromNow()
+  const timeAgo = created_at_formatted || dayjs(created_at).fromNow()
   // ToDo: research for hashtag format and provide link-view for it
   const { username, image } = profile;
   // -- navigate user to current comment page --
@@ -86,9 +88,11 @@ const ReactionCard = (props) => {
       <CardContent sx={isMobile ? { paddingX: 2, paddingY: 1 } : { paddingX: 3.75, paddingY: 2.5 }}>
         <ReactionCardHashtags>{hashtag}</ReactionCardHashtags>
         <ReactionCardText isMobile={isMobile}>{text}</ReactionCardText>
-        {!!images && !!images.length && (
-          <ReactionCardMedia image={images[0]} />
-        )}
+        { images?.length ? images.map((image, index) => (
+          <Box key={`${id}-${image}-${index}`} sx={index < images.length - 1 ? { marginBottom: 2 } : {}}>
+            <ReactionCardMedia image={image} />
+          </Box>
+        )) : null}
       </CardContent>
       {withoutActions
       ? null

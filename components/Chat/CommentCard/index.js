@@ -28,6 +28,7 @@ const CommentCard = ({
   text,
   images,
   created_at,
+  created_at_formatted,
   header,
   withoutActions,
   commentType
@@ -50,7 +51,8 @@ const CommentCard = ({
     // })
   }
 
-  const timeAgo = dayjs(created_at).fromNow();
+  // const timeAgo = dayjs(created_at).fromNow();
+  const timeAgo = created_at_formatted
 
   const { username, image } = profile;
   return (
@@ -72,7 +74,11 @@ const CommentCard = ({
         <CardText isMobile={isMobile}>
           {text}
         </CardText>
-        {images.length ? <ReactionCardMedia image={images[0]} /> : null}
+        {images?.length ? images.map((image) => (
+          <Box key={`${id}-${image}-${index}`} sx={index < images.length - 1 ? { marginBottom: 2 } : {}}>
+            <ReactionCardMedia image={image} />
+          </Box>
+        )) : null}
       </CardContent>
       {withoutActions ? null : (
         <CommentCardActions

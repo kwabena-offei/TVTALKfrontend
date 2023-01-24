@@ -1,4 +1,4 @@
-import { Avatar, CardActions, CardHeader, InputBase } from "@mui/material";
+import { Avatar, CardActions, CardContent, CardHeader, CardMedia, InputBase } from "@mui/material";
 import { StyledCard, stackStyle, DesktopCardActions, MobileCardActions } from "./NewPostCard.styled";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from '../../../util/AuthContext'
@@ -23,8 +23,10 @@ const NewPostCard = (props) => {
     videos: [],
     // mute_notifications: true
   })
-  const testGiff = 'https://media.giphy.com/media/3NtY188QaxDdC/giphy.gif'
-  // const secondImage = 'image.png'
+  const [commentMedia, setCommentMedia] = useState({
+    images: [],
+    videos: []
+  })
 
   const onAddHashtag = (event) => {console.log('onAddHashtag', event.target.value)}  
   const onAddPhotosVideo = (event) => {
@@ -34,9 +36,7 @@ const NewPostCard = (props) => {
   }
   const onAddGif = () => {
     toggleGiff()
-    // const newValue = testGiff
-    // commentRef.current.images = [ ...commentRef.current.images, newValue ]
-    // console.log('onAddGif', commentRef.current)
+    console.log('onAddGif', commentRef.current)
   }
   const onAddPhoto = (event) => {console.log('onAddPhoto', event.target.value)}
   const onAddVideo = (event) => {console.log('onAddVideo', event.target.value)}
@@ -56,6 +56,19 @@ const NewPostCard = (props) => {
     }
 
   }
+  const onGifClick = (objURL) => {
+    // console.log('url', objURL.images.original.url)
+    const newValue = objURL.images.original.url
+    commentRef.current.images = [ ...commentRef.current.images, newValue ]
+    setCommentMedia({
+      ...commentMedia,
+      images: [
+        ...commentMedia.images,
+        newValue
+      ]
+    })
+    toggleGiff()
+  }
 
   return (
     <>
@@ -74,6 +87,10 @@ const NewPostCard = (props) => {
             />
           }
         />
+        { commentMedia.images.length
+          ? <CardContent sx={{ px: isMobile ? 2.5 : 5, fontSize: '1.25rem' }}>{`${commentMedia.images.length} gif(s) added`}</CardContent>
+          : null
+          }
         <CardActions
           sx={isMobile ? { ...stackStyle, px: 2.5, pb: 1.875 } : { ...stackStyle, px: 5, pb: 3.75 }}
         >{ isMobile
@@ -96,7 +113,7 @@ const NewPostCard = (props) => {
           }
         </CardActions>
       </StyledCard>
-      <SearchGif open={openGiff} handleClose={toggleGiff}/>
+      <SearchGif open={openGiff} handleClose={toggleGiff} onGifClick={onGifClick}/>
     </>
   );
 };
