@@ -1,30 +1,41 @@
-import React from 'react';
-import { Box, Typography } from '@mui/material';
-import { styled } from '@mui/system';
+import React, { useState } from "react";
+import { Grid, Box } from "@mui/material";
+import bg from "../public/assets/LoginBackground.jpg";
+import Login from "../components/Login";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-const StyledBox = styled(Box, {
-    name: "Test", // Changes class name in the DOM 
-    slot: "boxWrapper" // appends slot name to the name above in the DOM
-})({
-        background: 'yellow',
-        height: '300px',
-        width: '300px'
-    })
-const StyledText = styled(Typography, {})({
-    color: 'blue',
-    fontWeight: 500,
-    fontSize: '30px',
-
-
-})
-
-const login = props => {
-    return (
-        // Don't forget about the SX prop to change styles!
-        <StyledBox sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}> 
-            <StyledText >Слава Україні</StyledText>
-        </StyledBox>
-    );
+const login = (props) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  return (
+    <Box
+      sx={isMobile ? {} : {
+        backgroundImage: `url(${bg.src})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        flexGrow: 1
+      }}
+    >
+      <Grid
+        container
+        spacing={{ lg: 3.6, md: 2 }}
+        sx={{ paddingTop: isMobile ? 0 : 10.25 }}
+      >
+        <Grid item xs={0} md={6} lg={6} />
+        <Grid item xs={12} md={5} lg={4}>
+          <Login isMobile={isMobile} />
+        </Grid>
+        <Grid item xs={0} md={1} lg={2} />
+      </Grid>
+    </Box>
+  );
 };
 
 export default login;
+
+export async function getServerSideProps(context) {
+  return {
+    props: {},
+  }
+}

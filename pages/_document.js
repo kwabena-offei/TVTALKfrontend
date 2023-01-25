@@ -4,51 +4,49 @@ import createEmotionServer from "@emotion/server/create-instance";
 import createEmotionCache from "../util/createEmotionCache";
 
 export default class MyDocument extends Document {
- render() {
-   return (
-     <Html lang="en">
-       <Head>
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-          <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
+  render() {
+    return (
+      <Html lang="en">
+        <Head>
+          {/* <title>TV Talk</title> */}
           {this.props.emotionStyleTags}
-       </Head>
-       <body>
-         <Main />
-         <NextScript />
-       </body>
-     </Html>
-   );
- }
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
 }
 
 MyDocument.getInitialProps = async (ctx) => {
- const originalRenderPage = ctx.renderPage;
+  const originalRenderPage = ctx.renderPage;
 
- const cache = createEmotionCache();
- const { extractCriticalToChunks } = createEmotionServer(cache);
+  const cache = createEmotionCache();
+  const { extractCriticalToChunks } = createEmotionServer(cache);
 
- ctx.renderPage = () =>
-   originalRenderPage({
-     enhanceApp: (App) =>
-       function EnhanceApp(props) {
-         return <App emotionCache={cache} {...props} />;
-       },
-   });
+  ctx.renderPage = () =>
+    originalRenderPage({
+      enhanceApp: (App) =>
+        function EnhanceApp(props) {
+          return <App emotionCache={cache} ctx={ctx} {...props} />;
+        },
+    });
 
- const initialProps = await Document.getInitialProps(ctx);
+  const initialProps = await Document.getInitialProps(ctx);
 
- const emotionStyles = extractCriticalToChunks(initialProps.html);
- const emotionStyleTags = emotionStyles.styles.map((style) => (
-   <style
-     data-emotion={`${style.key} ${style.ids.join(" ")}`}
-     key={style.key}
-     dangerouslySetInnerHTML={{ __html: style.css }}
-   />
- ));
+  const emotionStyles = extractCriticalToChunks(initialProps.html);
+  const emotionStyleTags = emotionStyles.styles.map((style) => (
+    <style
+      data-emotion={`${style.key} ${style.ids.join(" ")}`}
+      key={style.key}
+      dangerouslySetInnerHTML={{ __html: style.css }}
+    />
+  ));
 
- return {
-   ...initialProps,
-   emotionStyleTags,
- };
+  return {
+    ...initialProps,
+    emotionStyleTags,
+  };
 };

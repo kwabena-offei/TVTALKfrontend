@@ -1,0 +1,165 @@
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+
+export default function handler(req, res) {
+  res.status(200).json({
+    "pagination": {
+      "current_page": 1,
+      "total_pages": 1,
+      "prev_page": null,
+      "next_page": null,
+      "total_count": 8,
+      "current_per_page": 50
+    },
+    "results": [
+      {
+        "id": 357,
+        "text": "Is this any good?",
+        "hashtag": null,
+        "user_id": 98,
+        "created_at": "2022-02-13T17:57:52.827Z",
+        "updated_at": "2022-02-13T17:57:52.827Z",
+        "show_id": 1822312,
+        "images": null,
+        "likes_count": null,
+        "sub_comments_count": null,
+        "videos": null,
+        "shares_count": 0,
+        "story_id": null,
+        "mute_notifications": false,
+        "status": "active",
+        "tmsId": "SH024314420000"
+      },
+      {
+        "id": 354,
+        "text": "Pretty good",
+        "hashtag": null,
+        "user_id": 98,
+        "created_at": "2022-02-07T23:19:32.691Z",
+        "updated_at": "2022-02-07T23:19:32.691Z",
+        "show_id": 21633,
+        "images": [],
+        "likes_count": null,
+        "sub_comments_count": null,
+        "videos": [],
+        "shares_count": 0,
+        "story_id": null,
+        "mute_notifications": false,
+        "status": "active",
+        "tmsId": "MV007534630000"
+      },
+      {
+        "id": 351,
+        "text": "testing",
+        "hashtag": null,
+        "user_id": 98,
+        "created_at": "2021-12-06T23:02:52.921Z",
+        "updated_at": "2021-12-11T22:30:19.843Z",
+        "show_id": 2140243,
+        "images": [],
+        "likes_count": null,
+        "sub_comments_count": null,
+        "videos": [],
+        "shares_count": 1,
+        "story_id": null,
+        "mute_notifications": false,
+        "status": "inactive",
+        "tmsId": "EP007629560174"
+      },
+      {
+        "id": 350,
+        "text": "Pretty good episode",
+        "hashtag": null,
+        "user_id": 98,
+        "created_at": "2021-12-06T23:02:38.167Z",
+        "updated_at": "2021-12-06T23:02:38.167Z",
+        "show_id": 2140243,
+        "images": null,
+        "likes_count": null,
+        "sub_comments_count": null,
+        "videos": null,
+        "shares_count": 0,
+        "story_id": null,
+        "mute_notifications": false,
+        "status": "active",
+        "tmsId": "EP007629560174"
+      },
+      {
+        "id": 349,
+        "text": "When is the new season coming out?",
+        "hashtag": null,
+        "user_id": 98,
+        "created_at": "2021-11-01T03:35:33.484Z",
+        "updated_at": "2021-11-01T03:35:33.484Z",
+        "show_id": 2505353,
+        "images": null,
+        "likes_count": null,
+        "sub_comments_count": 2,
+        "videos": null,
+        "shares_count": 0,
+        "story_id": null,
+        "mute_notifications": false,
+        "status": "active",
+        "tmsId": "EP018632100050"
+      },
+      {
+        "id": 348,
+        "text": "This show is getting good..",
+        "hashtag": null,
+        "user_id": 98,
+        "created_at": "2021-11-01T00:38:17.839Z",
+        "updated_at": "2021-11-01T00:38:17.839Z",
+        "show_id": 2505353,
+        "images": [],
+        "likes_count": null,
+        "sub_comments_count": 1,
+        "videos": [],
+        "shares_count": 0,
+        "story_id": null,
+        "mute_notifications": false,
+        "status": "active",
+        "tmsId": "EP018632100050"
+      },
+      {
+        "id": 299,
+        "text": "",
+        "hashtag": null,
+        "user_id": 98,
+        "created_at": "2021-10-03T02:03:07.928Z",
+        "updated_at": "2021-10-03T02:03:07.928Z",
+        "show_id": null,
+        "images": [
+          "https://media2.giphy.com/media/3o7TKo6uiyLXcb4fqE/giphy.gif?cid=d61bf340wcgpv3gcc9skch2mhgjarpcasn7vdcvndm9ynj31&rid=giphy.gif&ct=g"
+        ],
+        "likes_count": null,
+        "sub_comments_count": null,
+        "videos": null,
+        "shares_count": 0,
+        "story_id": 1197110,
+        "mute_notifications": false,
+        "status": "active",
+        "tmsId": null
+      },
+      {
+        "id": 254,
+        "text": null,
+        "hashtag": null,
+        "user_id": 98,
+        "created_at": "2021-08-31T01:52:14.664Z",
+        "updated_at": "2021-08-31T01:52:14.664Z",
+        "show_id": 2139220,
+        "images": [
+          "https://media0.giphy.com/media/jba8ucWVAhG9VcUkx9/giphy.gif?cid=d61bf340whplmted5tjoimryx9dmrp6uzzsqe5yuyxx4lr50&rid=giphy.gif&ct=g"
+        ],
+        "likes_count": null,
+        "sub_comments_count": 1,
+        "videos": null,
+        "shares_count": 0,
+        "story_id": null,
+        "mute_notifications": false,
+        "status": "active",
+        "tmsId": "EP007629560095"
+      }
+    ]
+  }
+  )
+}

@@ -34,7 +34,7 @@ const StyledButton = styled(Button, {})({
     }
 });
 
-const BackButton = ({title}) => {
+const BackButton = ({ title, onClick, customStyles }) => {
     const router = useRouter();
 
     const handleGoBack = () => {
@@ -45,7 +45,8 @@ const BackButton = ({title}) => {
 
     return (
         <StyledButton
-            onClick={handleGoBack}
+            onClick={onClick || handleGoBack}
+            sx={customStyles}
             startIcon={
             <ChevronLeftIcon
                 size="small"

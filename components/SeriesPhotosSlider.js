@@ -2,15 +2,24 @@ import React from 'react';
 import { Box, Typography, CardMedia } from '@mui/material';
 import Carousel from 'react-elastic-carousel';
 import { useWindowDimensions } from '../util/useWindowDimensions.js';
+import ViewAllButton from '../components/ViewAllButton';
+import FullsizeModal from '../components/FullsizeModal';
 
 const SeriesPhotoSlider = ({ photos }) => {
 
 const { isMobile } = useWindowDimensions();
 
+const [modalOpen, setModalOpen] = React.useState(false);
+const handleOpen = () => setModalOpen(true);
+const handleClose = () => setModalOpen(false);
+
     return (
         <Box
-            sx={{ marginTop: '60px' }}
+            sx={{ marginTop: '60px', position: 'relative' }}
         >
+            <ViewAllButton
+                onClick={handleOpen}
+            />
             <Typography sx={{ 
                     fontSize: '36px',
                     lineHeight: '47px',
@@ -37,6 +46,13 @@ const { isMobile } = useWindowDimensions();
                     /> 
                 ))}
             </Carousel>
+            <FullsizeModal
+                isOpen={modalOpen}
+                onClose={handleClose}
+                title='Photos'
+            >
+               <div>Photos</div>
+            </FullsizeModal>
         </Box>
     );
 };
