@@ -30,8 +30,12 @@ export const ActionsMenuMobile = ({ id, commentType, tmsId, header }) => {
         anchor={'bottom'}
         open={state}
         onClose={toggleDrawer}
+        variant="temporary"
+        ModalProps={{
+          keepMounted: false,
+        }}
       >
-        <ListActions handleClose={toggleDrawer} id={id} commentType={commentType} tmsId={tmsId} header={header}/>
+        <ListActions handleClose={toggleDrawer} id={id} commentType={commentType} tmsId={tmsId} header={header} isMobile/>
       </StyledDrawer>
     </>
   );

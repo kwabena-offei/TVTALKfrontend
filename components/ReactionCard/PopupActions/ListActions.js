@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { MenuItem } from "@mui/material";
 import AttachmentIcon from "../../Icons/AttachmentIcon";
 import { CloseRounded } from "@mui/icons-material";
@@ -10,18 +10,23 @@ import { TV_TALK_HOST, TV_TALK_HOST_LOCAL } from "../../../util/constants";
 import { copyToClipboard } from '../../../util/helpers';
 import getConfig from 'next/config';
 import { AuthContext } from "../../../util/AuthContext";
+import { ShareModal } from "../ShareModal";
+import { ShareDrawer } from "../ShareDrawer";
 
-export const ListActions = ({ handleClose, commentType, id, tmsId, header }) => {
+export const ListActions = ({ handleClose, commentType, id, tmsId, header, isMobile }) => {
+  const [openShare, setOpenShare] = useState(false)
   const router = useRouter()
   const { publicRuntimeConfig } = getConfig();
   const isAuth = useContext(AuthContext);
 
   const baseUrl = publicRuntimeConfig.API_ENV === 'development' ? TV_TALK_HOST_LOCAL : TV_TALK_HOST;
   const copyLink = header ? `${baseUrl}${router.asPath}` : `${baseUrl}${router.asPath}#${id}`
-
+  const quote = 'Look what we got here on TV_Talk!'
+  const toggleShare = () => setOpenShare(!openShare)
   const handleShare = async (event) => {
     // Todo: add share logic
-    handleClose(event)
+    // handleClose(event)
+    toggleShare()
   }
   const handleCopyLink = async (event) => {
     await copyToClipboard(copyLink);
@@ -58,7 +63,21 @@ export const ListActions = ({ handleClose, commentType, id, tmsId, header }) => 
         <CloseRounded />
         Cancel
       </MenuItem>
-      {/* <MenuItem onClick={() => router.push(copyLink)}>reply</MenuItem> */}
+      { isMobile ? (
+        <ShareDrawer
+          open={openShare}
+          onClose={toggleShare}
+          quote={quote}
+          url={copyLink}
+        />
+      ) : (
+        <ShareModal
+          open={openShare}
+          onClose={toggleShare}
+          quote={quote}
+          url={copyLink}
+        />
+      )}
     </>
-  )
+  );
 };

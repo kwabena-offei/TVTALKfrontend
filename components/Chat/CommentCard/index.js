@@ -41,14 +41,14 @@ const CommentCard = ({
   const onReply = () => {
     // Todo: uncomment, when backend data fixed
 
-    // router.push({
-    //   pathname: '/chat/[tmsId]/comments/[id]/replies',
-    //   query: {
-    //     tmsId: router.query.tmsId,
-    //     id: id,
-    //     type: commentType
-    //   }
-    // })
+    router.push({
+      pathname: '/chat/[tmsId]/comments/[id]/replies',
+      query: {
+        tmsId: router.query.tmsId,
+        id: id,
+        type: commentType
+      }
+    })
   }
 
   // const timeAgo = dayjs(created_at).fromNow();
