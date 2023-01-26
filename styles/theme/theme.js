@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material/styles";
-import { experimental_sx as sx } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
 const theme = createTheme({
   typography: {
@@ -142,7 +142,7 @@ const theme = createTheme({
             borderRadius: 30,
           },
         },
-        icon: sx({
+        icon: ({ theme }) => theme.unstable_sx({
           color: 'primary.main',
           marginRight: '1.25rem'
         })
