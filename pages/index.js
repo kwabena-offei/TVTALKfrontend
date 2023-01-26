@@ -1,8 +1,5 @@
-import Head from 'next/head'
-import Image from 'next/image'
 import DisplayAllShows from '../components/DisplayAllShows'
-
-export default function Home({shows}) {
+export default function Home({ shows }) {
   return (
     <>
       <DisplayAllShows shows={shows} />

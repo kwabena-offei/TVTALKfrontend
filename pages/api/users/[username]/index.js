@@ -6,7 +6,7 @@ export default function handler(req, res) {
     "image": "https://lh3.googleusercontent.com/a/AATXAJx2ImOGTN8HnmebWEwEpEEANtn9Ul0Rb11WVAwj=s96-c",
     "reactions_count": 8,
     "favorites_count": 2,
-    "followers_count": null,
-    "following_count": null
+    "followers_count": 8,
+    "following_count": 8
   })
 }

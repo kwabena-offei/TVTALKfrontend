@@ -60,7 +60,7 @@ export const TabLabel = ({ count, title, isMobile }) => {
     </Stack>
   )
 }
-export const FollowButton = ({isMobile, ...props}) => {
+export const FollowButton = ({ isMobile, ...props }) => {
   return (
     <Button
       {...props}
@@ -74,16 +74,17 @@ export const FollowButton = ({isMobile, ...props}) => {
         lineHeight: '18px',
         height: isMobile ? '40px' : '50px'
       }}
-      >
+    >
       Follow
     </Button>
   )
 }
 
-export const EditProfileButton = ({isMobile, ...props}) => {
+export const EditProfileButton = ({ isMobile, ...props }) => {
   return (
     <Button
       {...props}
+      href="/profile"
       aria-label="edit-profile"
       variant="outlined"
       color="primary"
@@ -96,7 +97,7 @@ export const EditProfileButton = ({isMobile, ...props}) => {
         lineHeight: '18px',
         height: isMobile ? '40px' : '50px'
       }}
-      >
+    >
       Edit Profile
     </Button>
   )

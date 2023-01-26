@@ -7,6 +7,7 @@ import createEmotionCache from '../util/createEmotionCache';
 import theme from '../styles/theme/theme';
 import { createGlobalStyle } from "styled-components";
 import AppBar from '../components/AppBar';
+// import '../styles/main.scss'
 
 const GlobalStyle = createGlobalStyle`
     @font-face {
