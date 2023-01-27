@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonBase,
   Card
 } from "@mui/material";
 import { OutlinedButton } from "../../OutlinedButton";
@@ -134,4 +135,21 @@ export const MobileCardActions = ({
       </Box>
     </>
   );
+};
+export const StyledBadgeButton = styled(ButtonBase)({
+  height: "24px",
+  width: "24px",
+  borderRadius: "50%",
+  backgroundColor: "rgb(222 222 222 / 50%)",
+  color: "#000",
+});
+
+export const imageStyleProps = {
+  minWidth: "30px",
+  minHeight: "30px",
+  maxHeight: "60px",
+  maxWidth: "60px",
+  height: "fit-content",
+  width: "fit-content",
+  borderRadius: "6px",
 };

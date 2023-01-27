@@ -1,9 +1,11 @@
-import { Avatar, CardActions, CardContent, CardHeader, CardMedia, InputBase } from "@mui/material";
-import { StyledCard, stackStyle, DesktopCardActions, MobileCardActions } from "./NewPostCard.styled";
+import { Avatar, CardActions, CardContent, CardHeader, CardMedia, InputBase, Badge, IconButton, Button } from "@mui/material";
+import { StyledCard, stackStyle, DesktopCardActions, MobileCardActions, StyledBadgeButton, imageStyleProps } from "./NewPostCard.styled";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from '../../../util/AuthContext'
 import useAxios from "../../../services/api";
 import SearchGif from "../AddGiff";
+import { Box } from "@mui/system";
+import { Close } from "@mui/icons-material";
 
 const NewPostCard = (props) => {
   const { isMobile, profile, show_id, story_id } = props;
@@ -88,7 +90,29 @@ const NewPostCard = (props) => {
           }
         />
         { commentMedia.images.length
-          ? <CardContent sx={{ px: isMobile ? 2.5 : 5, fontSize: '1.25rem' }}>{`${commentMedia.images.length} gif(s) added`}</CardContent>
+          ? <CardContent sx={{ px: isMobile ? 2.5 : 5, fontSize: '1.25rem' }}>
+              <Box display='flex' flexDirection='row' justifyContent='flex-start' rowGap={2} columnGap={3} flexWrap='wrap' >
+              {commentMedia.images.map((image, index) => (
+                <Badge
+                  key={`${image}-mini-${index}`}
+                  color='default'
+                  badgeContent={
+                    // ToDo: add remove item function
+                    <StyledBadgeButton>
+                      <Close fontSize='1rem'/>
+                    </StyledBadgeButton>
+                  }
+                >
+                  <CardMedia
+                    sx={imageStyleProps}
+                    image={image}
+                    component="img"
+                    alt="gif"
+                  />
+                  </Badge>
+              ))}
+              </Box>
+            </CardContent>
           : null
           }
         <CardActions
