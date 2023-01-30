@@ -50,11 +50,11 @@ const RoundedButton = styled(Button, {}) ({
   }
 })
 
-export const RoundedIconButton = ({icon, ...props}) => {
+export const RoundedIconButton = ({icon, children, ...props}) => {
   return (
     <Box width={40} height={40}>
       <RoundedButton variant='contained' sx={{ backgroundColor: 'background.default' }} {...props}>
-        {icon}
+        {icon}{children}
       </RoundedButton>  
     </Box>
   )
@@ -125,7 +125,9 @@ export const MobileCardActions = ({
       <RoundedIconButton color='darkSecondary' onClick={onAddHashtag} icon={<HashtagIcon />} disabled={!isAuth}/>
       <RoundedIconButton color='darkSecondary' onClick={onAddPhoto} icon={<GaleryIcon />}disabled={!isAuth}/>
       <RoundedIconButton color='darkSecondary' onClick={onTakeShot} icon={<CameraIcon />}disabled={!isAuth}/>
-      <RoundedIconButton color='darkSecondary' onClick={onAddVideo} icon={<VideoIcon />} disabled={!isAuth}/>
+      <RoundedIconButton color='darkSecondary' icon={<VideoIcon />} disabled={!isAuth} component="label">
+        <input hidden accept="video/*" type='file' onChange={onAddVideo}/>
+      </RoundedIconButton>
       <RoundedIconButton color='darkSecondary' onClick={onAddGif} icon={<GifIcon />} disabled={!isAuth}/>
       <Box width={40} height={40} ml='auto!important'>
         <PostIconButton

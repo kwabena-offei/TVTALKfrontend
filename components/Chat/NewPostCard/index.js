@@ -29,6 +29,7 @@ const NewPostCard = (props) => {
     images: [],
     videos: []
   })
+  const [video, setVideo] = useState(null)
 
   const onAddHashtag = (event) => {console.log('onAddHashtag', event.target.value)}  
   const onAddPhotosVideo = (event) => {
@@ -41,7 +42,22 @@ const NewPostCard = (props) => {
     console.log('onAddGif', commentRef.current)
   }
   const onAddPhoto = (event) => {console.log('onAddPhoto', event.target.value)}
-  const onAddVideo = (event) => {console.log('onAddVideo', event.target.value)}
+  // const onVideoChange = event => {
+    
+  // };
+  const onAddVideo = (event) => {
+    const newValue = event.target.files[0]
+    setVideo(newValue)
+    setCommentMedia({
+      ...commentMedia,
+      videos: [
+        ...commentMedia.videos,
+        newValue
+      ]
+    })
+    // commentRef.current.videos = [ ...commentRef.current.videos, newValue]
+  }
+  console.log('video', video)
   const onTakeShot = (event) => {console.log('onTakeShot', event.target.value)}
 
   const onPost = async (values) => {
@@ -49,10 +65,10 @@ const NewPostCard = (props) => {
     // post /comments
     console.log('onPost: send ', commentRef.current)
     try {
-      const response = await axios.post(`/comments?tms_id=${show_id}`, {
-        comment: commentRef.current
-      })
-      console.log('response', response)
+      // const response = await axios.post(`/comments?tms_id=${show_id}`, {
+      //   comment: commentRef.current
+      // })
+      // console.log('response', response)
     } catch (error) {
       console.log('post error', error)
     }
@@ -70,6 +86,17 @@ const NewPostCard = (props) => {
       ]
     })
     toggleGiff()
+  }
+
+  const removeMedia = ({ image, index }) => {
+    const updatedMedia = commentMedia.images.filter((media, media_index) => (
+      !(media_index === index && media === image)
+    ))
+    setCommentMedia({
+      ...commentMedia,
+      images: updatedMedia
+    })
+    commentRef.current.images = updatedMedia
   }
 
   return (
@@ -98,7 +125,7 @@ const NewPostCard = (props) => {
                   color='default'
                   badgeContent={
                     // ToDo: add remove item function
-                    <StyledBadgeButton>
+                    <StyledBadgeButton onClick={() => removeMedia({ image, index })}>
                       <Close fontSize='1rem'/>
                     </StyledBadgeButton>
                   }
@@ -124,6 +151,7 @@ const NewPostCard = (props) => {
             onAddPhoto={onAddPhoto}
             onTakeShot={onTakeShot}
             onAddVideo={onAddVideo}
+            // onVideoChange={onVideoChange}
             onAddGif={onAddGif}
             onPost={onPost}
             />
