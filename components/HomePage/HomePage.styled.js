@@ -7,19 +7,20 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Box } from "@mui/system";
 import styled from "styled-components";
+import { Typography } from "@mui/material";
 
 const CustomTitle = () => {
-    return
+    return <Typography></Typography>
 }
-const CustomButton = styled(Box, {
+const CustomNextButton = styled(Box, {
     name: "Favorite",
     slot: "dark-button"
 })({
-    '&:before': 'red',
-    backgroundColor: '#090F27',
-    // color: "#A5B0D6",
-    // paddingLeft: '1.15vw',
-    // paddingRight: '1.15vw',
+    '&::before': {
+        content: '',
+        color: '#A5B0D6',
+        fontSize: '3rem',
+    },
     boxShadow: 'none'
 })
 
@@ -27,20 +28,28 @@ const CustomButton = styled(Box, {
 
 const NextArrow = ({ ...props }) => {
     return (
-        <CustomButton
+        <CustomNextButton
             {...props}
         />
     );
 }
 
-const PrevArrow = (props) => {
-    const { className, style, onClick } = props;
+const CustomPrevButton = styled(Box, {
+    name: "Favorite",
+    slot: "dark-button"
+})({
+    '&::before': {
+        content: '',
+        color: '#A5B0D6',
+        fontSize: '3rem',
+    },
+    left: '-50px',
+    boxShadow: 'none'
+})
+
+const PrevArrow = ({ ...props }) => {
     return (
-        <div
-            className={className}
-            style={{ ...style, display: "block", background: "green" }}
-            onClick={onClick}
-        />
+        <CustomPrevButton {...props} />
     );
 }
 

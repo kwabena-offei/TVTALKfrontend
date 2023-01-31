@@ -1,11 +1,18 @@
-import { Button, Card, CardContent, CardMedia, Grid, Typography, useMediaQuery } from '@mui/material';
+import { Button, Card, CardContent, CardMedia, Grid, Link, Typography, useMediaQuery } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
 import { useTheme } from 'styled-components';
 import BlueButton from '../BlueButton';
 import HeartButton from '../HeartButton';
+import { hasCookie } from 'cookies-next';
 
 const CustomShowCard = ({ tvShow, ind }) => {
+
+    let checkToken = hasCookie('token');
+
+    const likeShow = async () => {
+        // Submit post request to liek the show 
+    }
 
     return (
         <Box sx={{ padding: '0 1rem' }}>
@@ -32,7 +39,7 @@ const CustomShowCard = ({ tvShow, ind }) => {
                             </Button>
                         </Grid>
                         <Grid item>
-                            <HeartButton />
+                            <HeartButton onClick={likeShow} />
                         </Grid>
                     </Grid>
                 </CardContent>
