@@ -14,7 +14,6 @@ import { MenuSelects } from './MenuSelects';
 import MainContent from './MainContent';
 import { useRouter } from "next/router";
 import NewPostCard from "./NewPostCard";
-import SearchGif from "./AddGiff";
 
 export const ChatHeader = ({ show }) => {
   const theme = useTheme();

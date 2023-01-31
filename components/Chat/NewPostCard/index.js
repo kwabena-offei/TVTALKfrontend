@@ -1,4 +1,4 @@
-import { Avatar, CardActions, CardContent, CardHeader, CardMedia, InputBase, Badge, IconButton, Button } from "@mui/material";
+import { Avatar, CardActions, CardContent, CardHeader, CardMedia, InputBase, Badge, IconButton, Button, Dialog, DialogContent } from "@mui/material";
 import { StyledCard, stackStyle, DesktopCardActions, MobileCardActions, StyledBadgeButton, imageStyleProps } from "./NewPostCard.styled";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from '../../../util/AuthContext'
@@ -6,6 +6,12 @@ import useAxios from "../../../services/api";
 import SearchGif from "../AddGiff";
 import { Box } from "@mui/system";
 import { Close } from "@mui/icons-material";
+import dynamic from 'next/dynamic'
+
+const UploadFiles = dynamic(
+  () => import("./UploadFiles"),
+  { ssr: false }
+)
 
 const NewPostCard = (props) => {
   const { isMobile, profile, show_id, story_id } = props;
@@ -14,26 +20,25 @@ const NewPostCard = (props) => {
   const size = isMobile ? 50 : 60;
   const [openGiff, setOpenGiff] = useState(false)
   const toggleGiff = () => setOpenGiff(!openGiff)
-  // const [comment, setComment] = useState("")
   const { axios } = useAxios()
   const message = useRef()
   const commentRef = useRef({
     text: '',
-    // show_id: show_id ? show_id : null,
-    // story_id: story_id ? story_id : null,
     images: [],
-    videos: [],
-    // mute_notifications: true
+    videos: []
   })
   const [commentMedia, setCommentMedia] = useState({
     images: [],
     videos: []
   })
   const [video, setVideo] = useState(null)
+  const [openUploadFile, setOpenUloadFile] = useState(false)
+  const toggleUploadFile = () => setOpenUloadFile(!openUploadFile)
 
   const onAddHashtag = (event) => {console.log('onAddHashtag', event.target.value)}  
   const onAddPhotosVideo = (event) => {
-    console.log('onAddPhotosVideo', event.target.value)
+    toggleUploadFile()
+    // console.log('onAddPhotosVideo', event.target.value)
     // commentRef.current.images = [ ...commentRef.current.images, secondImage ]
     // console.log('onAddPhoto', commentRef.current)
   }
@@ -42,11 +47,9 @@ const NewPostCard = (props) => {
     console.log('onAddGif', commentRef.current)
   }
   const onAddPhoto = (event) => {console.log('onAddPhoto', event.target.value)}
-  // const onVideoChange = event => {
-    
-  // };
   const onAddVideo = (event) => {
     const newValue = event.target.files[0]
+    // const newValue = 'https://youtu.be/Di310WS8zLk'
     setVideo(newValue)
     setCommentMedia({
       ...commentMedia,
@@ -55,7 +58,7 @@ const NewPostCard = (props) => {
         newValue
       ]
     })
-    // commentRef.current.videos = [ ...commentRef.current.videos, newValue]
+    commentRef.current.videos = [ ...commentRef.current.videos, newValue]
   }
   console.log('video', video)
   const onTakeShot = (event) => {console.log('onTakeShot', event.target.value)}
@@ -65,10 +68,10 @@ const NewPostCard = (props) => {
     // post /comments
     console.log('onPost: send ', commentRef.current)
     try {
-      // const response = await axios.post(`/comments?tms_id=${show_id}`, {
-      //   comment: commentRef.current
-      // })
-      // console.log('response', response)
+      const response = await axios.post(`/comments?tms_id=${show_id}`, {
+        comment: commentRef.current
+      })
+      console.log('response', response)
     } catch (error) {
       console.log('post error', error)
     }
@@ -151,7 +154,6 @@ const NewPostCard = (props) => {
             onAddPhoto={onAddPhoto}
             onTakeShot={onTakeShot}
             onAddVideo={onAddVideo}
-            // onVideoChange={onVideoChange}
             onAddGif={onAddGif}
             onPost={onPost}
             />
@@ -166,6 +168,11 @@ const NewPostCard = (props) => {
         </CardActions>
       </StyledCard>
       <SearchGif open={openGiff} handleClose={toggleGiff} onGifClick={onGifClick}/>
+      <Dialog open={openUploadFile} onClose={toggleUploadFile}>
+        <DialogContent>
+          <UploadFiles />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

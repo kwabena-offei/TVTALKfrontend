@@ -94,13 +94,13 @@ export const DesktopCardActions = ({
 }) => {
   return (
     <>
-      <OutlinedButton sx={buttonDesktopStyle} onClick={onAddHashtag}disabled={!isAuth}>
+      <OutlinedButton sx={buttonDesktopStyle} onClick={onAddHashtag} disabled={!isAuth}>
         Add #
       </OutlinedButton>
-      <OutlinedButton sx={buttonDesktopStyle} onClick={onAddPhotosVideo}disabled={!isAuth}>
-        Add photos/videos
+      <OutlinedButton sx={buttonDesktopStyle} disabled={!isAuth} onClick={onAddPhotosVideo}> Add photos/videos
+        {/* <input hidden accept="video/*" type='file' onChange={onAddPhotosVideo}/> */}
       </OutlinedButton>
-      <OutlinedButton sx={buttonDesktopStyle} onClick={onAddGif}disabled={!isAuth}>
+      <OutlinedButton sx={buttonDesktopStyle} onClick={onAddGif} disabled={!isAuth}>
         Add GIF
       </OutlinedButton>
       <Box ml="auto!important">
