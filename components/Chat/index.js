@@ -54,7 +54,7 @@ export const ChatHeader = ({ show }) => {
   )
 }
 
-export const ChatContent = ({ comments, profile }) => {
+export const ChatContent = ({ comments, profile, show }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isNotLarge = useMediaQuery(theme.breakpoints.down("lg"));
@@ -69,7 +69,7 @@ export const ChatContent = ({ comments, profile }) => {
         alignItems={isMobile ? "flex-start" : "stretch"}
       >
         <Grid xs={12} md={3} lg={2.5}>
-          <MenuSelects />
+          <MenuSelects episodes={show.totalEpisodes} seasons={show.totalSeasons} />
         </Grid>
         <Grid xs={12} md={9} lg={7}>
           <NewPostCard isMobile={isMobile} profile={profile} show_id={tmsId} />
