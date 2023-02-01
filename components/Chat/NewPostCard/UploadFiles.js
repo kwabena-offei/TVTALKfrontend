@@ -3,16 +3,24 @@
 import getConfig from 'next/config';
 import { PickerOverlay } from 'filestack-react';
 
-function UploadFiles (props) {
+function UploadFiles ({ onClose, onOpen, onCancel, onUploadDone, accept, sources }) {
   const { publicRuntimeConfig } = getConfig();
   const apiKey = publicRuntimeConfig.FILESTACK_API_KEY
-  console.log('apiKey', apiKey)
 
   return (
     <PickerOverlay
       apikey={apiKey}
-      onUploadDone={(res) => console.log(res)}
-    />
+      pickerOptions={{
+        allowManualRetry: true,
+        accept: accept,
+        onClose: onClose,
+        onCancel: onCancel,
+        onOpen: onOpen,
+        fromSources: sources ? [ 'local_file_system', ...sources ] : [ 'local_file_system' ],
+        maxFiles: 10,
+      }}
+      onUploadDone={onUploadDone}
+      />
   )
 }
 export default UploadFiles;

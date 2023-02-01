@@ -1,11 +1,9 @@
-import { Avatar, CardActions, CardContent, CardHeader, CardMedia, InputBase, Badge, IconButton, Button, Dialog, DialogContent } from "@mui/material";
-import { StyledCard, stackStyle, DesktopCardActions, MobileCardActions, StyledBadgeButton, imageStyleProps } from "./NewPostCard.styled";
+import { Avatar, CardActions, CardHeader, InputBase } from "@mui/material";
+import { StyledCard, stackStyle, DesktopCardActions, MobileCardActions, UploadedVideos, UploadedMedia } from "./NewPostCard.styled";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from '../../../util/AuthContext'
 import useAxios from "../../../services/api";
 import SearchGif from "../AddGiff";
-import { Box } from "@mui/system";
-import { Close } from "@mui/icons-material";
 import dynamic from 'next/dynamic'
 
 const UploadFiles = dynamic(
@@ -27,80 +25,122 @@ const NewPostCard = (props) => {
     images: [],
     videos: []
   })
-  const [commentMedia, setCommentMedia] = useState({
-    images: [],
-    videos: []
-  })
-  const [video, setVideo] = useState(null)
+  const [images, setImages] = useState([])
+  const [videos, setVideos] = useState([])
+  const [acceptType, setAcceptType] = useState()
+  const [sources, setSources] = useState(null)
   const [openUploadFile, setOpenUloadFile] = useState(false)
   const toggleUploadFile = () => setOpenUloadFile(!openUploadFile)
 
-  const onAddHashtag = (event) => {console.log('onAddHashtag', event.target.value)}  
-  const onAddPhotosVideo = (event) => {
+  const handleCloseUpload = async (response) => {
+    // console.log('response', response)
+    const { filesFailed, filesUploaded } = response
+    if (filesFailed.length > 0) {
+      // ToDo: add behaviour in case the file has not uploaded (if it's needed)
+      console.log('Upload failed failed for files: ', filesFailed)
+      return
+    }
+    if (!filesUploaded.length) {
+      console.log('No uploaded files')
+      return
+    }
+
+    for (const file of filesUploaded) {
+      const [ type, _extension ] = file.mimetype.split('/')
+      const responseUrl = file.url
+
+      // -- handle url for video type file --
+      if (type === 'video') {
+        setVideos((prevState) => ([
+          ...prevState,
+          {
+            name: file.originalFile.name,
+            url: responseUrl,
+            handle: file.handle
+          }
+        ]))
+      }
+
+      // -- handle url for image type file --
+      if (type === 'image') {
+        setImages((prevState) => ([
+          ...prevState,
+          responseUrl
+        ]))
+      }
+    }
+
     toggleUploadFile()
-    // console.log('onAddPhotosVideo', event.target.value)
-    // commentRef.current.images = [ ...commentRef.current.images, secondImage ]
-    // console.log('onAddPhoto', commentRef.current)
+  }
+
+  const onAddHashtag = (event) => {console.log('onAddHashtag', event.target.value)}  
+
+  const onAddPhotosVideo = () => {
+    setAcceptType(['video/*', 'image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+    setSources(['url'])
+    toggleUploadFile()
   }
   const onAddGif = () => {
     toggleGiff()
-    console.log('onAddGif', commentRef.current)
+    // console.log('onAddGif', commentRef.current)
   }
-  const onAddPhoto = (event) => {console.log('onAddPhoto', event.target.value)}
-  const onAddVideo = (event) => {
-    const newValue = event.target.files[0]
-    // const newValue = 'https://youtu.be/Di310WS8zLk'
-    setVideo(newValue)
-    setCommentMedia({
-      ...commentMedia,
-      videos: [
-        ...commentMedia.videos,
-        newValue
-      ]
-    })
-    commentRef.current.videos = [ ...commentRef.current.videos, newValue]
+  const onAddPhoto = () => {
+    setAcceptType(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+    setSources(['url'])
+    toggleUploadFile()
   }
-  console.log('video', video)
+  const onAddVideo = () => {
+    setAcceptType(['video/*'])
+    setSources(['url'])
+    toggleUploadFile()
+  }
   const onTakeShot = (event) => {console.log('onTakeShot', event.target.value)}
 
-  const onPost = async (values) => {
+  const onPost = async () => {
     commentRef.current.text = message.current.value
+    commentRef.current.videos = videos.map((video) => (video.url))
+    commentRef.current.images = images
     // post /comments
     console.log('onPost: send ', commentRef.current)
     try {
       const response = await axios.post(`/comments?tms_id=${show_id}`, {
         comment: commentRef.current
       })
+      commentRef.current = {
+        text: '',
+        images: [],
+        videos: []
+      }
+      setVideos([])
+      setImages([])
+      message.current.value = ''
       console.log('response', response)
     } catch (error) {
       console.log('post error', error)
     }
-
   }
   const onGifClick = (objURL) => {
-    // console.log('url', objURL.images.original.url)
     const newValue = objURL.images.original.url
-    commentRef.current.images = [ ...commentRef.current.images, newValue ]
-    setCommentMedia({
-      ...commentMedia,
-      images: [
-        ...commentMedia.images,
-        newValue
-      ]
-    })
+    setImages((prevState) => ([
+      ...prevState,
+      newValue
+    ]))
     toggleGiff()
   }
 
   const removeMedia = ({ image, index }) => {
-    const updatedMedia = commentMedia.images.filter((media, media_index) => (
+    const updatedMedia = images.filter((media, media_index) => (
       !(media_index === index && media === image)
     ))
-    setCommentMedia({
-      ...commentMedia,
-      images: updatedMedia
-    })
-    commentRef.current.images = updatedMedia
+    setImages(updatedMedia)
   }
+  const removeVideo = (item) => {
+    const updateVideo = videos.filter((video) => (
+      !(video.handle === item)
+    ))
+    setVideos(updateVideo)
+  }
+  const cardStyle = { px: isMobile ? 2.5 : 5, fontSize: '1.25rem' }
 
   return (
     <>
@@ -119,32 +159,14 @@ const NewPostCard = (props) => {
             />
           }
         />
-        { commentMedia.images.length
-          ? <CardContent sx={{ px: isMobile ? 2.5 : 5, fontSize: '1.25rem' }}>
-              <Box display='flex' flexDirection='row' justifyContent='flex-start' rowGap={2} columnGap={3} flexWrap='wrap' >
-              {commentMedia.images.map((image, index) => (
-                <Badge
-                  key={`${image}-mini-${index}`}
-                  color='default'
-                  badgeContent={
-                    // ToDo: add remove item function
-                    <StyledBadgeButton onClick={() => removeMedia({ image, index })}>
-                      <Close fontSize='1rem'/>
-                    </StyledBadgeButton>
-                  }
-                >
-                  <CardMedia
-                    sx={imageStyleProps}
-                    image={image}
-                    component="img"
-                    alt="gif"
-                  />
-                  </Badge>
-              ))}
-              </Box>
-            </CardContent>
+        { images.length
+          ? <UploadedMedia images={images} removeMedia={removeMedia} cardStyle={cardStyle} />
           : null
           }
+        { videos.length
+          ? <UploadedVideos videos={videos} removeVideo={removeVideo} cardStyle={cardStyle} />
+          : null
+        }
         <CardActions
           sx={isMobile ? { ...stackStyle, px: 2.5, pb: 1.875 } : { ...stackStyle, px: 5, pb: 3.75 }}
         >{ isMobile
@@ -168,11 +190,17 @@ const NewPostCard = (props) => {
         </CardActions>
       </StyledCard>
       <SearchGif open={openGiff} handleClose={toggleGiff} onGifClick={onGifClick}/>
-      <Dialog open={openUploadFile} onClose={toggleUploadFile}>
-        <DialogContent>
-          <UploadFiles />
-        </DialogContent>
-      </Dialog>
+      { openUploadFile
+        ? <UploadFiles
+          onCancel={toggleUploadFile}
+          onClose={toggleUploadFile}
+          onOpen={() => setOpenUloadFile(true)}
+          onUploadDone={handleCloseUpload}
+          accept={acceptType}
+          sources={sources}
+        />
+        : null
+      }
     </>
   );
 };

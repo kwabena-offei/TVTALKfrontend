@@ -2,8 +2,10 @@ import {
   Box,
   Button,
   ButtonBase,
-  Card
+  Card,
+  CardContent, CardMedia, Badge, List, ListItem, IconButton, ListItemText
 } from "@mui/material";
+import { Close, Delete, CancelOutlined } from "@mui/icons-material";
 import { OutlinedButton } from "../../OutlinedButton";
 import { styled } from "@mui/system";
 import CameraIcon from "../../Icons/CameraIcon";
@@ -98,7 +100,6 @@ export const DesktopCardActions = ({
         Add #
       </OutlinedButton>
       <OutlinedButton sx={buttonDesktopStyle} disabled={!isAuth} onClick={onAddPhotosVideo}> Add photos/videos
-        {/* <input hidden accept="video/*" type='file' onChange={onAddPhotosVideo}/> */}
       </OutlinedButton>
       <OutlinedButton sx={buttonDesktopStyle} onClick={onAddGif} disabled={!isAuth}>
         Add GIF
@@ -125,9 +126,7 @@ export const MobileCardActions = ({
       <RoundedIconButton color='darkSecondary' onClick={onAddHashtag} icon={<HashtagIcon />} disabled={!isAuth}/>
       <RoundedIconButton color='darkSecondary' onClick={onAddPhoto} icon={<GaleryIcon />}disabled={!isAuth}/>
       <RoundedIconButton color='darkSecondary' onClick={onTakeShot} icon={<CameraIcon />}disabled={!isAuth}/>
-      <RoundedIconButton color='darkSecondary' icon={<VideoIcon />} disabled={!isAuth} component="label">
-        <input hidden accept="video/*" type='file' onChange={onAddVideo}/>
-      </RoundedIconButton>
+      <RoundedIconButton color='darkSecondary' onClick={onAddVideo} icon={<VideoIcon />} disabled={!isAuth} />
       <RoundedIconButton color='darkSecondary' onClick={onAddGif} icon={<GifIcon />} disabled={!isAuth}/>
       <Box width={40} height={40} ml='auto!important'>
         <PostIconButton
@@ -155,3 +154,56 @@ export const imageStyleProps = {
   width: "fit-content",
   borderRadius: "6px",
 };
+
+export const UploadedVideos = ({ videos, removeVideo, cardStyle }) => {
+  return (
+    <CardContent sx={cardStyle}>
+      <List as={Box} >
+        {videos.map((video) => (
+          <ListItem
+            as={Box}
+            key={video.handle}
+            secondaryAction={
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => removeVideo(video.handle)}
+                color='neutral' >
+                <CancelOutlined />
+              </IconButton>
+            }
+          >
+            <ListItemText sx={{overflowWrap: 'break-word'}}>{video.name}</ListItemText>
+          </ListItem>
+        ))}
+      </List>
+    </CardContent>
+  )
+}
+
+export const UploadedMedia = ({ images, removeMedia, cardStyle }) => {
+  return (
+    <CardContent sx={cardStyle}>
+      <Box display='flex' flexDirection='row' justifyContent='flex-start' rowGap={2} columnGap={3} flexWrap='wrap' >
+      {images.map((image, index) => (
+        <Badge
+          key={`${image}-mini-${index}`}
+          color='default'
+          badgeContent={
+            <StyledBadgeButton onClick={() => removeMedia({ image, index })}>
+              <Close fontSize='1rem'/>
+            </StyledBadgeButton>
+          }
+        >
+          <CardMedia
+            sx={imageStyleProps}
+            image={image}
+            component="img"
+            alt="image/gif"
+          />
+          </Badge>
+      ))}
+      </Box>
+    </CardContent>
+  )
+}
