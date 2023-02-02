@@ -11,12 +11,12 @@ function UploadFiles ({ onClose, onOpen, onCancel, onUploadDone, accept, sources
     <PickerOverlay
       apikey={apiKey}
       pickerOptions={{
-        allowManualRetry: true,
+        // allowManualRetry: true,
         accept: accept,
         onClose: onClose,
         onCancel: onCancel,
         onOpen: onOpen,
-        fromSources: sources ? [ 'local_file_system', ...sources ] : [ 'local_file_system' ],
+        fromSources: sources ? [ ...sources ] : [ 'local_file_system' ],
         maxFiles: 10,
       }}
       onUploadDone={onUploadDone}

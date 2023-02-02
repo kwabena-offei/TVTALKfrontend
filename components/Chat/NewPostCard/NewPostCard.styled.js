@@ -5,7 +5,7 @@ import {
   Card,
   CardContent, CardMedia, Badge, List, ListItem, IconButton, ListItemText
 } from "@mui/material";
-import { Close, Delete, CancelOutlined } from "@mui/icons-material";
+import { Close, CancelOutlined } from "@mui/icons-material";
 import { OutlinedButton } from "../../OutlinedButton";
 import { styled } from "@mui/system";
 import CameraIcon from "../../Icons/CameraIcon";
@@ -162,6 +162,7 @@ export const UploadedVideos = ({ videos, removeVideo, cardStyle }) => {
         {videos.map((video) => (
           <ListItem
             as={Box}
+            sx={{ paddingLeft: 1 }}
             key={video.handle}
             secondaryAction={
               <IconButton

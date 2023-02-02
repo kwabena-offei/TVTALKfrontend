@@ -73,11 +73,12 @@ const NewPostCard = (props) => {
     toggleUploadFile()
   }
 
-  const onAddHashtag = (event) => {console.log('onAddHashtag', event.target.value)}  
+  // ToDo: add functionality to add hashtags when BE will be ready for this
+  const onAddHashtag = (event) => { console.log('onAddHashtag', event.target.value )}
 
   const onAddPhotosVideo = () => {
     setAcceptType(['video/*', 'image/jpeg', 'image/png', 'image/gif', 'image/webp'])
-    setSources(['url'])
+    setSources(['local_file_system', 'url'])
     toggleUploadFile()
   }
   const onAddGif = () => {
@@ -86,15 +87,19 @@ const NewPostCard = (props) => {
   }
   const onAddPhoto = () => {
     setAcceptType(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
-    setSources(['url'])
+    setSources(['local_file_system', 'url'])
     toggleUploadFile()
   }
   const onAddVideo = () => {
     setAcceptType(['video/*'])
-    setSources(['url'])
+    setSources([ 'video', 'local_file_system', 'url'])
     toggleUploadFile()
   }
-  const onTakeShot = (event) => {console.log('onTakeShot', event.target.value)}
+  const onTakeShot = () => {
+    setAcceptType(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+    setSources(['webcam', 'local_file_system'])
+    toggleUploadFile()
+  }
 
   const onPost = async () => {
     commentRef.current.text = message.current.value
