@@ -14,7 +14,8 @@ import {
 import { FacebookRounded, Apple } from "@mui/icons-material";
 import GoogleIcon from '../Icons/GoogleColorIcon'
 import { TV_TALK_API } from "../../util/constants";
-import axios from "axios";
+// import axios from "axios";
+import useAxios from '../../services/api'
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import AppleLogin from 'react-apple-signin-auth';
@@ -28,6 +29,7 @@ const { publicRuntimeConfig } = getConfig();
 const Login = (props) => {
   const { isMobile } = props;
   const router = useRouter();
+  const { axios } = useAxios();
   const [formValues, setFormValues] = useState({
     username: "",
     password: "",
@@ -64,7 +66,7 @@ const Login = (props) => {
   const onSubmit = async () => {
     try {
       // -- send user/password to API --
-      const { data: { token } } = await axios.post(`${TV_TALK_API}/auth/login`, formValues);
+      const { data: { token } } = await axios.post(`/auth/login`, formValues);
       // -- set cookie with token --
       setCookie('token', token);
       // -- redirect user to profile page --

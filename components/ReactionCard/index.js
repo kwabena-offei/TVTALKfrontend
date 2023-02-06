@@ -114,6 +114,7 @@ const ReactionCard = (props) => {
             title='Comment'
             isMobile={isMobileAndTablet}
             aria-label="Comment"
+            onClick={() => openCommentPage('replies')}
             icon={<MessagesIcon fontSize='inherit' />} />
           <ActionButton
             withTitleMode={commentsMode}

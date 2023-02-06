@@ -1,27 +1,28 @@
-import React from "react";
-import axios from "axios";
+'use client';
+
+import React, { useState } from "react";
 import useAxios from '../../../../../services/api'
 import { isAuthenticated } from '../../../../../services/isAuth'
-import { TV_TALK_API } from "../../../../../util/constants";
 import CommentCard from '../../../../../components/Chat/CommentCard'
 import { CommentLayout } from "../../../../../components/Chat/CommentLayout";
 import { Box } from "@mui/material";
 import { EmptyDataFeedback } from "../../../../../components/Chat/EmptyDataFeedback";
+import useSocket from '../../../../../hooks/useSocket';
 
 export async function getServerSideProps(context) {
+  const { axios } = useAxios(context);
   const { tmsId, id, type } = context.query;
   const comment_type = type === 'SubComment' ? 'sub_' : ''
-  console.log('context.query', context.query)
-  const { data: show } = await axios.get(`${TV_TALK_API}/shows/${tmsId}`);
-  const { data: comment } = await axios.get(`${TV_TALK_API}/${comment_type}comments/${id}`)
+  // console.log('context.query', context.query)
+  const { data: show } = await axios.get(`/shows/${tmsId}`);
+  const { data: comment } = await axios.get(`/${comment_type}comments/${id}`)
   const { data: subComments } = await axios.get(
-    `${TV_TALK_API}/sub_comments?${comment_type}comment_id=${id}`
+    `/sub_comments?${comment_type}comment_id=${id}`
   );
-  const { axios: myAxios } = useAxios(context);
 
   // -- If User is not authorized profile data will return null and isAuth will be false --
   const isAuth = isAuthenticated(context)
-  const { data: profile } = isAuth ? await myAxios.get('/profile') : { data: null }
+  const { data: profile } = isAuth ? await axios.get('/profile') : { data: null }
 
   return {
     props: {
@@ -35,13 +36,27 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function Page({ subComments }) {
-  const { results: sub_comments } = subComments;
+export default function Page({ subComments: serverSubComments, comment }) {
+  const [subComments, setSubComments] = useState(serverSubComments)
+
+  const socket = useSocket(
+    'comments',
+    'CommentsChannel',
+    { "comment_id": comment.id },
+    (response) => {
+      if(response.message?.type === 'sub_comment') {
+        setSubComments((prevState) => {
+          return {
+            ...prevState,
+            results: [ ...prevState.results, response.message ]};
+        })
+      }
+  });
 
   return (
     <>
-      { sub_comments.length
-        ? sub_comments.map((comment) => (
+      { subComments?.results?.length
+        ? subComments?.results?.map((comment) => (
             <Box sx={{py: {xs: 1.25, md: 2.5}}} key={`${comment.tmsId}-${comment.id}`}>
               <CommentCard profile={comment.user} tmsId={comment.tmsId} {...comment} header={false} commentType='SubComment'/>
             </Box>
@@ -53,5 +68,5 @@ export default function Page({ subComments }) {
 };
 
 Page.getLayout = function getLayout(page) {
-  return <CommentLayout isAuth={page.props.isAuth} replay>{page}</CommentLayout>;
+  return <CommentLayout isAuth={page.props.isAuth} reply>{page}</CommentLayout>;
 };

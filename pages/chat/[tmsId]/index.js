@@ -1,22 +1,23 @@
-import React from "react";
-import useAxios from "../../../services/api";
-import axios from "axios";
-import { TV_TALK_API } from "../../../util/constants";
+'use client';
+
+import React, { useEffect, useState } from "react";
+import { useRouter } from 'next/router';
 import { ChatHeader, ChatContent } from "../../../components/Chat";
 import { isAuthenticated } from '../../../services/isAuth'
 import { AuthContext } from '../../../util/AuthContext'
+import useSocket from '../../../hooks/useSocket';
+import useAxios from '../../../services/api';
 
 export async function getServerSideProps(context) {
   const { tmsId } = context.query;
-  console.log('tmsId', tmsId)
-  const { axios: myAxios } = useAxios(context)
-  const { data: show } = await axios.get(`${TV_TALK_API}/shows/${tmsId}`);
+  const { axios } = useAxios(context)
+  const { data: show } = await axios.get(`/shows/${tmsId}`);
   const { data: comments } = await axios.get(
-    `${TV_TALK_API}/comments?tms_id=${tmsId}`
+    `/comments?tms_id=${tmsId}`
   );
   // -- If User is not authorized profile data will return null and isAuth will be false --
   const isAuth = isAuthenticated(context)
-  const { data: profile } = isAuth ? await myAxios.get('/profile') : { data: null }
+  const { data: profile } = isAuth ? await axios.get('/profile') : { data: null }
 
   return {
     props: {
@@ -28,8 +29,25 @@ export async function getServerSideProps(context) {
   };
 }
 
-const chat = ({ show, comments, profile, isAuth }) => {
+const Chat = ({ show, comments: serverComments, profile, isAuth }) => {
+  const { tmsId } = show;
+  const [comments, setComments] = useState(serverComments)
   console.log('comments', comments)
+
+  const socket = useSocket(
+    'comments',
+    'CommentsChannel',
+    { tms_id: tmsId},
+    (response) => {
+      if(response.message?.type === 'comment') {
+        setComments((prevState) => {
+          return {
+            ...prevState,
+            results: [ ...prevState.results, response.message ]};
+        })
+      }
+  });
+
   return (
     <>
       <ChatHeader show={show} />
@@ -40,4 +58,4 @@ const chat = ({ show, comments, profile, isAuth }) => {
   );
 };
 
-export default chat;
+export default Chat;

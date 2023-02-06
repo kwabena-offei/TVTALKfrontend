@@ -9,14 +9,15 @@ import {
 } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { TabLabel, ReplayInputWrapper, ReplayDesktopInput, ReplayMobileInput } from "./CommentLayout.styled";
+import { TabLabel } from "./CommentLayout.styled";
+import { Reply } from "../Reply";
 import { useRouter } from "next/router";
 import ReactionCard from "../../ReactionCard";
 import { ButtonBack, ButtonBackMobile } from "../Chat.styled"
 import Grid from "@mui/material/Unstable_Grid2";
 import { AuthContext } from "../../../util/AuthContext";
 
-export const CommentLayout = ({ children, replay, isAuth }) => {
+export const CommentLayout = ({ children, reply, isAuth }) => {
   const { props } = children;
   const { comment, profile, route } = props;
   const router = useRouter();
@@ -109,13 +110,8 @@ export const CommentLayout = ({ children, replay, isAuth }) => {
           <Grid xs={0} md={2} />
         </Grid>
       </Container>
-      {replay
-        ? <ReplayInputWrapper isMobile={isMobile}>
-            { isMobile 
-              ? <ReplayMobileInput profile={profile} onPost={() => console.log('post')}/> 
-              : <ReplayDesktopInput profile={profile} onPost={() => console.log('post')}/>
-            }
-          </ReplayInputWrapper>
+      {reply
+        ? <Reply isMobile={isMobile} profile={profile} comment={comment} />
         : null
       }
     </AuthContext.Provider>
