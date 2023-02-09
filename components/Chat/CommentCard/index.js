@@ -18,6 +18,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
+import { setLike } from "../../../services/like"; 
 
 dayjs.extend(relativeTime);
 
@@ -41,17 +42,24 @@ const CommentCard = ({
   const onReply = () => {
     // Todo: uncomment, when backend data fixed
 
-    router.push({
-      pathname: '/chat/[tmsId]/comments/[id]/replies',
-      query: {
-        tmsId: router.query.tmsId,
-        id: id,
-        type: commentType
-      }
-    })
+    // router.push({
+    //   pathname: '/chat/[tmsId]/comments/[id]/replies',
+    //   query: {
+    //     tmsId: router.query.tmsId,
+    //     id: id,
+    //     type: commentType
+    //   }
+    // })
+  }
+  const onLike = async () => {
+    // try {
+    //   const response = await setLike({ type: 'subCommentId', id, isLiked: true })
+    //   console.log('[onLike][subCommentId]response', response)
+    // } catch (error) {
+    //   console.error(error.message)
+    // }
   }
 
-  // const timeAgo = dayjs(created_at).fromNow();
   const timeAgo = created_at_formatted
 
   const { username, image } = profile;
@@ -90,9 +98,7 @@ const CommentCard = ({
         >
           <ActionButton
             title="Like"
-            onClick={() => {
-              console.log("click add to favorites - id:", id);
-            }}
+            onClick={onLike}
             aria-label="Like"
             icon={<FavoriteIcon fontSize="inherit" />}
           />

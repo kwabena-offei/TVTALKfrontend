@@ -51,7 +51,7 @@ export const ReactionCardMedia = ({ image }) => {
   );
 };
 
-export const ActionButton = ({ isMobile, withTitleMode, title, icon, onClick, ...props }) => {
+export const ActionButton = ({ isMobile, withTitleMode, title, icon, onClick, checked, ...props }) => {
   if (!isMobile && withTitleMode) {
     return (
       <OutlinedButton
@@ -59,7 +59,8 @@ export const ActionButton = ({ isMobile, withTitleMode, title, icon, onClick, ..
           height: "50px",
           padding: "1em 2em",
           fontSize: '1rem',
-          ...props.sx
+          backgroundColor: checked ? 'neutral.main' : 'neutral.contrastText',
+          color: checked ? 'neutral.contrastText' : 'neutral.main'
         }}
         onClick={onClick}
         startIcon={icon}

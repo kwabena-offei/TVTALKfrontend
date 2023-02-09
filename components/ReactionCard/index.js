@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   CardContent,
@@ -23,6 +23,7 @@ import {
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
+import { setLike } from "../../services/like";
 
 dayjs.extend(relativeTime)
 
@@ -36,6 +37,7 @@ const ReactionCard = (props) => {
     created_at,
     created_at_formatted,
     likes_count,
+    current_user_liked,
     sub_comments_count,
     shares_count,
     tmsId,
@@ -68,6 +70,7 @@ const ReactionCard = (props) => {
     }
   }
   const timeAgo = created_at_formatted || dayjs(created_at).fromNow()
+  const [isLiked, setIsliked] = useState(current_user_liked)
   // ToDo: research for hashtag format and provide link-view for it
   const { username, image } = profile;
   // -- navigate user to current comment page --
@@ -80,6 +83,16 @@ const ReactionCard = (props) => {
         page: route
       }
     })
+  }
+
+  const onLike = async () => {
+    try {
+      const response = await setLike({ type: 'commentId', id, isLiked: !isLiked })
+      console.log('[onLike][commentId]response', response)
+      setIsliked(!isLiked)
+    } catch (error) {
+      console.error(error.message)
+    }
   }
 
   return (
@@ -105,7 +118,8 @@ const ReactionCard = (props) => {
             withTitleMode={commentsMode}
             title='Like'
             isMobile={isMobileAndTablet}
-            onClick={() => { console.log("click add to favorites - id:", id) }}
+            onClick={onLike}
+            checked={isLiked}
             aria-label="Like"
             icon={<FavoriteIcon fontSize='inherit' />}
           />

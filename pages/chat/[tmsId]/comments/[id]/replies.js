@@ -52,6 +52,7 @@ export default function Page({ subComments: serverSubComments, comment }) {
         })
       }
   });
+  // console.info('[subComments]', subComments.results)
 
   return (
     <>
