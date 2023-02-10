@@ -23,9 +23,9 @@ export const ListActions = ({ handleClose, commentType, id, tmsId, header, isMob
   const copyLink = header ? `${baseUrl}${router.asPath}` : `${baseUrl}${router.asPath}#${id}`
   const quote = 'Look what we got here on TV_Talk!'
   const toggleShare = () => setOpenShare(!openShare)
-  const handleShare = async (event) => {
+  const handleShareClose = (event) => {
     // Todo: add share logic
-    // handleClose(event)
+    handleClose(event)
     toggleShare()
   }
   const handleCopyLink = async (event) => {
@@ -42,7 +42,7 @@ export const ListActions = ({ handleClose, commentType, id, tmsId, header, isMob
 
   return (
     <>
-      <MenuItem onClick={handleShare} disableRipple>
+      <MenuItem onClick={toggleShare} disableRipple>
         <ShareIcon />
         Share to...
       </MenuItem>
@@ -66,14 +66,14 @@ export const ListActions = ({ handleClose, commentType, id, tmsId, header, isMob
       { isMobile ? (
         <ShareDrawer
           open={openShare}
-          onClose={toggleShare}
+          onClose={handleShareClose}
           quote={quote}
           url={copyLink}
         />
       ) : (
         <ShareModal
           open={openShare}
-          onClose={toggleShare}
+          onClose={handleShareClose}
           quote={quote}
           url={copyLink}
         />

@@ -8,6 +8,6 @@ export const setLike = async ({ type, id, isLiked }) => {
       liked: isLiked
     }
   )
-  console.log('[like response]', response)
+  // console.log('[like response]', response)
   return response
 }

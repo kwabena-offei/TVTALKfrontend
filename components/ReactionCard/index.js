@@ -49,8 +49,14 @@ const ReactionCard = (props) => {
     header
   } = props;
   const [likes, setLikes] = useState(likes_count)
-  const liked = () => setLikes(likes + 1)
-  const unliked = () => setLikes(likes - 1)
+  const liked = () => {
+    setIsliked(true)
+    setLikes(likes + 1)
+  }
+  const unliked = () => {
+    setIsliked(false)
+    setLikes(likes - 1)
+  }
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -93,9 +99,8 @@ const ReactionCard = (props) => {
   const onLike = async () => {
     try {
       const response = await setLike({ type: 'commentId', id, isLiked: !isLiked })
-      // console.log('[onLike][commentId]response', response)
-      setIsliked(!isLiked)
-      !isLiked ? liked() : unliked()
+      const isLikedSuccess = response.data.comments.includes(id)
+      isLikedSuccess ? liked() : unliked()
     } catch (error) {
       console.error(error.message)
     }
