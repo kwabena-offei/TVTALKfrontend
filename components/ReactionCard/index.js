@@ -17,6 +17,7 @@ import {
   ReactionCardText,
   ReactionCardActions,
   ReactionCardMedia,
+  ReactionCardVideo,
   ActionButton,
   cardActionsMobileProps
 } from './ReactionCard.styled';
@@ -34,6 +35,7 @@ const ReactionCard = (props) => {
     text,
     hashtag,
     images,
+    videos,
     created_at,
     created_at_formatted,
     likes_count,
@@ -46,6 +48,9 @@ const ReactionCard = (props) => {
     commentType,
     header
   } = props;
+  const [likes, setLikes] = useState(likes_count)
+  const liked = () => setLikes(likes + 1)
+  const unliked = () => setLikes(likes - 1)
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -54,7 +59,7 @@ const ReactionCard = (props) => {
 
   const reactionsInfoCounts = {
     likes: {
-      count: likes_count,
+      count: likes,
       icon: <FavoriteIcon color="primary" fontSize="inherit"/>,
       route: 'likes'
     },
@@ -88,8 +93,9 @@ const ReactionCard = (props) => {
   const onLike = async () => {
     try {
       const response = await setLike({ type: 'commentId', id, isLiked: !isLiked })
-      console.log('[onLike][commentId]response', response)
+      // console.log('[onLike][commentId]response', response)
       setIsliked(!isLiked)
+      !isLiked ? liked() : unliked()
     } catch (error) {
       console.error(error.message)
     }
@@ -98,14 +104,19 @@ const ReactionCard = (props) => {
   return (
     <CardWrapper sx={withoutActions ? { paddingBottom: 2 } : {} } id={id}>
       <CardHeader isMobile={isMobile} userData={{ id, username, image, timeAgo }} header={header} commentType={commentType} tmsId={tmsId}/>
-      <CardContent sx={isMobile ? { paddingX: 2, paddingY: 1 } : { paddingX: 3.75, paddingY: 2.5 }}>
+      <CardContent sx={isMobile ? { paddingX: 2, paddingY: 0.5 } : { paddingX: 3.75, paddingY: 1.25 }}>
         <ReactionCardHashtags>{hashtag}</ReactionCardHashtags>
         <ReactionCardText isMobile={isMobile}>{text}</ReactionCardText>
         { images?.length ? images.map((image, index) => (
-          <Box key={`${id}-${image}-${index}`} sx={index < images.length - 1 ? { marginBottom: 2 } : {}}>
+          <Box key={`${id}-${image}-${index}`} sx={{ paddingY: 1.25}}>
             <ReactionCardMedia image={image} />
           </Box>
         )) : null}
+        { videos?.length ? videos.map((video, index) => (
+            <Box key={`${id}-${video}-${index}`} sx={{ paddingY: 1.25}}>
+              <ReactionCardVideo video={video} />
+            </Box>
+          )) : null }
       </CardContent>
       {withoutActions
       ? null
@@ -135,6 +146,7 @@ const ReactionCard = (props) => {
             title="Share"
             isMobile={isMobileAndTablet}
             aria-label="Share"
+            onClick={() => console.log('Share')}
             icon={<ShareIcon fontSize='inherit' />} />
         </Stack>
       </ReactionCardActions>}

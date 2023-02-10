@@ -25,7 +25,7 @@ export const ReactionCardText = ({ children, isMobile, ...props }) => {
         fontSize: isMobile ? "1rem" : "1.5rem",
         lineHeight: "180%",
         whiteSpace: 'break-spaces',
-        paddingBottom: isMobile ? 1 : 2.5,
+        paddingBottom: isMobile ? 0.5 : 1.25,
       }}
       {...props}
     >
@@ -51,6 +51,18 @@ export const ReactionCardMedia = ({ image }) => {
   );
 };
 
+export const ReactionCardVideo = ({ video }) => {
+  return <CardMedia
+    component='video'
+    height="auto"
+    src={video}
+    alt="Show video"
+    sx={{ borderRadius: 2 }}
+    autoPlay
+    controls
+  />
+}
+
 export const ActionButton = ({ isMobile, withTitleMode, title, icon, onClick, checked, ...props }) => {
   if (!isMobile && withTitleMode) {
     return (
@@ -70,7 +82,10 @@ export const ActionButton = ({ isMobile, withTitleMode, title, icon, onClick, ch
       </OutlinedButton>
     )
   }
-  return <RoundedIconButton onClick={onClick} icon={icon} {...props} />;
+  return <RoundedIconButton onClick={onClick} icon={icon} {...props} sx={{
+    backgroundColor: checked ? 'neutral.main' : 'neutral.contrastText',
+    color: checked ? 'neutral.contrastText' : 'neutral.main'
+  }}/>;
 }
 
 export const cardActionsMobileProps = {
