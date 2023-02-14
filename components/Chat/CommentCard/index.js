@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { CardContent } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import MessagesIcon from "../../Icons/MessagesIcon";
+import { Favorite } from "@mui/icons-material";
+// import MessagesIcon from "../../Icons/MessagesIcon";
 import ShareIcon from "../../Icons/ShareIcon";
 import dayjs from "dayjs";
 import * as relativeTime from "dayjs/plugin/relativeTime";
 import CardHeader from "../../ReactionCard/CardHeader";
+import getConfig from "next/config";
+import { TV_TALK_HOST, TV_TALK_HOST_LOCAL } from "../../../util/constants";
+import Share from "../Share";
 
 import { ReactionCardMedia } from "../../ReactionCard/ReactionCard.styled";
 import {
@@ -32,32 +36,42 @@ const CommentCard = ({
   created_at_formatted,
   header,
   withoutActions,
-  commentType
+  commentType,
+  likes_count
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const router = useRouter();
+  const { publicRuntimeConfig } = getConfig();
+  const baseUrl = publicRuntimeConfig.API_ENV === 'development' ? TV_TALK_HOST_LOCAL : TV_TALK_HOST;
+  const copyLink = header ? `${baseUrl}${router.asPath}` : `${baseUrl}${router.asPath}#${id}`
+  const [openShare, setOpenShare] = useState(false);
+  const toggleShare = () => setOpenShare(!openShare);
+  const [isLiked, setIsliked] = useState(Boolean(likes_count))
 
   // -- Redirect for reply on subComment 
-  const onReply = () => {
-    // Todo: uncomment, when backend data fixed
+  // const onReply = () => {
+  //   // Todo: uncomment, when backend data fixed
 
-    // router.push({
-    //   pathname: '/chat/[tmsId]/comments/[id]/replies',
-    //   query: {
-    //     tmsId: router.query.tmsId,
-    //     id: id,
-    //     type: commentType
-    //   }
-    // })
-  }
+  //   // router.push({
+  //   //   pathname: '/chat/[tmsId]/comments/[id]/replies',
+  //   //   query: {
+  //   //     tmsId: router.query.tmsId,
+  //   //     id: id,
+  //   //     type: commentType
+  //   //   }
+  //   // })
+  // }
   const onLike = async () => {
-    // try {
-    //   const response = await setLike({ type: 'subCommentId', id, isLiked: true })
-    //   console.log('[onLike][subCommentId]response', response)
-    // } catch (error) {
-    //   console.error(error.message)
-    // }
+    try {
+      const response = await setLike({ type: 'subCommentId', id, isLiked: !isLiked })
+      setIsliked(response.data.sub_comments.includes(id))
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
+  const onShare = () => {
+    toggleShare()
   }
 
   const timeAgo = created_at_formatted
@@ -92,7 +106,7 @@ const CommentCard = ({
         <CommentCardActions
           sx={
             isMobile
-              ? cardActionsMobileProps
+              ? { ...cardActionsMobileProps, justifyContent: "flex-start" }
               : { justifyContent: "flex-start" }
           }
         >
@@ -100,21 +114,28 @@ const CommentCard = ({
             title="Like"
             onClick={onLike}
             aria-label="Like"
-            icon={<FavoriteIcon fontSize="inherit" />}
+            icon={isLiked ? <Favorite fontSize="inherit" /> : <FavoriteIcon fontSize="inherit" />}
           />
-          <ActionButton
+          {/* <ActionButton
             title="Reply"
             aria-label="Reply"
             onClick={onReply}
             icon={<MessagesIcon fontSize="inherit" />}
-          />
+          /> */}
           <ActionButton
             title="Share"
             aria-label="Share"
+            onClick={onShare}
             icon={<ShareIcon fontSize="inherit" />}
           />
         </CommentCardActions>
       )}
+      <Share
+        open={openShare}
+        onClose={toggleShare}
+        url={copyLink}
+        isMobile={isMobile}
+      />
     </CardWrapper>
   );
 };

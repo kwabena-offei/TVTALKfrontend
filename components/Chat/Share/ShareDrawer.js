@@ -6,6 +6,7 @@ import {
   Typography,
   Drawer,
 } from "@mui/material";
+import { QUOTE } from "../../../util/constants";
 import { styled } from "@mui/material/styles";
 import {
   FacebookShareButton,
@@ -24,7 +25,7 @@ export const StyledDrawer = styled(Drawer)(({ theme }) => ({
   },
 }));
 
-export const ShareDrawer = ({ open, onClose, url, quote }) => {
+export const ShareDrawer = ({ open, onClose, url }) => {
   return (
     <StyledDrawer
       open={open}
@@ -39,7 +40,7 @@ export const ShareDrawer = ({ open, onClose, url, quote }) => {
       <DialogContent sx={{ paddingBottom: 6 }}>
         <Stack direction="row" justifyContent="space-around">
           <Box justifyContent="center" display="flex" flexDirection="column">
-            <FacebookShareButton url={url} quote={quote} hashtag={"#tv_talk"}>
+            <FacebookShareButton url={url} quote={QUOTE} hashtag={"#tv_talk"}>
               <FacebookIcon size={32} round />
             </FacebookShareButton>
             <Typography>Facebook</Typography>
@@ -47,7 +48,7 @@ export const ShareDrawer = ({ open, onClose, url, quote }) => {
           <Box justifyContent="center" display="flex" flexDirection="column">
             <TwitterShareButton
               url={url}
-              title={quote}
+              title={QUOTE}
               hashtags={["tv_talk", "shows"]}
             >
               <TwitterIcon size={32} round />

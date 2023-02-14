@@ -25,6 +25,9 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
 import { setLike } from "../../services/like";
+import { TV_TALK_HOST_LOCAL, TV_TALK_HOST } from "../../util/constants";
+import getConfig from "next/config";
+import Share from "../Chat/Share";
 
 dayjs.extend(relativeTime)
 
@@ -48,6 +51,7 @@ const ReactionCard = (props) => {
     commentType,
     header
   } = props;
+  const { publicRuntimeConfig } = getConfig();
   const [likes, setLikes] = useState(likes_count)
   const liked = () => {
     setIsliked(true)
@@ -57,11 +61,15 @@ const ReactionCard = (props) => {
     setIsliked(false)
     setLikes(likes - 1)
   }
+  const [openShare, setOpenShare] = useState(false);
+  const toggleShare = () => setOpenShare(!openShare);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isMobileAndTablet = useMediaQuery(theme.breakpoints.down('md'));
   const router = useRouter()
+  const baseUrl = publicRuntimeConfig.API_ENV === 'development' ? TV_TALK_HOST_LOCAL : TV_TALK_HOST;
+  const copyLink = `${baseUrl}${router.asPath}#${id}`
 
   const reactionsInfoCounts = {
     likes: {
@@ -105,6 +113,10 @@ const ReactionCard = (props) => {
       console.error(error.message)
     }
   }
+  const onComment = () => openCommentPage('replies')
+  const onShare = () => {
+    toggleShare()
+  }
 
   return (
     <CardWrapper sx={withoutActions ? { paddingBottom: 2 } : {} } id={id}>
@@ -144,17 +156,23 @@ const ReactionCard = (props) => {
             title='Comment'
             isMobile={isMobileAndTablet}
             aria-label="Comment"
-            onClick={() => openCommentPage('replies')}
+            onClick={onComment}
             icon={<MessagesIcon fontSize='inherit' />} />
           <ActionButton
             withTitleMode={commentsMode}
             title="Share"
             isMobile={isMobileAndTablet}
             aria-label="Share"
-            onClick={() => console.log('Share')}
+            onClick={onShare}
             icon={<ShareIcon fontSize='inherit' />} />
         </Stack>
       </ReactionCardActions>}
+      <Share
+        open={openShare}
+        onClose={toggleShare}
+        url={copyLink}
+        isMobile={isMobile}
+      />
     </CardWrapper>
   );
 };

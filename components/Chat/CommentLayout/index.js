@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Container,
@@ -20,7 +20,6 @@ import { AuthContext } from "../../../util/AuthContext";
 export const CommentLayout = ({ children, reply, isAuth }) => {
   const { props } = children;
   const { comment, profile, route } = props;
-  console.log('[CommentLayout children] [props]', props)
   const router = useRouter();
   const currentRoute = route || 'likes'
   const { tmsId, id, sub_comments_count, likes_count, shares_count } = comment;

@@ -10,21 +10,19 @@ import { TV_TALK_HOST, TV_TALK_HOST_LOCAL } from "../../../util/constants";
 import { copyToClipboard } from '../../../util/helpers';
 import getConfig from 'next/config';
 import { AuthContext } from "../../../util/AuthContext";
-import { ShareModal } from "../ShareModal";
-import { ShareDrawer } from "../ShareDrawer";
+import { ShareContext } from "../../../util/ShareContext";
 
-export const ListActions = ({ handleClose, commentType, id, tmsId, header, isMobile }) => {
-  const [openShare, setOpenShare] = useState(false)
+export const ListActions = ({ handleClose, commentType, id, tmsId, header }) => {
   const router = useRouter()
   const { publicRuntimeConfig } = getConfig();
   const isAuth = useContext(AuthContext);
+  const { openShare, setOpenShare } = useContext(ShareContext);
 
   const baseUrl = publicRuntimeConfig.API_ENV === 'development' ? TV_TALK_HOST_LOCAL : TV_TALK_HOST;
   const copyLink = header ? `${baseUrl}${router.asPath}` : `${baseUrl}${router.asPath}#${id}`
-  const quote = 'Look what we got here on TV_Talk!'
+  
   const toggleShare = () => setOpenShare(!openShare)
   const handleShareClose = (event) => {
-    // Todo: add share logic
     handleClose(event)
     toggleShare()
   }
@@ -35,14 +33,14 @@ export const ListActions = ({ handleClose, commentType, id, tmsId, header, isMob
   const handleUnfollow = async (event) => {
     // Todo: find api endpoint to change the status of following
     if (isAuth) {
-      console.log('you can do this')
+      console.log('you can unfollow', id)
     }
     handleClose(event)
   }
 
   return (
     <>
-      <MenuItem onClick={toggleShare} disableRipple>
+      <MenuItem onClick={handleShareClose} disableRipple>
         <ShareIcon />
         Share to...
       </MenuItem>
@@ -63,21 +61,6 @@ export const ListActions = ({ handleClose, commentType, id, tmsId, header, isMob
         <CloseRounded />
         Cancel
       </MenuItem>
-      { isMobile ? (
-        <ShareDrawer
-          open={openShare}
-          onClose={handleShareClose}
-          quote={quote}
-          url={copyLink}
-        />
-      ) : (
-        <ShareModal
-          open={openShare}
-          onClose={handleShareClose}
-          quote={quote}
-          url={copyLink}
-        />
-      )}
     </>
   );
 };

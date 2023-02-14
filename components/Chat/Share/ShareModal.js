@@ -1,5 +1,6 @@
 import { Box, Dialog, DialogContent, DialogTitle, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { QUOTE } from "../../../util/constants";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -24,7 +25,7 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
   }
 }));
 
-export const ShareModal = ({ open, onClose, url, quote }) => {
+export const ShareModal = ({ open, onClose, url }) => {
   return (
     <StyledDialog open={open} onClose={onClose} keepMounted={false} >
       <DialogTitle>Share to...</DialogTitle>
@@ -33,7 +34,7 @@ export const ShareModal = ({ open, onClose, url, quote }) => {
           <Box justifyContent='center' display='flex' flexDirection='column'>
             <FacebookShareButton
               url={url}
-              quote={quote}
+              quote={QUOTE}
               hashtag={"#tv_talk"}
             >
               <FacebookIcon size={32} round />
@@ -41,7 +42,7 @@ export const ShareModal = ({ open, onClose, url, quote }) => {
             <Typography>Facebook</Typography>
           </Box>
           <Box justifyContent='center' display='flex' flexDirection='column'>
-            <TwitterShareButton url={url} title={quote} hashtags={['tv_talk', 'shows']}>
+            <TwitterShareButton url={url} title={QUOTE} hashtags={['tv_talk', 'shows']}>
               <TwitterIcon size={32} round />
             </TwitterShareButton>
             <Typography>Twitter</Typography>

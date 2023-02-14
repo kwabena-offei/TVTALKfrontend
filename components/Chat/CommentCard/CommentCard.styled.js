@@ -44,6 +44,7 @@ export const ActionButton = ({
   title,
   icon,
   onClick,
+  checked,
   ...props
 }) => (
   <Button
