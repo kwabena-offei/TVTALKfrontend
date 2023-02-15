@@ -9,8 +9,7 @@ import { CustomCardHeader } from "../components/Login/CustomCardHeader";
 import { CalendarInput } from '../components/CalendarInput'
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { TV_TALK_API } from "../util/constants";
-import axios from "axios";
+import useAxios from "../services/api";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import { ModalError } from '../components/Login/ModalError'
@@ -52,6 +51,7 @@ const registration = (props) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const router = useRouter();
+  const { axios } = useAxios();
   const [userData, setUserData] = useState({
     username: '',
     email: '',
@@ -91,14 +91,14 @@ const registration = (props) => {
   const handleDateChange = (change) => {
     setUserData({
       ...userData,
-      birthday: change.toJSON()
+      birthday: change?.toJSON()
     })
   }
 
   const onSubmit = async () => {
     try {
       // -- send user data to API --
-      const { data: { token } } = await axios.post(`${TV_TALK_API}/users`, userData);
+      const { data: { token } } = await axios.post(`/users`, userData);
       // -- set cookie with token --
       setCookie('token', token);
       // -- redirect user to profile page --

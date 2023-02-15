@@ -24,6 +24,10 @@ const DisplayAllShows = ({ shows }) => {
 
         router.push({ pathname: '/about', query: { tmsId: tmsId } })
     }
+    const handleChat = (tmsId, title) => {
+
+        router.push({ pathname: '/chat/[tmsId]', query: { tmsId: tmsId } })
+    }
 
     return (
         <>
@@ -90,6 +94,7 @@ const DisplayAllShows = ({ shows }) => {
                                             <Grid item>
                                             <BlueButton 
                                                 title='Chat'
+                                                onClick={() => handleChat(tvShow.tmsId)}
                                              />
                                             </Grid>
                                             <Grid item>

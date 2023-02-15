@@ -74,6 +74,12 @@ export const TextInput = ({label, id, value, children, ...props}) => {
     <Stack direction='column' spacing={1}>
       <InputLabel htmlFor={id}>{label}</InputLabel>
       <TextField
+        variant="filled"
+        sx={{
+          '.MuiInputBase-root': {
+              bgcolor: 'background.default'
+          }
+        }}
         {...props}
         id={id}
         value={value}
@@ -94,7 +100,8 @@ export const SelectInput = ({label, id, children, ...props}) => {
     <Stack direction='column' spacing={1}>
       <InputLabel htmlFor={id}>{label}</InputLabel>
       <Select
-        variant='outlined'
+        variant='filled'
+        sx={{ backgroundColor: '#090F27', ...props.sx }}
         {...props}
         id={id}
       >{children}</Select>

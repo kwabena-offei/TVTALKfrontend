@@ -1,4 +1,4 @@
-import { Container, Grid } from '@mui/material';
+import Masonry from '@mui/lab/Masonry';
 import React from 'react';
 import { ProfileLayout } from '../../components/ProfileLayout';
 import ReactionCard from '../../components/ReactionCard';
@@ -21,17 +21,20 @@ export async function getServerSideProps({ req, res }) {
 export default function Page({ reactions, profile }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMd = useMediaQuery(theme.breakpoints.down('md'));
   const { results: reactionsList, pagination } = reactions;
   return (
-      <Grid container spacing={isMobile ? 2.5 : 3.5}>
-        {reactionsList?.map((result) => {
-          return (
-            <Grid item key={result.id} xs={12} md={6}>
-              <ReactionCard {...result} profile={profile} />
-            </Grid>
-          );
-        })}
-      </Grid>
+    <Masonry
+      columns={isMd ? 1 : 2}
+      spacing={isMobile ? 2.5 : 3.5}
+      defaultColumns={1}
+      defaultSpacing={2.5}
+      sx={{ margin: 0 }}
+    >
+      {reactionsList?.map((result) => (
+        <ReactionCard key={result.id} {...result} profile={profile} />
+      ))}
+    </Masonry>
   );
 }
 

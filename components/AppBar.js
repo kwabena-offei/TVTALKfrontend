@@ -138,7 +138,7 @@ function ResponsiveAppBar({ context }) {
               variant="h5"
               noWrap
               component="a"
-              href=""
+              href="/"
               sx={{
                 mr: 2,
                 display: { xs: 'flex', md: 'none' },
@@ -167,7 +167,7 @@ function ResponsiveAppBar({ context }) {
               ? <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src="https://www.fillmurray.com/300/300" />
+                    <Avatar alt="Remy Sharp" src="https://placekitten.com/300/300" />
                   </IconButton>
                 </Tooltip>
                 <Menu
