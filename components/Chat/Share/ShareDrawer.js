@@ -25,7 +25,7 @@ export const StyledDrawer = styled(Drawer)(({ theme }) => ({
   },
 }));
 
-export const ShareDrawer = ({ open, onClose, url }) => {
+export const ShareDrawer = ({ open, onClose, url, onShare }) => {
   return (
     <StyledDrawer
       open={open}
@@ -40,13 +40,14 @@ export const ShareDrawer = ({ open, onClose, url }) => {
       <DialogContent sx={{ paddingBottom: 6 }}>
         <Stack direction="row" justifyContent="space-around">
           <Box justifyContent="center" display="flex" flexDirection="column">
-            <FacebookShareButton url={url} quote={QUOTE} hashtag={"#tv_talk"}>
+            <FacebookShareButton url={url} quote={QUOTE} hashtag={"#tv_talk"} onClick={onShare}>
               <FacebookIcon size={32} round />
             </FacebookShareButton>
             <Typography>Facebook</Typography>
           </Box>
           <Box justifyContent="center" display="flex" flexDirection="column">
             <TwitterShareButton
+              onClick={onShare}
               url={url}
               title={QUOTE}
               hashtags={["tv_talk", "shows"]}

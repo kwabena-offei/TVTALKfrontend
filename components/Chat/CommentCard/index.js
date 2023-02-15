@@ -29,6 +29,7 @@ dayjs.extend(relativeTime);
 const CommentCard = ({
   profile,
   id,
+  type,
   tmsId,
   text,
   images,
@@ -85,6 +86,7 @@ const CommentCard = ({
         commentType={commentType}
         tmsId={tmsId}
         header={header}
+        type={type}
       />
       <CardContent
         sx={
@@ -135,6 +137,8 @@ const CommentCard = ({
         onClose={toggleShare}
         url={copyLink}
         isMobile={isMobile}
+        id={id}
+        type={type}
       />
     </CardWrapper>
   );

@@ -10,7 +10,7 @@ import ShareIcon from '../Icons/ShareIcon';
 import dayjs from "dayjs";
 import * as relativeTime from 'dayjs/plugin/relativeTime';
 import CardHeader from './CardHeader'
-import InfoCountWithIcon from './InfoCountWithIcon'
+
 import {
   CardWrapper,
   ReactionCardHashtags,
@@ -28,6 +28,7 @@ import { setLike } from "../../services/like";
 import { TV_TALK_HOST_LOCAL, TV_TALK_HOST } from "../../util/constants";
 import getConfig from "next/config";
 import Share from "../Chat/Share";
+import { ReactionCounts } from "./ReactionCounts";
 
 dayjs.extend(relativeTime)
 
@@ -35,6 +36,7 @@ const ReactionCard = (props) => {
   const {
     profile,
     id,
+    type,
     text,
     hashtag,
     images,
@@ -61,6 +63,7 @@ const ReactionCard = (props) => {
     setIsliked(false)
     setLikes(likes - 1)
   }
+  const [shares, setShares] = useState(shares_count)
   const [openShare, setOpenShare] = useState(false);
   const toggleShare = () => setOpenShare(!openShare);
 
@@ -71,23 +74,7 @@ const ReactionCard = (props) => {
   const baseUrl = publicRuntimeConfig.API_ENV === 'development' ? TV_TALK_HOST_LOCAL : TV_TALK_HOST;
   const copyLink = `${baseUrl}${router.asPath}#${id}`
 
-  const reactionsInfoCounts = {
-    likes: {
-      count: likes,
-      icon: <FavoriteIcon color="primary" fontSize="inherit"/>,
-      route: 'likes'
-    },
-    comments: {
-      count: sub_comments_count,
-      icon: <MessagesIcon color="primary" fontSize="inherit"/>,
-      route: 'replies'
-    },
-    shares: {
-      count: shares_count,
-      icon: <ShareIcon color="primary" fontSize="inherit"/>,
-      route: 'shares'
-    }
-  }
+  
   const timeAgo = created_at_formatted || dayjs(created_at).fromNow()
   const [isLiked, setIsliked] = useState(current_user_liked)
   // ToDo: research for hashtag format and provide link-view for it
@@ -120,7 +107,7 @@ const ReactionCard = (props) => {
 
   return (
     <CardWrapper sx={withoutActions ? { paddingBottom: 2 } : {} } id={id}>
-      <CardHeader isMobile={isMobile} userData={{ id, username, image, timeAgo }} header={header} commentType={commentType} tmsId={tmsId}/>
+      <CardHeader isMobile={isMobile} userData={{ id, username, image, timeAgo }} header={header} commentType={commentType} tmsId={tmsId} type={type} setShares={setShares} />
       <CardContent sx={isMobile ? { paddingX: 2, paddingY: 0.5 } : { paddingX: 3.75, paddingY: 1.25 }}>
         <ReactionCardHashtags>{hashtag}</ReactionCardHashtags>
         <ReactionCardText isMobile={isMobile}>{text}</ReactionCardText>
@@ -139,7 +126,12 @@ const ReactionCard = (props) => {
       ? null
       : <ReactionCardActions sx={isMobile ? cardActionsMobileProps : {}}>
         <Stack direction="row" spacing={1.25}>
-          {Object.entries(reactionsInfoCounts).map(([key, value]) => { return (<InfoCountWithIcon isMobile={isMobile} key={key} {...value} navigation={() => openCommentPage(value.route)} />) })}
+          <ReactionCounts
+            likes={likes}
+            shares={shares}
+            sub_comments={sub_comments_count}
+            isMobile={isMobile}
+          />
         </Stack>
         <Stack direction="row" spacing={1.25}>
           <ActionButton
@@ -166,12 +158,16 @@ const ReactionCard = (props) => {
             onClick={onShare}
             icon={<ShareIcon fontSize='inherit' />} />
         </Stack>
-      </ReactionCardActions>}
-      <Share
+      </ReactionCardActions>
+     }
+     <Share
+        setShares={setShares}
         open={openShare}
         onClose={toggleShare}
         url={copyLink}
         isMobile={isMobile}
+        id={id}
+        type={type}
       />
     </CardWrapper>
   );

@@ -25,7 +25,7 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
   }
 }));
 
-export const ShareModal = ({ open, onClose, url }) => {
+export const ShareModal = ({ open, onClose, url, onShare }) => {
   return (
     <StyledDialog open={open} onClose={onClose} keepMounted={false} >
       <DialogTitle>Share to...</DialogTitle>
@@ -33,6 +33,7 @@ export const ShareModal = ({ open, onClose, url }) => {
         <Stack direction="row" justifyContent='space-around'>
           <Box justifyContent='center' display='flex' flexDirection='column'>
             <FacebookShareButton
+              onClick={onShare}
               url={url}
               quote={QUOTE}
               hashtag={"#tv_talk"}
@@ -42,7 +43,7 @@ export const ShareModal = ({ open, onClose, url }) => {
             <Typography>Facebook</Typography>
           </Box>
           <Box justifyContent='center' display='flex' flexDirection='column'>
-            <TwitterShareButton url={url} title={QUOTE} hashtags={['tv_talk', 'shows']}>
+            <TwitterShareButton url={url} title={QUOTE} hashtags={['tv_talk', 'shows']} onClick={onShare} >
               <TwitterIcon size={32} round />
             </TwitterShareButton>
             <Typography>Twitter</Typography>

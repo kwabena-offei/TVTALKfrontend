@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import { ShareContext } from "../../util/ShareContext";
 import Share from "../Chat/Share";
 
-const ReactionsCardHeader = ({ userData, isMobile, commentType, tmsId, header, ...props }) => {
+const ReactionsCardHeader = ({ userData, setShares, isMobile, commentType, tmsId, header, type, ...props }) => {
   const { id, username, image, timeAgo } = userData;
   const { publicRuntimeConfig } = getConfig();
   const router = useRouter();
@@ -49,6 +49,9 @@ const ReactionsCardHeader = ({ userData, isMobile, commentType, tmsId, header, .
         onClose={toggleShare}
         url={copyLink}
         isMobile={isMobile}
+        id={id}
+        type={type}
+        setShares={setShares}
       />
     </ShareContext.Provider>
     

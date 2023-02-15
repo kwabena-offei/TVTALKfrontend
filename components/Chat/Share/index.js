@@ -1,14 +1,28 @@
 import { ShareModal } from "./ShareModal"
 import { ShareDrawer } from "./ShareDrawer"
+import { setShare } from '../../../services/share';
 
-const Share = ({ isMobile, ...props }) => {
+const Share = ({ isMobile, id, type, setShares, ...props }) => {
+  const onShare = async () => {
+    if (type === "comment") {
+      try {
+        const { data } = await setShare({ id: id, type: `${type}_id` });
+        setShares(data.shares_count)
+        return data;
+      } catch (error) {
+        console.log("share error", error);
+      }
+    }
+    console.log(`shared ${type}`, id, type);
+  };
+
   if (isMobile) {
     return (
-      <ShareDrawer {...props} />
+      <ShareDrawer {...props} onShare={onShare} />
     )
   }
   return (
-    <ShareModal {...props} />
+    <ShareModal {...props} onShare={onShare} />
   )
 }
 
