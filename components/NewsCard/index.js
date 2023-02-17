@@ -18,6 +18,7 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ReactionCounts } from "../ReactionCard/ReactionCounts";
 import PrimaryButton from "../PrimaryButton";
+import { useRouter } from "next/router";
 
 const NewsCard = (props) => {
   const {
@@ -37,15 +38,35 @@ const NewsCard = (props) => {
   } = props;
   const [likes, setLikes] = useState(likes_count);
   const [shares, setShares] = useState(shares_count);
+  const image = image_url ? image_url : '/assets/no-picture-available.jpg';
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isMobileAndTablet = useMediaQuery(theme.breakpoints.down('md'));
+  const router = useRouter()
+  const navigate = () => {
+    if (iframe_enabled) {
+      router.push({
+        pathname: '/news/original/[source_url]',
+        query: {
+          source_url: url,
+          source: source
+        }
+      })
+    }
+    router.push({
+      pathname: '/news/[source_url]',
+      query: {
+        source_url: url
+      }
+    })
+    console.log('url', url)
+  }
 
   return (
     <CardWrapper id={id}>
       <MediaNews
-        image={image_url}
+        image={image}
         component="img"
         alt="News_screenshot"
       />
@@ -69,7 +90,9 @@ const NewsCard = (props) => {
       </CardContent>
        <ReactionCardActions sx={isMobile ? cardActionsMobileProps : {}}>
         <Box>
-          <PrimaryButton>Read more</PrimaryButton>
+          <PrimaryButton
+            onClick={navigate}
+          >Read more</PrimaryButton>
         </Box>
         <Stack direction="row" spacing={1.25}>
           <ActionButton
