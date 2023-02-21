@@ -9,7 +9,6 @@ import MessagesIcon from "../Icons/MessagesIcon";
 
 export const DesktopHeader = ({ source, url }) => {
   const router = useRouter();
-  const BUTTON_WIDTH = "115px";
 
   return (
     <>
@@ -26,8 +25,8 @@ export const DesktopHeader = ({ source, url }) => {
         >
           <DesktopTitle>{source}</DesktopTitle>
           <Box>
-            <Link href={url} target="_blank">
-              {source}
+            <Link href={url.href} target="_blank">
+              {url.origin}
             </Link>
           </Box>
         </Box>

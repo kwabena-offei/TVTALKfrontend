@@ -8,5 +8,5 @@
   margin-right: 0;
 }
 .iframe-style {
-  height: 90vh;
+  min-height: 65vh;
 }

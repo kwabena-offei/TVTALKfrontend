@@ -46,21 +46,19 @@ const NewsCard = (props) => {
   const router = useRouter()
   const navigate = () => {
     if (iframe_enabled) {
-      router.push({
-        pathname: '/news/original/[source_url]',
+      return router.push({
+        pathname: '/news/original/[id]',
         query: {
-          source_url: url,
-          source: source
+          id: id
         }
       })
     }
-    router.push({
-      pathname: '/news/[source_url]',
+    return router.push({
+      pathname: '/news/[id]',
       query: {
-        source_url: url
+        id: id
       }
     })
-    console.log('url', url)
   }
 
   return (
