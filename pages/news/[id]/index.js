@@ -6,6 +6,8 @@ import { NewsMainContainer } from "../../../components/NewsCard/NewsCard.styled"
 import MobileHeader from "../../../components/OneNewsPage/MobileHeader";
 import { DesktopHeader } from "../../../components/NewsIFrameLayout/DesktopHeader";
 import OneNewsCardDesktop from "../../../components/OneNewsPage/DesktopCard";
+import OneNewsCardMobile from "../../../components/OneNewsPage/MobileCard";
+import { useRouter } from "next/router";
 // import useAxios from '../services/api';
 
 export async function getServerSideProps(context) {
@@ -29,28 +31,37 @@ export async function getServerSideProps(context) {
 }
 
 export default function Page({ news }) {
-  console.log("news", news);
   const { source, url } = news;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const router = useRouter()
   const parsedUrl = new URL(url)
-  console.log("parseUrl", parsedUrl);
+  const shortenedHostUrl = parsedUrl.host.startsWith('www.') ? parsedUrl.host.substring(4) : parsedUrl.host
+
+  console.log('router', router)
+  const onComment = () => {
+    return router.push({
+      pathname: `${router.pathname}/comment`,
+      query: router.query
+    })
+  }
 
   if (isMobile) {
     return (
       <NewsMainContainer>
         <MobileHeader source={source} />
+        <OneNewsCardMobile {...news} parsedUrl={parsedUrl} shortenedHostUrl={shortenedHostUrl} onComment={onComment}/>
       </NewsMainContainer>
     );
   }
 
   return (
     <NewsMainContainer maxWidth="xl">
-      <DesktopHeader source={source} url={parsedUrl} />
+      <DesktopHeader source={source} url={parsedUrl} onComment={onComment}/>
       <Grid container sx={{ marginBottom: "60px" }}>
         <Grid item sm />
         <Grid item maxWidth={1010}>
-          <OneNewsCardDesktop {...news} parsedUrl={parsedUrl} />
+          <OneNewsCardDesktop {...news} parsedUrl={parsedUrl} shortenedHostUrl={shortenedHostUrl} />
         </Grid>
         <Grid item sm />
       </Grid>

@@ -7,7 +7,7 @@ import ShareIcon from "../Icons/ShareIcon";
 import IconButton from "../OutlinedRoundIconButton";
 import MessagesIcon from "../Icons/MessagesIcon";
 
-export const DesktopHeader = ({ source, url }) => {
+export const DesktopHeader = ({ source, url, onComment }) => {
   const router = useRouter();
 
   return (
@@ -25,14 +25,14 @@ export const DesktopHeader = ({ source, url }) => {
         >
           <DesktopTitle>{source}</DesktopTitle>
           <Box>
-            <Link href={url.href} target="_blank">
+            <Link href={url.href} target="_blank" sx={{ fontSize: '1rem', fontWeight: 600 }}>
               {url.origin}
             </Link>
           </Box>
         </Box>
         <Stack direction="row" gap={1.25}>
           <IconButton icon={<FavoriteBorderOutlined />} />
-          <IconButton icon={<MessagesIcon />} />
+          <IconButton onClick={onComment} icon={<MessagesIcon />} />
           <IconButton icon={<ShareIcon />} />
         </Stack>
       </Stack>

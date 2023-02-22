@@ -34,7 +34,8 @@ const NewsCard = (props) => {
     show_id,
     source,
     title,
-    url
+    url,
+    commentMode
   } = props;
   const [likes, setLikes] = useState(likes_count);
   const [shares, setShares] = useState(shares_count);
@@ -86,35 +87,38 @@ const NewsCard = (props) => {
           <TitleNews isMobile={isMobile}>{title}</TitleNews>
           <DescriptionNews isMobile={isMobile}>{description }</DescriptionNews>
       </CardContent>
-       <ReactionCardActions sx={isMobile ? cardActionsMobileProps : {}}>
-        <Box>
-          <PrimaryButton
-            onClick={navigate}
-          >Read more</PrimaryButton>
-        </Box>
-        <Stack direction="row" spacing={1.25}>
-          <ActionButton
-            title='Like'
-            isMobile={isMobileAndTablet}
-            // onClick={onLike}
-            // checked={isLiked}
-            aria-label="Like"
-            icon={<FavoriteIcon fontSize='inherit' />}
-          />
-          <ActionButton
-            title='Comment'
-            isMobile={isMobileAndTablet}
-            aria-label="Comment"
-            // onClick={onComment}
-            icon={<MessagesIcon fontSize='inherit' />} />
-          <ActionButton
-            title="Share"
-            isMobile={isMobileAndTablet}
-            aria-label="Share"
-            // onClick={onShare}
-            icon={<ShareIcon fontSize='inherit' />} />
-        </Stack>
-      </ReactionCardActions>
+      { commentMode
+        ? null
+        : <ReactionCardActions sx={isMobile ? cardActionsMobileProps : {}}>
+          <Box>
+            <PrimaryButton
+              onClick={navigate}
+            >Read more</PrimaryButton>
+          </Box>
+          <Stack direction="row" spacing={1.25}>
+            <ActionButton
+              title='Like'
+              isMobile={isMobileAndTablet}
+              // onClick={onLike}
+              // checked={isLiked}
+              aria-label="Like"
+              icon={<FavoriteIcon fontSize='inherit' />}
+            />
+            <ActionButton
+              title='Comment'
+              isMobile={isMobileAndTablet}
+              aria-label="Comment"
+              // onClick={onComment}
+              icon={<MessagesIcon fontSize='inherit' />} />
+            <ActionButton
+              title="Share"
+              isMobile={isMobileAndTablet}
+              aria-label="Share"
+              // onClick={onShare}
+              icon={<ShareIcon fontSize='inherit' />} />
+          </Stack>
+        </ReactionCardActions>
+      }
     </CardWrapper>
   );
 };

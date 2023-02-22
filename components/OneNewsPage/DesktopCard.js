@@ -4,6 +4,7 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
+  Link,
   Stack,
   styled,
 } from "@mui/material";
@@ -29,7 +30,8 @@ const OneNewsCardDesktop = ({
   source,
   title,
   url,
-  parsedUrl
+  parsedUrl,
+  shortenedHostUrl
 }) => {
   const image = image_url ? image_url : "/assets/no-picture-available.jpg";
 
@@ -58,7 +60,7 @@ const OneNewsCardDesktop = ({
           paddingBottom: "30px",
         }}
       >
-        <PrimaryButton href={url}>Read on {parsedUrl.host}</PrimaryButton>
+        <PrimaryButton component={Link} target='_blank' href={url}>Read on {shortenedHostUrl}</PrimaryButton>
       </CardActions>
     </CardWrapper>
   );
