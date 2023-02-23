@@ -44,7 +44,7 @@ export const ReplyInputWrapper = ({children, isMobile}) => (
   </Box>
 )
 
-export const ReplyDesktopInput = ({ profile, onPost, message }) => {
+export const ReplyDesktopInput = ({ profile, onPost, message, children }) => {
   const isAuth = useContext(AuthContext);
   const { image, username } = isAuth ? profile : { image: '', username: '' };
   return (
@@ -65,6 +65,7 @@ export const ReplyDesktopInput = ({ profile, onPost, message }) => {
           sx={{ fontSize: '1.25rem' }}
           fullWidth
         />
+        {children}
       <PostButton disabled={!isAuth} onClick={onPost} title='Reply' sx={{ fontSize: '1rem' }} />
     </>
   )

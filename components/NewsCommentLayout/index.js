@@ -12,11 +12,13 @@ export const NewsCommentLayout = ({ children }) => {
   const router = useRouter()
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  // ToDo: replace with auth value
+  const profile = { image: '', username: '' }
 
   if (isMobile) {
     return (
       <>
-        <NewsMainContainer sx={{ marginBottom: '20px' }}>
+        <NewsMainContainer sx={{ marginBottom: '20px', flexGrow: 1 }}>
           <MobileHeader source={'Comment'} />
           <Grid container>
             <Grid item sm />
@@ -27,23 +29,14 @@ export const NewsCommentLayout = ({ children }) => {
             <Grid item sm />
           </Grid>
         </NewsMainContainer>
-        {/* <Box
-          sx={{
-            background: "linear-gradient(89.18deg, #0B228D 0%, #6184FF 129.11%)",
-            width: "100%",
-            justifyContent: "center",
-            paddingY: isMobile ? 1.25 : 3.75,
-          }}
-          >
-            <CommentNews isMobile story_id={news.id}/>
-        </Box> */}
+        <CommentNews profile={profile} isMobile story_id={news.id}/>
       </>
     );
   }
 
   return (
     <>
-      <NewsMainContainer maxWidth="xl" sx={{ marginY: '60px' }}>
+      <NewsMainContainer maxWidth="xl" sx={{ marginY: '60px', flexGrow: 1 }}>
         <Grid container sx={{ marginBottom: "60px" }} spacing={2}>
           <Grid item md>
             <ButtonBack onClick={() => router.back()} />
@@ -55,7 +48,7 @@ export const NewsCommentLayout = ({ children }) => {
           <Grid item md />
         </Grid>
       </NewsMainContainer>
-      {/* <CommentNews isMobile={false} story_id={news.id}/> */}
+      <CommentNews profile={profile} isMobile={false} story_id={news.id}/>
     </>
   );
 }
