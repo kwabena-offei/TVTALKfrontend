@@ -61,6 +61,14 @@ const NewsCard = (props) => {
       }
     })
   }
+  const onComment = () => {
+    router.push({
+      pathname: '/news/[id]/comment',
+      query: {
+        id: id
+      }
+    })
+  }
 
   return (
     <CardWrapper id={id}>
@@ -68,57 +76,67 @@ const NewsCard = (props) => {
         image={image}
         component="img"
         alt="News_screenshot"
+        sx={
+          commentMode
+            ? { ["@media (min-width: 1200px)"]: { height: "560px" } }
+            : {}
+        }
       />
-      <CardContent sx={{
-          paddingX: isMobile ? '15px' : '30px',
-          flexGrow: 1
-        }}>
-          <Stack direction='row' justifyContent='space-between' marginBottom={isMobile ? '10px' : '14px'}>
-            <SourceBox>{source}</SourceBox>
-            <Stack direction="row" spacing={1.25}>
-              <ReactionCounts
-                likes={likes}
-                shares={shares}
-                sub_comments={likes_count_by_followed_users}
-                isMobile={isMobile}
-              />
-            </Stack>
+      <CardContent
+        sx={{
+          paddingX: isMobile ? "15px" : "30px",
+          flexGrow: 1,
+        }}
+      >
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          marginBottom={isMobile ? "10px" : "14px"}
+        >
+          <SourceBox>{source}</SourceBox>
+          <Stack direction="row" spacing={1.25}>
+            <ReactionCounts
+              likes={likes}
+              shares={shares}
+              sub_comments={likes_count_by_followed_users}
+              isMobile={isMobile}
+            />
           </Stack>
-          <TitleNews isMobile={isMobile}>{title}</TitleNews>
-          <DescriptionNews isMobile={isMobile}>{description }</DescriptionNews>
+        </Stack>
+        <TitleNews isMobile={isMobile}>{title}</TitleNews>
+        <DescriptionNews isMobile={isMobile}>{description}</DescriptionNews>
       </CardContent>
-      { commentMode
-        ? null
-        : <ReactionCardActions sx={isMobile ? cardActionsMobileProps : {}}>
+      {commentMode ? null : (
+        <ReactionCardActions sx={isMobile ? cardActionsMobileProps : {}}>
           <Box>
-            <PrimaryButton
-              onClick={navigate}
-            >Read more</PrimaryButton>
+            <PrimaryButton onClick={navigate}>Read more</PrimaryButton>
           </Box>
           <Stack direction="row" spacing={1.25}>
             <ActionButton
-              title='Like'
+              title="Like"
               isMobile={isMobileAndTablet}
               // onClick={onLike}
               // checked={isLiked}
               aria-label="Like"
-              icon={<FavoriteIcon fontSize='inherit' />}
+              icon={<FavoriteIcon fontSize="inherit" />}
             />
             <ActionButton
-              title='Comment'
+              title="Comment"
               isMobile={isMobileAndTablet}
               aria-label="Comment"
-              // onClick={onComment}
-              icon={<MessagesIcon fontSize='inherit' />} />
+              onClick={onComment}
+              icon={<MessagesIcon fontSize="inherit" />}
+            />
             <ActionButton
               title="Share"
               isMobile={isMobileAndTablet}
               aria-label="Share"
               // onClick={onShare}
-              icon={<ShareIcon fontSize='inherit' />} />
+              icon={<ShareIcon fontSize="inherit" />}
+            />
           </Stack>
         </ReactionCardActions>
-      }
+      )}
     </CardWrapper>
   );
 };

@@ -1,15 +1,18 @@
 import React from "react";
-import axios from "axios";
+import mainAxios from "axios";
 import { TV_TALK_API } from "../../../util/constants";
 import { isAuthenticated } from "../../../services/isAuth";
-// import useAxios from '../services/api';
+// import useAxios from '../../../services/api';
 import { NewsCommentLayout } from "../../../components/NewsCommentLayout";
 import { AuthContext } from "../../../util/AuthContext";
+import ReactionCard from "../../../components/ReactionCard";
+import { Grid, useMediaQuery, useTheme } from "@mui/material";
 
 export async function getServerSideProps(context) {
   // const { axios } = useAxios(context)
   const { id } = context.query;
-  const { data: news } = await axios.get(`${TV_TALK_API}/news`);
+  // const { data: news } = await axios.get(`/news`);
+  const { data: news } = await mainAxios.get(`${TV_TALK_API}/news`);
   const isAuth = isAuthenticated(context)
   // Todo: this is temporary solution - replace it if you find another way to fetch data of a one news
   const [filteredNews] = news.filter((newsItem) => {
@@ -18,7 +21,8 @@ export async function getServerSideProps(context) {
       return newsItem;
     }
   });
-  const { data: comments } = await axios.get(`${TV_TALK_API}/comments?story_id=${id}`);
+  const { data: comments } = await mainAxios.get(`${TV_TALK_API}/comments?story_id=${id}`);
+  // const { data: comments } = await axios.get(`/comments?story_id=${id}`);
   // const { data: profile } = isAuth ? await axios.get(`${TV_TALK_API}/profile`) : { data: null }
   console.log('comments', comments)
   return {
@@ -32,12 +36,21 @@ export async function getServerSideProps(context) {
 }
 
 export default function Page({ news, comments, isAuth }) {
-  console.log('comments', comments)
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const { results: commentsList } = comments
 
   return (
-    <>
-      comments
-    </>
+    <Grid container rowSpacing={isMobile ? 2.5 : 5}>
+      { commentsList.length
+        ? commentsList.map(comment => (
+          <Grid item xs={12} key={comment.id}>
+            <ReactionCard {...comment} profile={comment.user} commentsMode commentType={'Story'} />
+          </Grid>
+        ))
+        : null
+      }
+    </Grid>
   )
   
 }

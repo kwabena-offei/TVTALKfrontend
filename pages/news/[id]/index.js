@@ -38,7 +38,6 @@ export default function Page({ news }) {
   const parsedUrl = new URL(url)
   const shortenedHostUrl = parsedUrl.host.startsWith('www.') ? parsedUrl.host.substring(4) : parsedUrl.host
 
-  console.log('router', router)
   const onComment = () => {
     return router.push({
       pathname: `${router.pathname}/comment`,

@@ -33,7 +33,7 @@ export const PostInputWrapper = ({ children, isMobile, addition }) => (
     }}
   >
     <NewsMainContainer maxWidth="xl">
-      <GridLayout isMobile={isMobile}>
+      <GridLayout isMobile={isMobile} middleColProps={{ width: '100%' }}>
         <Stack
           direction="row"
           spacing={ isMobile ? 1.25 : 3.75 }
@@ -54,12 +54,12 @@ export const PostInputWrapper = ({ children, isMobile, addition }) => (
   </Box>
 );
 
-export const GridLayout = ({ children, isMobile }) => {
+export const GridLayout = ({ children, isMobile, middleColProps, containerProps }) => {
   if (isMobile) {
     return (
-      <Grid container>
+      <Grid container {...containerProps}>
         <Grid item sm />
-        <Grid item maxWidth={555} sx={{ width: "100%" }}>
+        <Grid item maxWidth={555} {...middleColProps}>
           {children}
         </Grid>
         <Grid item sm />
@@ -67,9 +67,9 @@ export const GridLayout = ({ children, isMobile }) => {
     );
   }
   return (
-    <Grid container>
+    <Grid container {...containerProps}>
       <Grid item md />
-      <Grid item maxWidth={1010} sx={{ width: "100%" }}>
+      <Grid item maxWidth={1010} {...middleColProps}>
         {children}
       </Grid>
       <Grid item md />

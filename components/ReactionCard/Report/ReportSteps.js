@@ -38,6 +38,7 @@ export default function ReportSteps({ id, url, commentType, onClose }) {
   });
 
   const handleValues = async (event) => {
+    report.current.reportable_type = report.current.reportable_type === "User" ? "User" : commentType
     try {
       await axios.post(`/report`, {
         report: report.current

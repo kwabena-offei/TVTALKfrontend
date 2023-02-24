@@ -10,25 +10,24 @@ import VideoIcon from "../Icons/VideoIcon";
 
 export const CommentNews = ({ profile, story_id, isMobile }) => {
   const message = useRef(null)
-  // const { axios } = useAxios()
+  const { axios } = useAxios()
 
   const onPost = async () => {
-    // try {
-    //   const response = await axios.post(`/comments?story_id=${story_id}`, {
-    //     comment: {
-    //       text: message.current.value,
-    //       comment_id: comment.id,
-    //       sub_comment_id: null,
-    //       images: [],
-    //       videos: [],
-    //       mute_notifications: false,
-    //     }
-    //   })
-      console.log('[post][response]')
-    //   message.current.value = ''
-    // } catch (error) {
-    //   console.log('post error', error)
-    // }
+    try {
+      const response = await axios.post(`/comments?story_id=${story_id}`, {
+        comment: {
+          text: message.current.value,
+          story_id: story_id,
+          images: [],
+          videos: [],
+          mute_notifications: false,
+        }
+      })
+      console.log('[post][response]', response)
+      message.current.value = ''
+    } catch (error) {
+      console.log('post error', error)
+    }
   }
   const onAddPhoto = () => {
     console.log('onAddPhoto', story_id)

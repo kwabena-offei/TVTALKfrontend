@@ -48,11 +48,13 @@ const ReactionCard = (props) => {
     sub_comments_count,
     shares_count,
     tmsId,
+    story_id,
     commentsMode,
     withoutActions,
     commentType,
     header
   } = props;
+  console.log('[ReactionCard] props', props)
   const { publicRuntimeConfig } = getConfig();
   const [likes, setLikes] = useState(likes_count)
   const liked = () => {
@@ -80,13 +82,13 @@ const ReactionCard = (props) => {
   // ToDo: research for hashtag format and provide link-view for it
   const { username, image } = profile;
   // -- navigate user to current comment page --
-  const openCommentPage = (route) => {
+  const onComment = () => {
     router.push({
       pathname: '/chat/[tmsId]/comments/[id]/[page]',
       query: {
         tmsId: tmsId,
         id: id,
-        page: route
+        page: 'replies'
       }
     })
   }
@@ -100,7 +102,6 @@ const ReactionCard = (props) => {
       console.error(error.message)
     }
   }
-  const onComment = () => openCommentPage('replies')
   const onShare = () => {
     toggleShare()
   }
@@ -143,13 +144,16 @@ const ReactionCard = (props) => {
             aria-label="Like"
             icon={<FavoriteIcon fontSize='inherit' />}
           />
-          <ActionButton
-            withTitleMode={commentsMode}
-            title='Comment'
-            isMobile={isMobileAndTablet}
-            aria-label="Comment"
-            onClick={onComment}
-            icon={<MessagesIcon fontSize='inherit' />} />
+          { story_id
+            ? null
+            : <ActionButton
+              withTitleMode={commentsMode}
+              title='Comment'
+              isMobile={isMobileAndTablet}
+              aria-label="Comment"
+              onClick={onComment}
+              icon={<MessagesIcon fontSize='inherit' />} />
+            }
           <ActionButton
             withTitleMode={commentsMode}
             title="Share"
