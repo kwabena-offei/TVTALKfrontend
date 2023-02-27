@@ -23,7 +23,7 @@ export const IconButton = ({
   </MuiIconButton>
 );
 
-export const PostInputWrapper = ({ children, isMobile, addition }) => (
+export const PostInputWrapper = ({ children, isMobile, addition, media }) => (
   <Box
     sx={{
       background: "linear-gradient(89.18deg, #0B228D 0%, #6184FF 129.11%)",
@@ -33,10 +33,23 @@ export const PostInputWrapper = ({ children, isMobile, addition }) => (
     }}
   >
     <NewsMainContainer maxWidth="xl">
-      <GridLayout isMobile={isMobile} middleColProps={{ width: '100%' }}>
+      {media ? (
+        <Box
+          sx={{
+            maxWidth: isMobile ? "555px" : "1010px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            marginX: "auto",
+          }}
+        >
+          {media}
+        </Box>
+      ) : null}
+      <GridLayout isMobile={isMobile} middleColProps={{ width: "100%" }}>
         <Stack
           direction="row"
-          spacing={ isMobile ? 1.25 : 3.75 }
+          spacing={isMobile ? 1.25 : 3.75}
           sx={{
             minHeight: isMobile ? "60px" : "120px",
             bgcolor: "background.default",
