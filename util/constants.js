@@ -1,7 +1,7 @@
 export const TV_TALK_API = 'https://api.tvtalk.app';
 export const TV_TALK_WEBSOCKET = 'wss://api.tvtalk.app/websocket'
-export const TV_TALK_WEBSOCKET_LOCAL = 'ws://608d-128-124-197-105.ngrok.io/websocket';
-export const TV_TALK_API_LOCAL = 'https://608d-128-124-197-105.ngrok.io';
+export const TV_TALK_WEBSOCKET_LOCAL = 'ws://9647-128-124-148-238.ngrok.io/websocket';
+export const TV_TALK_API_LOCAL = 'https://9647-128-124-148-238.ngrok.io';
 export const TV_TALK_HOST = 'https://gotvchat.com';
 export const TV_TALK_HOST_LOCAL = 'http://localhost:3000';
 

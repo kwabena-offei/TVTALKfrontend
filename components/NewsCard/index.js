@@ -19,6 +19,10 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { ReactionCounts } from "../ReactionCard/ReactionCounts";
 import PrimaryButton from "../PrimaryButton";
 import { useRouter } from "next/router";
+import { setLike } from "../../services/like";
+import Share from "../Chat/Share";
+import getConfig from "next/config";
+import { TV_TALK_HOST, TV_TALK_HOST_LOCAL } from "../../util/constants";
 
 const NewsCard = (props) => {
   const {
@@ -38,13 +42,19 @@ const NewsCard = (props) => {
     commentMode
   } = props;
   const [likes, setLikes] = useState(likes_count);
+  const [isLiked, setIsliked] = useState(false);
   const [shares, setShares] = useState(shares_count);
+  const [openShare, setOpenShare] = useState(false);
   const image = image_url ? image_url : '/assets/no-picture-available.jpg';
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isMobileAndTablet = useMediaQuery(theme.breakpoints.down('md'));
   const router = useRouter()
+  const { publicRuntimeConfig } = getConfig()
+  const baseUrl = publicRuntimeConfig.API_ENV === 'development' ? TV_TALK_HOST_LOCAL : TV_TALK_HOST;
+  const createUrl = new URL(router.asPath, baseUrl).pathname
+  const copyLink = `${baseUrl}${createUrl}#${id}`
   const navigate = () => {
     if (iframe_enabled) {
       return router.push({
@@ -68,6 +78,30 @@ const NewsCard = (props) => {
         id: id
       }
     })
+  }
+
+  const liked = () => {
+    setIsliked(true)
+    setLikes(likes + 1)
+  }
+  const unliked = () => {
+    setIsliked(false)
+    setLikes(likes - 1)
+  }
+  const onLike = async () => {
+    try {
+      const response = await setLike({ type: 'storyId', id, isLiked: !isLiked })
+      // console.log('onLike story response', response)
+      const isLikedSuccess = response.data.stories.includes(id)
+      isLikedSuccess ? liked() : unliked()
+    } catch (error) {
+      console.log('onLike story error', error)
+    }
+  }
+
+  const toggleShare = () => setOpenShare(!openShare);
+  const onShare = () => {
+    toggleShare()
   }
 
   return (
@@ -115,8 +149,8 @@ const NewsCard = (props) => {
             <ActionButton
               title="Like"
               isMobile={isMobileAndTablet}
-              // onClick={onLike}
-              // checked={isLiked}
+              onClick={onLike}
+              checked={isLiked}
               aria-label="Like"
               icon={<FavoriteIcon fontSize="inherit" />}
             />
@@ -131,10 +165,19 @@ const NewsCard = (props) => {
               title="Share"
               isMobile={isMobileAndTablet}
               aria-label="Share"
-              // onClick={onShare}
+              onClick={onShare}
               icon={<ShareIcon fontSize="inherit" />}
             />
           </Stack>
+          <Share
+            setShares={setShares}
+            open={openShare}
+            onClose={toggleShare}
+            url={copyLink}
+            isMobile={isMobile}
+            id={id}
+            type={'story'}
+          />
         </ReactionCardActions>
       )}
     </CardWrapper>

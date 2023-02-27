@@ -74,7 +74,8 @@ const ReactionCard = (props) => {
   const isMobileAndTablet = useMediaQuery(theme.breakpoints.down('md'));
   const router = useRouter()
   const baseUrl = publicRuntimeConfig.API_ENV === 'development' ? TV_TALK_HOST_LOCAL : TV_TALK_HOST;
-  const copyLink = `${baseUrl}${router.asPath}#${id}`
+  const createUrl = new URL(router.asPath, baseUrl).pathname
+  const copyLink = `${baseUrl}${createUrl}#${id}`
 
   
   const timeAgo = created_at_formatted || dayjs(created_at).fromNow()
