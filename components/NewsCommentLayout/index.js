@@ -9,12 +9,12 @@ import { CommentNews } from "./CommentNews";
 import { GridLayout } from "./NewsCommentLayout.styled";
 
 export const NewsCommentLayout = ({ children }) => {
-  const { news } = children.props
+  const { news, profile } = children.props
   const router = useRouter()
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   // ToDo: replace with auth value
-  const profile = { image: '', username: '' }
+  // const profile = { image: '', username: '' }
 
   if (isMobile) {
     return (

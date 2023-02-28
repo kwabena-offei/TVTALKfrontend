@@ -35,7 +35,7 @@ export async function getServerSideProps(context) {
     props: {
       news: {
         ...filteredNews,
-        liked_by_auth_user: likes.stories.includes(filteredNews.id)
+        liked_by_auth_user: likes.stories.includes(filteredNews?.id)
       }
     },
   };

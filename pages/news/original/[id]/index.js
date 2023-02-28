@@ -29,15 +29,16 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      news: filteredNews,
-      likes
+      news: {
+        ...filteredNews,
+        liked_by_auth_user: likes.stories.includes(filteredNews?.id)
+      }
     }, // will be passed to the page component as props
   };
 }
 
-export default function Page({ news, likes }) {
-  const { url, source, id } = news;
-  // console.log('likes', likes)
+export default function Page({ news }) {
+  const { url, source, id, liked_by_auth_user } = news;
   const router = useRouter()
   const { publicRuntimeConfig } = getConfig();
 
@@ -46,7 +47,7 @@ export default function Page({ news, likes }) {
   const baseUrl = publicRuntimeConfig.API_ENV === 'development' ? TV_TALK_HOST_LOCAL : TV_TALK_HOST;
 
   const sharedLink = `${baseUrl}${router.asPath}`
-  const [isLiked, setIsliked] = useState(false)
+  const [isLiked, setIsliked] = useState(liked_by_auth_user)
   const [shares, setShares] = useState(0)
   const [openShare, setOpenShare] = useState(false);
   const toggleShare = () => setOpenShare(!openShare);
