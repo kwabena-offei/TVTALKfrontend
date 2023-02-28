@@ -2,12 +2,12 @@ import { Stack, Box, Link } from "@mui/material";
 import { useRouter } from "next/router";
 import { ButtonBack } from "../AccountSettingsLayout/AccountSettingsLayout.styled";
 import { DesktopTitle } from "./NewsIFrameLayout.styled";
-import { FavoriteBorderOutlined } from "@mui/icons-material";
+import { FavoriteBorderOutlined, Favorite, FavoriteRounded } from "@mui/icons-material";
 import ShareIcon from "../Icons/ShareIcon";
 import IconButton from "../OutlinedRoundIconButton";
 import MessagesIcon from "../Icons/MessagesIcon";
 
-export const DesktopHeader = ({ source, url, onComment }) => {
+export const DesktopHeader = ({ source, url, onComment, onLike, onShare, isLiked }) => {
   const router = useRouter();
 
   return (
@@ -31,9 +31,16 @@ export const DesktopHeader = ({ source, url, onComment }) => {
           </Box>
         </Box>
         <Stack direction="row" gap={1.25}>
-          <IconButton icon={<FavoriteBorderOutlined />} />
+          <IconButton
+            onClick={onLike}
+            icon={ isLiked ? <FavoriteRounded /> : <FavoriteBorderOutlined />}
+            // sx={{
+            //   backgroundColor: isLiked ? 'neutral.contrastText' : 'neutral.main',
+            //   color: isLiked ? 'neutral.main' : 'neutral.contrastText'
+            // }}
+          />
           <IconButton onClick={onComment} icon={<MessagesIcon />} />
-          <IconButton icon={<ShareIcon />} />
+          <IconButton onClick={onShare} icon={<ShareIcon />} />
         </Stack>
       </Stack>
     </>

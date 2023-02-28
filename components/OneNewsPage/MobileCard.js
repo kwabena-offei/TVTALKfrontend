@@ -28,6 +28,9 @@ const OneNewsCardMobile = ({
   parsedUrl,
   shortenedHostUrl,
   onComment,
+  onLike,
+  isLiked,
+  onShare
 }) => {
   const image = image_url ? image_url : "/assets/no-picture-available.jpg";
   console.log("parsedUrl", parsedUrl);
@@ -54,8 +57,8 @@ const OneNewsCardMobile = ({
           <ActionButton
             title="Like"
             isMobile
-            // onClick={onLike}
-            // checked={isLiked}
+            onClick={onLike}
+            checked={isLiked}
             aria-label="Like"
             icon={<FavoriteIcon fontSize="inherit" />}
           />
@@ -70,7 +73,7 @@ const OneNewsCardMobile = ({
             title="Share"
             isMobile
             aria-label="Share"
-            // onClick={onShare}
+            onClick={onShare}
             icon={<ShareIcon fontSize="inherit" />}
           />
         </Stack>

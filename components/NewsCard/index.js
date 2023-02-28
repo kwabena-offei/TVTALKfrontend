@@ -39,10 +39,11 @@ const NewsCard = (props) => {
     source,
     title,
     url,
+    liked_by_auth_user,
     commentMode
   } = props;
   const [likes, setLikes] = useState(likes_count);
-  const [isLiked, setIsliked] = useState(false);
+  const [isLiked, setIsliked] = useState(liked_by_auth_user);
   const [shares, setShares] = useState(shares_count);
   const [openShare, setOpenShare] = useState(false);
   const image = image_url ? image_url : '/assets/no-picture-available.jpg';

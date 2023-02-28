@@ -4,7 +4,7 @@ import {
   ButtonBackMobile,
   MobileTitle,
 } from "../AccountSettingsLayout/AccountSettingsLayout.styled";
-import { FavoriteBorderOutlined } from "@mui/icons-material";
+import { FavoriteBorderOutlined, Favorite } from "@mui/icons-material";
 import ShareIcon from "../Icons/ShareIcon";
 import IconButton from "../OutlinedRoundIconButton";
 import MessagesIcon from "../Icons/MessagesIcon";
@@ -15,7 +15,7 @@ const StyledButton = styled(Button) ({
   paddingRight: '15px'
 })
 
-export const MobileHeader = ({ source, url }) => {
+export const MobileHeader = ({ source, url, isLiked, onComment, onLike, onShare }) => {
   const router = useRouter();
 
   return (
@@ -33,9 +33,18 @@ export const MobileHeader = ({ source, url }) => {
           sx={{ backgroundColor: '#131B3F'}}
         >{source}</Link>
         <Stack direction="row" gap={1.25}>
-          <IconButton icon={<FavoriteBorderOutlined />} />
-          <IconButton icon={<MessagesIcon />} />
-          <IconButton icon={<ShareIcon />} />
+          <IconButton
+            icon={isLiked ? <Favorite /> : <FavoriteBorderOutlined />}
+            onClick={onLike}
+          />
+          <IconButton
+            icon={<MessagesIcon />} 
+            onClick={onComment}
+          />
+          <IconButton
+            icon={<ShareIcon />}
+            onClick={onShare}
+          />
         </Stack>
       </Stack>
     </>
