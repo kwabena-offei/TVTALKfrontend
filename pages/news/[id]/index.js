@@ -15,6 +15,7 @@ import { setLike } from "../../../services/like";
 import useAxios from '../../../services/api';
 import { isAuthenticated } from "../../../services/isAuth";
 import { unAuthLikes } from "../../../util/constants";
+import { AuthContext } from "../../../util/AuthContext";
 
 export async function getServerSideProps(context) {
   const { axios } = useAxios(context)
@@ -36,12 +37,13 @@ export async function getServerSideProps(context) {
       news: {
         ...filteredNews,
         liked_by_auth_user: likes.stories.includes(filteredNews?.id)
-      }
+      },
+      isAuth
     },
   };
 }
 
-export default function Page({ news }) {
+export default function Page({ news, isAuth }) {
 
   const { source, url, id, liked_by_auth_user } = news;
   // console.log('news', news)
@@ -88,6 +90,7 @@ export default function Page({ news }) {
 
   if (isMobile) {
     return (
+      <AuthContext.Provider value={isAuth}>
       <NewsMainContainer>
         <MobileHeader source={source} />
         <OneNewsCardMobile
@@ -109,10 +112,12 @@ export default function Page({ news }) {
           type={'story'}
         />
       </NewsMainContainer>
+      </AuthContext.Provider>
     );
   }
 
   return (
+    <AuthContext.Provider value={isAuth}>
     <NewsMainContainer maxWidth="xl">
       <DesktopHeader
         source={source}
@@ -139,5 +144,6 @@ export default function Page({ news }) {
         type={'story'}
       />
     </NewsMainContainer>
+    </AuthContext.Provider>
   );
 }

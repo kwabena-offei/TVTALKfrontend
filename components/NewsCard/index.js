@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Box,
   CardContent,
@@ -23,6 +23,7 @@ import { setLike } from "../../services/like";
 import Share from "../Chat/Share";
 import getConfig from "next/config";
 import { TV_TALK_HOST, TV_TALK_HOST_LOCAL } from "../../util/constants";
+import { AuthContext } from "../../util/AuthContext";
 
 const NewsCard = (props) => {
   const {
@@ -51,6 +52,8 @@ const NewsCard = (props) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isMobileAndTablet = useMediaQuery(theme.breakpoints.down('md'));
+  const isAuth = useContext(AuthContext)
+
   const router = useRouter()
   const { publicRuntimeConfig } = getConfig()
   const baseUrl = publicRuntimeConfig.API_ENV === 'development' ? TV_TALK_HOST_LOCAL : TV_TALK_HOST;
@@ -152,6 +155,7 @@ const NewsCard = (props) => {
               isMobile={isMobileAndTablet}
               onClick={onLike}
               checked={isLiked}
+              disabled={!isAuth}
               aria-label="Like"
               icon={<FavoriteIcon fontSize="inherit" />}
             />

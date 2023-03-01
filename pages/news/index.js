@@ -12,6 +12,7 @@ import { NewsMainContainer } from "../../components/NewsCard/NewsCard.styled";
 import useAxios from '../../services/api';
 import { isAuthenticated } from "../../services/isAuth";
 import { unAuthLikes } from "../../util/constants";
+import { AuthContext } from "../../util/AuthContext";
 
 export async function getServerSideProps(context) {
   const { axios } = useAxios(context)
@@ -23,15 +24,17 @@ export async function getServerSideProps(context) {
   return {
     props: {
       news: news,
-      likes: likes.stories
+      likes: likes.stories,
+      isAuth
     }, // will be passed to the page component as props
   };
 }
-const News = ({ news, likes }) => {
+const News = ({ news, likes, isAuth }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   console.log('news, likes', news, likes);
   return (
+    <AuthContext.Provider value={isAuth}>
     <NewsMainContainer sx={{ marginBottom: "5vh" }} maxWidth="xl">
       <Typography
         variant='h2'
@@ -50,6 +53,7 @@ const News = ({ news, likes }) => {
         ))}
       </Grid>
     </NewsMainContainer>
+    </AuthContext.Provider>
   );
 };
 

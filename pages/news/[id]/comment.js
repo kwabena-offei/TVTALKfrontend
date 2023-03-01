@@ -1,18 +1,15 @@
-import React from "react";
-import mainAxios from "axios";
-import { TV_TALK_API } from "../../../util/constants";
+import React, { useState } from "react";
 import { isAuthenticated } from "../../../services/isAuth";
 import useAxios from '../../../services/api';
 import { NewsCommentLayout } from "../../../components/NewsCommentLayout";
-import { AuthContext } from "../../../util/AuthContext";
 import ReactionCard from "../../../components/ReactionCard";
-import { Grid, useMediaQuery, useTheme } from "@mui/material";
+import { Grid } from "@mui/material";
+import useSocket from "../../../hooks/useSocket";
 
 export async function getServerSideProps(context) {
   const { axios } = useAxios(context)
   const { id } = context.query;
   const { data: news } = await axios.get(`/news`);
-  // const { data: news } = await mainAxios.get(`${TV_TALK_API}/news`);
   const isAuth = isAuthenticated(context)
   // Todo: this is temporary solution - replace it if you find another way to fetch data of a one news
   const [filteredNews] = news.filter((newsItem) => {
@@ -21,10 +18,9 @@ export async function getServerSideProps(context) {
       return newsItem;
     }
   });
-  // const { data: comments } = await mainAxios.get(`${TV_TALK_API}/comments?story_id=${id}`);
   const { data: comments } = await axios.get(`/comments?story_id=${id}`);
   const { data: profile } = isAuth ? await axios.get(`/profile`) : { data: { image: '', username: '' } }
-  // console.log('comments', comments)
+
   return {
     props: {
       news: filteredNews,
@@ -35,15 +31,27 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function Page({ news, comments, isAuth, profile }) {
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
-  const { results: commentsList } = comments
+export default function Page({ news, comments: serverComments, isAuth, profile }) {
+  const [newsComments, setNewsComments] = useState(serverComments)
 
+  const socket = useSocket(
+    'story_comments',
+    'CommentsChannel',
+    { "story_id": news.id },
+    (response) => {
+      if(response.message?.type === 'comment') {
+        setNewsComments((prevState) => {
+          return {
+            ...prevState,
+            results: [ ...prevState.results, response.message ]};
+        })
+      }
+  });
+  
   return (
-    <Grid container rowSpacing={isMobile ? 2.5 : 5}>
-      { commentsList.length
-        ? commentsList.map(comment => (
+    <Grid container rowSpacing={{ xs: 2.5, md: 5 }}>
+      { newsComments?.results?.length
+        ? newsComments?.results?.map(comment => (
           <Grid item xs={12} key={comment.id}>
             <ReactionCard {...comment} profile={comment.user} commentsMode commentType={'Story'} />
           </Grid>
@@ -56,7 +64,5 @@ export default function Page({ news, comments, isAuth, profile }) {
 }
 
 Page.getLayout = function getLayout(page) {
-  return <AuthContext.Provider value={page.props.isAuth}>
-    <NewsCommentLayout>{page}</NewsCommentLayout>
-  </AuthContext.Provider>
+  return <NewsCommentLayout isAuth={page.props.isAuth}>{page}</NewsCommentLayout>
 }

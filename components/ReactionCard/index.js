@@ -54,7 +54,7 @@ const ReactionCard = (props) => {
     commentType,
     header
   } = props;
-  console.log('[ReactionCard] props', props)
+
   const { publicRuntimeConfig } = getConfig();
   const [likes, setLikes] = useState(likes_count)
   const liked = () => {

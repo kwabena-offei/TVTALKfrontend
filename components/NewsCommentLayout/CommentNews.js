@@ -105,6 +105,8 @@ export const CommentNews = ({ profile, story_id, isMobile }) => {
       })
       console.log('[post][response]', response)
       message.current.value = ''
+      setVideos([])
+      setImages([])
     } catch (error) {
       console.log('post error', error)
     }

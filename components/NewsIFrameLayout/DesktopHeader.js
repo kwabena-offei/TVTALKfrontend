@@ -9,6 +9,8 @@ import {
 import ShareIcon from "../Icons/ShareIcon";
 import IconButton from "../OutlinedRoundIconButton";
 import MessagesIcon from "../Icons/MessagesIcon";
+import { useContext } from "react";
+import { AuthContext } from "../../util/AuthContext";
 
 export const DesktopHeader = ({
   source,
@@ -19,6 +21,7 @@ export const DesktopHeader = ({
   isLiked,
 }) => {
   const router = useRouter();
+  const isAuth = useContext(AuthContext)
 
   return (
     <>
@@ -26,7 +29,7 @@ export const DesktopHeader = ({
         direction="row"
         alignItems="center"
         spacing={2}
-        sx={{ my: 5, display: "inline-flex" }}
+        sx={{ my: 5 }}
       >
         <Container disableGutters>
           <ButtonBack onClick={() => router.back()} />
@@ -47,6 +50,7 @@ export const DesktopHeader = ({
           <Stack direction="row" gap={1.25} justifyContent="flex-end">
             <IconButton
               onClick={onLike}
+              disabled={!isAuth}
               icon={isLiked ? <FavoriteRounded /> : <FavoriteBorderOutlined />}
             />
             <IconButton onClick={onComment} icon={<MessagesIcon />} />
