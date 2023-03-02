@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { IFrameComponent } from "../../../../components/IFrameComponent";
 import { NewsIFrameLayout } from "../../../../components/NewsIFrameLayout";
 import { NewsMainContainer } from "../../../../components/NewsCard/NewsCard.styled";
-import axios from "axios";
 import useAxios from "../../../../services/api";
-import { TV_TALK_API, TV_TALK_HOST_LOCAL, TV_TALK_HOST } from "../../../../util/constants";
+import { TV_TALK_HOST_LOCAL, TV_TALK_HOST } from "../../../../util/constants";
 import { useRouter } from "next/router";
 import getConfig from "next/config";
 import { setLike } from "../../../../services/like";
 import { isAuthenticated } from "../../../../services/isAuth";
 import { unAuthLikes } from "../../../../util/constants";
+import Share from "../../../../components/Chat/Share";
+import { useTheme, useMediaQuery } from "@mui/material";
+import { AuthContext } from "../../../../util/AuthContext";
 
 export async function getServerSideProps(context) {
   // console.log('context', context)
@@ -32,18 +34,20 @@ export async function getServerSideProps(context) {
       news: {
         ...filteredNews,
         liked_by_auth_user: likes.stories.includes(filteredNews?.id)
-      }
+      },
+      isAuth
     }, // will be passed to the page component as props
   };
 }
 
-export default function Page({ news }) {
+export default function Page({ news, isAuth }) {
   const { url, source, id, liked_by_auth_user } = news;
   const router = useRouter()
   const { publicRuntimeConfig } = getConfig();
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const parsedUrl = new URL(url)
-  const shortenedHostUrl = parsedUrl.host.startsWith('www.') ? parsedUrl.host.substring(4) : parsedUrl.host
   const baseUrl = publicRuntimeConfig.API_ENV === 'development' ? TV_TALK_HOST_LOCAL : TV_TALK_HOST;
 
   const sharedLink = `${baseUrl}${router.asPath}`
@@ -60,7 +64,6 @@ export default function Page({ news }) {
   }
 
   const onComment = () => {
-    // console.log('router', router)
     const cropedRoute = router.pathname.replace('/original', '')
     return router.push({
       pathname: `${cropedRoute}/comment`,
@@ -81,18 +84,27 @@ export default function Page({ news }) {
   }
 
   return (
-    <>
+    <AuthContext.Provider value={isAuth}>
       <NewsMainContainer maxWidth="xl">
         <NewsIFrameLayout
           source={source}
-          url={url}
+          url={parsedUrl}
           onComment={onComment}
           onLike={onLike}
           isLiked={isLiked}
           onShare={onShare}
         />
       </NewsMainContainer>
+      <Share
+        setShares={setShares}
+        open={openShare}
+        onClose={toggleShare}
+        url={sharedLink}
+        isMobile={isMobile}
+        id={id}
+        type={'story'}
+      />
       <IFrameComponent url={url} />
-    </>
+    </AuthContext.Provider>
   );
 }

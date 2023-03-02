@@ -27,7 +27,7 @@ export const MobileHeader = ({ source, url, isLiked, onComment, onLike, onShare 
       <Stack direction="row" justifyContent='space-between' mb={2.25}>
         <Link
           component={StyledButton}
-          href={url}
+          href={url.href}
           target='_blank'
           underline='none'
           sx={{ backgroundColor: '#131B3F'}}

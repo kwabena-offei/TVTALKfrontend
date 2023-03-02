@@ -28,13 +28,14 @@ export const DesktopHeader = ({
       <Stack
         direction="row"
         alignItems="center"
+        justifyContent='space-between'
         spacing={2}
         sx={{ my: 5 }}
       >
-        <Container disableGutters>
+        <Box sx={{ maxWidth: '170px', minWidth: '140px', flexShrink: 1}}>
           <ButtonBack onClick={() => router.back()} />
-        </Container>
-        <Container disableGutters>
+        </Box>
+        <Container disableGutters sx={{ flexGrow: 1 }}>
           <DesktopTitle component="h2">{source}</DesktopTitle>
           <Box sx={{ textAlign: "center" }}>
             <Link
@@ -46,8 +47,8 @@ export const DesktopHeader = ({
             </Link>
           </Box>
         </Container>
-        <Container disableGutters>
-          <Stack direction="row" gap={1.25} justifyContent="flex-end">
+        <Box sx={{ maxWidth: '170px', minWidth: '140px', flexShrink: 1}}>
+          <Stack direction="row" gap={1.25} justifyContent="flex-end" justifySelf='flex-end' >
             <IconButton
               onClick={onLike}
               disabled={!isAuth}
@@ -56,7 +57,7 @@ export const DesktopHeader = ({
             <IconButton onClick={onComment} icon={<MessagesIcon />} />
             <IconButton onClick={onShare} icon={<ShareIcon />} />
           </Stack>
-        </Container>
+        </Box>
       </Stack>
     </>
   );
