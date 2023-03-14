@@ -13,8 +13,7 @@ import {
 } from "./Login.styled";
 import { FacebookRounded, Apple } from "@mui/icons-material";
 import GoogleIcon from '../Icons/GoogleColorIcon'
-import { TV_TALK_API } from "../../util/constants";
-import axios from "axios";
+import useAxios from '../../services/api'
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import AppleLogin from 'react-apple-signin-auth';
@@ -28,6 +27,7 @@ const { publicRuntimeConfig } = getConfig();
 const Login = (props) => {
   const { isMobile } = props;
   const router = useRouter();
+  const { axios } = useAxios();
   const [formValues, setFormValues] = useState({
     username: "",
     password: "",
@@ -64,7 +64,7 @@ const Login = (props) => {
   const onSubmit = async () => {
     try {
       // -- send user/password to API --
-      const { data: { token } } = await axios.post(`${TV_TALK_API}/auth/login`, formValues);
+      const { data: { token } } = await axios.post(`/auth/login`, formValues);
       // -- set cookie with token --
       setCookie('token', token);
       // -- redirect user to profile page --
@@ -80,7 +80,7 @@ const Login = (props) => {
   const handleResponseGoogle = async (googleResponse) => {
     try {
       // -- send request to API and exchange google token with local token --
-      const apiResponse = await axios.post(`${TV_TALK_API}/auth/login_social`, {
+      const apiResponse = await axios.post(`/auth/login_social`, {
         google_token: googleResponse.tokenId,
       });
        // -- set cookie with token --
@@ -109,7 +109,7 @@ const Login = (props) => {
     }
     try {
       // -- send request to API and exchange google token with local token --
-      const apiResponse = await axios.post(`${TV_TALK_API}/auth/login_social`, {
+      const apiResponse = await axios.post(`/auth/login_social`, {
         facebook_token: facebookResponse.accessToken,
         facebook_id: facebookResponse.userID,
       });
@@ -131,7 +131,7 @@ const Login = (props) => {
     console.log('apple response: ', appleResponse);
     try {
       // -- send request to API and exchange apple token with local token --
-      const apiResponse = await axios.post(`${TV_TALK_API}/auth/apple`, appleResponse);
+      const apiResponse = await axios.post(`/auth/apple`, appleResponse);
 
       // -- set cookie with token --
       setCookie('token', apiResponse.data.token);

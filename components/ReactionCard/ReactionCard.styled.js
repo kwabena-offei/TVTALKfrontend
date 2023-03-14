@@ -1,5 +1,7 @@
 import { styled } from "@mui/system";
 import { Typography, Card, CardActions, CardMedia } from "@mui/material";
+import { OutlinedButton } from "../OutlinedButton";
+import RoundedIconButton from './RoundedIconButton';
 
 export const CardWrapper = styled(Card, {
   name: "Reaction",
@@ -13,11 +15,19 @@ export const ReactionCardHashtags = ({ children }) => {
   return <Typography color="#3361FF">{children}</Typography>;
 };
 
-export const ReactionCardText = ({ children, isMobile }) => {
+export const ReactionCardText = ({ children, isMobile, ...props }) => {
   return (
     <Typography
       color="#EFF2FD"
-      sx={{ fontSize: isMobile ? "1rem" : "1.5rem", lineHeight: "180%" }}
+      variant="body1"
+      as='pre'
+      sx={{
+        fontSize: isMobile ? "1rem" : "1.5rem",
+        lineHeight: "180%",
+        whiteSpace: 'break-spaces',
+        paddingBottom: isMobile ? 0.5 : 1.25,
+      }}
+      {...props}
     >
       {children}
     </Typography>
@@ -41,10 +51,43 @@ export const ReactionCardMedia = ({ image }) => {
   );
 };
 
-export const mobileIconButtonProps = {
-  minWidth: "36px",
-  minHeight: "36px",
-};
+export const ReactionCardVideo = ({ video }) => {
+  return <CardMedia
+    component='video'
+    height="auto"
+    src={video}
+    alt="Show video"
+    sx={{ borderRadius: 2 }}
+    autoPlay
+    controls
+  />
+}
+
+export const ActionButton = ({ isMobile, withTitleMode, title, icon, onClick, checked, ...props }) => {
+  if (!isMobile && withTitleMode) {
+    return (
+      <OutlinedButton
+        sx={{
+          height: "50px",
+          padding: "1em 2em",
+          fontSize: '1rem',
+          backgroundColor: checked ? 'neutral.main' : 'neutral.contrastText',
+          color: checked ? 'neutral.contrastText' : 'neutral.main'
+        }}
+        onClick={onClick}
+        startIcon={icon}
+        {...props}
+      >
+        {title}
+      </OutlinedButton>
+    )
+  }
+  return <RoundedIconButton onClick={onClick} icon={icon} {...props} sx={{
+    backgroundColor: checked ? 'neutral.main' : 'neutral.contrastText',
+    color: checked ? 'neutral.contrastText' : 'neutral.main'
+  }}/>;
+}
+
 export const cardActionsMobileProps = {
   paddingX: 2,
   paddingTop: 1,

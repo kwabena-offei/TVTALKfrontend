@@ -21,7 +21,7 @@ const NotificationCard = (props) => {
   const { children } = props;
   const { actor, message, created_at, notifiable_type } = children;
   const { username, image } = actor;
-  console.log("children", children);
+
   const time = dayjs(created_at).calendar(null, {
     sameDay: "[Today at] h:mm A", // The same day ( Today at 2:30 AM )
     nextDay: "[Tomorrow at] h:mm A", // The next day ( Tomorrow at 2:30 AM )

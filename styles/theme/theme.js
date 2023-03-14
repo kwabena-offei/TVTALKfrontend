@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material/styles";
-import { experimental_sx as sx } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
 const theme = createTheme({
   typography: {
@@ -30,6 +30,10 @@ const theme = createTheme({
       main: '#A5B0D6',
       dark: '#131B3F',
       contrastText: '#090F27',
+    },
+    darkSecondary: {
+      main: '#090F27',
+      contrastText: '#A5B0D6'
     }
   },
   components: {
@@ -44,42 +48,46 @@ const theme = createTheme({
           "&:after": {
             content: 'none'
           },
-          ":focus": {
+          "&:focus": {
             borderRadius: 30,
           }
         },
         input: {
-          padding: '12px 30px'
+          padding: '0.75rem 1.875rem',
+          "&:focus": {
+            borderRadius: 30,
+          }
         },
         adornedEnd: {
-          paddingRight: '30px'
+          paddingRight: '1.875rem'
         }
       }
     },
     MuiOutlinedInput: {
       styleOverrides: {
-        root: {
-          borderRadius: 30
-        },
-        input: {
-          padding: '12px 30px'
-        },
-        adornedEnd: {
-          paddingRight: '30px'
-        },
-        notchedOutline: {
-          border: '1px solid #090F27',
-          ":focus": {
-            border: '1px solid #090F27'
-          }
-        }
+      //   root: {
+      //     borderRadius: 30
+      //   },
+        // input: {
+        //   paddingLeft: '1.875rem',
+        //   paddingRight: '1.875rem',
+        // },
+        // adornedEnd: {
+        //   paddingRight: '1.875rem',
+        // },
+      //   notchedOutline: {
+      //     border: '1px solid #090F27',
+      //     ":focus": {
+      //       border: '1px solid #090F27'
+      //     }
+      //   }
       }
     },
     MuiTextField: {
       styleOverrides: {
         root: {
           borderRadius: 30,
-          backgroundColor: '#090F27'
+          backgroundColor: "#090F27"
         }
       }
     },
@@ -129,14 +137,14 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 30,
-          backgroundColor: '#090F27',
+          backgroundColor: "#090F27",
           ":focus": {
             borderRadius: 30,
           },
         },
-        icon: sx({
-          color: '#3361FF',
-          marginRight: '20px'
+        icon: ({ theme }) => theme.unstable_sx({
+          color: 'primary.main',
+          marginRight: '1.25rem'
         })
       }
     },

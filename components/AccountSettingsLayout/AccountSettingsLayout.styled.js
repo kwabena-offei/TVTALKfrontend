@@ -17,7 +17,7 @@ export const SectionTitle = ({ title }) => {
       <Stack direction="row" alignItems="center" spacing={2} sx={{ my: isMobile ? 2 : 5 }}>
         {isMobile ? <ButtonBackMobile onClick={() => router.push('/profile')} /> : <ButtonBack onClick={() => router.push('/profile/reactions')} />}
         <Box sx={{ width: "100%", padding: 0, paddingRight: isMobile ? 0 : BUTTON_WIDTH }}>
-          { isMobile ? <MobileTitle>{title}</MobileTitle> : <DescktopTitle>{title}</DescktopTitle> }
+          { isMobile ? <MobileTitle>{title}</MobileTitle> : <DesktopTitle>{title}</DesktopTitle> }
         </Box>
       </Stack>
     </Container>
@@ -30,7 +30,7 @@ export const MobileTitle = ({children}) => (
   </Typography>
 )
 
-export const DescktopTitle = ({children}) => (
+export const DesktopTitle = ({children}) => (
   <Typography component='h1' fontWeight={700} fontSize={48} textAlign='center'>
     {children}
   </Typography>

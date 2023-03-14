@@ -17,7 +17,14 @@ import { useRouter } from "next/router";
 import { deleteCookie, hasCookie } from "cookies-next";
 import { LoginButton } from './LoginButton'
 
-const pages = ['Chat By Show', 'News'];
+const pages = [
+  {
+    title: 'Chat By Show',
+    route: '/chat',
+  }, {
+    title: 'News',
+    route: '/news'
+  }];
 
 function ResponsiveAppBar({ context }) {
   const token = hasCookie('token', context);
@@ -52,7 +59,12 @@ function ResponsiveAppBar({ context }) {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (key, reason) => {
+    if (reason == 'backdropClick') {
+      setAnchorElNav(null);
+      return;
+    }
+    router.push(key);
     setAnchorElNav(null);
   };
 
@@ -128,8 +140,8 @@ function ResponsiveAppBar({ context }) {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
+                  <MenuItem key={page.route} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page.title}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
@@ -138,7 +150,7 @@ function ResponsiveAppBar({ context }) {
               variant="h5"
               noWrap
               component="a"
-              href=""
+              href="/"
               sx={{
                 mr: 2,
                 display: { xs: 'flex', md: 'none' },
@@ -154,11 +166,11 @@ function ResponsiveAppBar({ context }) {
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {pages.map((page) => (
                 <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
+                  key={page.route}
+                  onClick={() => router.push(page.route)}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
-                  {page}
+                  {page.title}
                 </Button>
               ))}
             </Box>
@@ -167,7 +179,7 @@ function ResponsiveAppBar({ context }) {
               ? <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src="https://www.fillmurray.com/300/300" />
+                    <Avatar alt="Remy Sharp" src="https://placekitten.com/300/300" />
                   </IconButton>
                 </Tooltip>
                 <Menu

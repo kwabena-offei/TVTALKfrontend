@@ -7,6 +7,8 @@ const nextConfig = {
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
     APPLE_APP_ID: process.env.APPLE_APP_ID,
+    GIPHY_API_KEY: process.env.GIPHY_API_KEY,
+    FILESTACK_API_KEY: process.env.FILESTACK_API_KEY
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
