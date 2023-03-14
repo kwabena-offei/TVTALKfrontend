@@ -32,7 +32,6 @@ export async function getServerSideProps(context) {
 const Chat = ({ show, comments: serverComments, profile, isAuth }) => {
   const { tmsId } = show;
   const [comments, setComments] = useState(serverComments)
-  // console.log('comments', comments)
 
   const socket = useSocket(
     'comments',

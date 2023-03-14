@@ -1,7 +1,5 @@
 import { useTheme, useMediaQuery, Grid } from "@mui/material";
 import React, { useState } from "react";
-import axios from "axios";
-import { TV_TALK_API } from "../../../util/constants";
 import { NewsMainContainer } from "../../../components/NewsCard/NewsCard.styled";
 import MobileHeader from "../../../components/OneNewsPage/MobileHeader";
 import { DesktopHeader } from "../../../components/NewsIFrameLayout/DesktopHeader";
@@ -46,7 +44,6 @@ export async function getServerSideProps(context) {
 export default function Page({ news, isAuth }) {
 
   const { source, url, id, liked_by_auth_user } = news;
-  // console.log('news', news)
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const router = useRouter()

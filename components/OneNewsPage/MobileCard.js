@@ -33,7 +33,6 @@ const OneNewsCardMobile = ({
   onShare
 }) => {
   const image = image_url ? image_url : "/assets/no-picture-available.jpg";
-  console.log("parsedUrl", parsedUrl);
 
   return (
     <CardWrapper id={id} sx={{ marginBottom: "40px" }}>

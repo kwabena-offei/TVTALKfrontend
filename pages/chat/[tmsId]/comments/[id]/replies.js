@@ -13,7 +13,6 @@ export async function getServerSideProps(context) {
   const { axios } = useAxios(context);
   const { tmsId, id, type } = context.query;
   const comment_type = type === 'SubComment' ? 'sub_' : ''
-  // console.log('context.query', context.query)
   const { data: show } = await axios.get(`/shows/${tmsId}`);
   const { data: comment } = await axios.get(`/${comment_type}comments/${id}`)
   const { data: subComments } = await axios.get(
@@ -52,7 +51,6 @@ export default function Page({ subComments: serverSubComments, comment }) {
         })
       }
   });
-  // console.info('[subComments]', subComments.results)
 
   return (
     <>

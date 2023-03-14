@@ -60,7 +60,6 @@ function ResponsiveAppBar({ context }) {
   };
 
   const handleCloseNavMenu = (key, reason) => {
-    console.log('key', key)
     if (reason == 'backdropClick') {
       setAnchorElNav(null);
       return;

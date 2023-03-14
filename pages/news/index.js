@@ -5,8 +5,6 @@ import {
   Typography
 } from "@mui/material";
 import React from "react";
-// import axios from "axios";
-import { TV_TALK_API } from "../../util/constants";
 import NewsCard from "../../components/NewsCard";
 import { NewsMainContainer } from "../../components/NewsCard/NewsCard.styled";
 import useAxios from '../../services/api';
@@ -19,8 +17,7 @@ export async function getServerSideProps(context) {
   const isAuth = isAuthenticated(context)
   const { data: news } = await axios.get(`/news`);
   const { data: likes } = isAuth ? await axios.get(`/likes`) : unAuthLikes
-  // const { data: news } = await axios.get(`${TV_TALK_API}/news`);
-  console.log(news);
+
   return {
     props: {
       news: news,
@@ -32,7 +29,7 @@ export async function getServerSideProps(context) {
 const News = ({ news, likes, isAuth }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  console.log('news, likes', news, likes);
+
   return (
     <AuthContext.Provider value={isAuth}>
     <NewsMainContainer sx={{ marginBottom: "5vh" }} maxWidth="xl">

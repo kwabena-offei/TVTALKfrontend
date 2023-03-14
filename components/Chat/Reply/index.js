@@ -8,7 +8,7 @@ export const Reply = ({ isMobile, profile, comment }) => {
 
   const onPost = async () => {
     try {
-      const response = await axios.post(`/sub_comments?comment_id=${comment.id}`, {
+      await axios.post(`/sub_comments?comment_id=${comment.id}`, {
         sub_comment: {
           text: message.current.value,
           comment_id: comment.id,
@@ -18,7 +18,6 @@ export const Reply = ({ isMobile, profile, comment }) => {
           mute_notifications: false,
         }
       })
-      console.log('Reply [post][response]', response)
       message.current.value = ''
     } catch (error) {
       console.log('post error', error)

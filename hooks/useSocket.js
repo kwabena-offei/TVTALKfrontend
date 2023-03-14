@@ -26,7 +26,7 @@ export default function useSocket(eventName, channel, params, cb) {
         "command": "subscribe",
         "identifier": JSON.stringify(identifier)
       }
-      console.log('[WebSocket][open]: ', payload);
+      // console.log('[WebSocket][open]: ', payload);
       ws.send(JSON.stringify(payload));
     }
 
@@ -41,7 +41,7 @@ export default function useSocket(eventName, channel, params, cb) {
 
     ws.onclose = function(msg) {
       console.log('[WebSocket][close]', msg);
-      // let json = JSON.parse(msg.dataa)
+      // let json = JSON.parse(msg.data)
     }
 
     return () => {

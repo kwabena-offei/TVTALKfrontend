@@ -14,7 +14,6 @@ import { useTheme, useMediaQuery } from "@mui/material";
 import { AuthContext } from "../../../../util/AuthContext";
 
 export async function getServerSideProps(context) {
-  // console.log('context', context)
   const { id } = context.query;
   const { axios } = useAxios(context)
   const isAuth = isAuthenticated(context)

@@ -94,7 +94,7 @@ export const CommentNews = ({ profile, story_id, isMobile }) => {
 
   const onPost = async () => {
     try {
-      const response = await axios.post(`/comments?story_id=${story_id}`, {
+      await axios.post(`/comments?story_id=${story_id}`, {
         comment: {
           text: message.current.value,
           story_id: story_id,
@@ -103,7 +103,6 @@ export const CommentNews = ({ profile, story_id, isMobile }) => {
           mute_notifications: false,
         }
       })
-      console.log('[post][response]', response)
       message.current.value = ''
       setVideos([])
       setImages([])
