@@ -13,8 +13,6 @@ import {
 } from "./Login.styled";
 import { FacebookRounded, Apple } from "@mui/icons-material";
 import GoogleIcon from '../Icons/GoogleColorIcon'
-import { TV_TALK_API } from "../../util/constants";
-// import axios from "axios";
 import useAxios from '../../services/api'
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
@@ -82,7 +80,7 @@ const Login = (props) => {
   const handleResponseGoogle = async (googleResponse) => {
     try {
       // -- send request to API and exchange google token with local token --
-      const apiResponse = await axios.post(`${TV_TALK_API}/auth/login_social`, {
+      const apiResponse = await axios.post(`/auth/login_social`, {
         google_token: googleResponse.tokenId,
       });
        // -- set cookie with token --
@@ -111,7 +109,7 @@ const Login = (props) => {
     }
     try {
       // -- send request to API and exchange google token with local token --
-      const apiResponse = await axios.post(`${TV_TALK_API}/auth/login_social`, {
+      const apiResponse = await axios.post(`/auth/login_social`, {
         facebook_token: facebookResponse.accessToken,
         facebook_id: facebookResponse.userID,
       });
@@ -133,7 +131,7 @@ const Login = (props) => {
     console.log('apple response: ', appleResponse);
     try {
       // -- send request to API and exchange apple token with local token --
-      const apiResponse = await axios.post(`${TV_TALK_API}/auth/apple`, appleResponse);
+      const apiResponse = await axios.post(`/auth/apple`, appleResponse);
 
       // -- set cookie with token --
       setCookie('token', apiResponse.data.token);

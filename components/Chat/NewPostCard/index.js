@@ -33,7 +33,6 @@ const NewPostCard = (props) => {
   const toggleUploadFile = () => setOpenUloadFile(!openUploadFile)
 
   const handleCloseUpload = async (response) => {
-    // console.log('response', response)
     const { filesFailed, filesUploaded } = response
     if (filesFailed.length > 0) {
       // ToDo: add behaviour in case the file has not uploaded (if it's needed)
@@ -83,7 +82,6 @@ const NewPostCard = (props) => {
   }
   const onAddGif = () => {
     toggleGiff()
-    // console.log('onAddGif', commentRef.current)
   }
   const onAddPhoto = () => {
     setAcceptType(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
@@ -105,8 +103,6 @@ const NewPostCard = (props) => {
     commentRef.current.text = message.current.value
     commentRef.current.videos = videos.map((video) => (video.url))
     commentRef.current.images = images
-    // post /comments
-    console.log('onPost: send ', commentRef.current)
     try {
       const response = await axios.post(`/comments?tms_id=${show_id}`, {
         comment: commentRef.current
@@ -119,7 +115,6 @@ const NewPostCard = (props) => {
       setVideos([])
       setImages([])
       message.current.value = ''
-      console.log('response', response)
     } catch (error) {
       console.log('post error', error)
     }

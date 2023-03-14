@@ -48,11 +48,13 @@ const ReactionCard = (props) => {
     sub_comments_count,
     shares_count,
     tmsId,
+    story_id,
     commentsMode,
     withoutActions,
     commentType,
     header
   } = props;
+
   const { publicRuntimeConfig } = getConfig();
   const [likes, setLikes] = useState(likes_count)
   const liked = () => {
@@ -72,7 +74,8 @@ const ReactionCard = (props) => {
   const isMobileAndTablet = useMediaQuery(theme.breakpoints.down('md'));
   const router = useRouter()
   const baseUrl = publicRuntimeConfig.API_ENV === 'development' ? TV_TALK_HOST_LOCAL : TV_TALK_HOST;
-  const copyLink = `${baseUrl}${router.asPath}#${id}`
+  const createUrl = new URL(router.asPath, baseUrl).pathname
+  const copyLink = `${baseUrl}${createUrl}#${id}`
 
   
   const timeAgo = created_at_formatted || dayjs(created_at).fromNow()
@@ -80,13 +83,13 @@ const ReactionCard = (props) => {
   // ToDo: research for hashtag format and provide link-view for it
   const { username, image } = profile;
   // -- navigate user to current comment page --
-  const openCommentPage = (route) => {
+  const onComment = () => {
     router.push({
       pathname: '/chat/[tmsId]/comments/[id]/[page]',
       query: {
         tmsId: tmsId,
         id: id,
-        page: route
+        page: 'replies'
       }
     })
   }
@@ -100,7 +103,6 @@ const ReactionCard = (props) => {
       console.error(error.message)
     }
   }
-  const onComment = () => openCommentPage('replies')
   const onShare = () => {
     toggleShare()
   }
@@ -143,13 +145,16 @@ const ReactionCard = (props) => {
             aria-label="Like"
             icon={<FavoriteIcon fontSize='inherit' />}
           />
-          <ActionButton
-            withTitleMode={commentsMode}
-            title='Comment'
-            isMobile={isMobileAndTablet}
-            aria-label="Comment"
-            onClick={onComment}
-            icon={<MessagesIcon fontSize='inherit' />} />
+          { story_id
+            ? null
+            : <ActionButton
+              withTitleMode={commentsMode}
+              title='Comment'
+              isMobile={isMobileAndTablet}
+              aria-label="Comment"
+              onClick={onComment}
+              icon={<MessagesIcon fontSize='inherit' />} />
+            }
           <ActionButton
             withTitleMode={commentsMode}
             title="Share"

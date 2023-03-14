@@ -4,7 +4,7 @@ import { setShare } from '../../../services/share';
 
 const Share = ({ isMobile, id, type, setShares, ...props }) => {
   const onShare = async () => {
-    if (type === "comment") {
+    if (type === "comment" || "story") {
       try {
         const { data } = await setShare({ id: id, type: `${type}_id` });
         setShares(data.shares_count)
