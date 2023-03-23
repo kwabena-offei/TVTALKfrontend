@@ -9,6 +9,10 @@ import useSocket from '../../../hooks/useSocket';
 import useAxios from '../../../services/api';
 
 export async function getServerSideProps(context) {
+  // res.setHeader(
+  //   'Cache-Control',
+  //   'public, s-maxage=10, stale-while-revalidate=59'
+  // )
   const { tmsId } = context.query;
   const { axios } = useAxios(context)
   const { data: show } = await axios.get(`/shows/${tmsId}`);
@@ -36,16 +40,17 @@ const Chat = ({ show, comments: serverComments, profile, isAuth }) => {
   const socket = useSocket(
     'comments',
     'CommentsChannel',
-    { tms_id: tmsId},
+    { tms_id: tmsId },
     (response) => {
-      if(response.message?.type === 'comment') {
+      if (response.message?.type === 'comment') {
         setComments((prevState) => {
           return {
             ...prevState,
-            results: [ ...prevState.results, response.message ]};
+            results: [...prevState.results, response.message]
+          };
         })
       }
-  });
+    });
 
   return (
     <>

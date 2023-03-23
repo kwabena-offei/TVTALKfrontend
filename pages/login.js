@@ -5,7 +5,7 @@ import Login from "../components/Login";
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-const login = (props) => {
+const login = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     return (
@@ -34,8 +34,8 @@ const login = (props) => {
 
 export default login;
 
-export async function getServerSideProps(context) {
-    return {
-        props: {},
-    }
-}
+// export async function getServerSideProps(context) {
+//     return {
+//         props: {},
+//     }
+// }
