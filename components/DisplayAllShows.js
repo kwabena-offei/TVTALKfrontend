@@ -76,11 +76,12 @@ const DisplayAllShows = ({ shows }) => {
                         <Typography></Typography>
                         <Carousel itemsToShow={4} itemsToScroll={4} pagination={false} itemPadding={[0, 10]}>
 
-                            {show.shows.map((tvShow, ind) =>
-                                <Card key={ind} sx={{ background: 'transparent' }}>
+                            {show.shows.map((tvShow, ind) => {
+                                return <Card key={ind} sx={{ background: 'transparent' }}>
                                     <CardMedia
                                         component="img"
-                                        image={tvShow.preferred_image_uri}
+                                        // src="wewe.tmsimg.com/assets/p13909803_b_h9_am.jpg?w=720&h=540"
+                                        src={`https://${tvShow.preferred_image_uri}`}
 
                                     />
                                     <CardContent sx={{ background: '#131B3F' }}>
@@ -106,6 +107,7 @@ const DisplayAllShows = ({ shows }) => {
                                     </CardContent>
 
                                 </Card>
+                            }
 
                             )}
                         </Carousel>

@@ -83,7 +83,7 @@ const Login = (props) => {
       const apiResponse = await axios.post(`/auth/login_social`, {
         google_token: googleResponse.tokenId,
       });
-       // -- set cookie with token --
+      // -- set cookie with token --
       setCookie('token', apiResponse.data.token);
       // -- redirect user to profile page --
       router.push('/profile/reactions');
@@ -97,7 +97,7 @@ const Login = (props) => {
 
   // -- callback function for handling facebook auth --
   const handleResponseFacebook = async (facebookResponse) => {
-    
+
     console.log('facebookResponse', facebookResponse)
     // -- create boolean variable that is true is facebook response status is unknown --
     const userDidNotCompleteFacebookLogin = facebookResponse.status === 'unknown';
@@ -137,7 +137,7 @@ const Login = (props) => {
       setCookie('token', apiResponse.data.token);
       // -- redirect user to profile page --
       router.push('/profile/reactions');
-      
+
     } catch (error) {
       // -- show modal with error message in case of error from API --
       handleOpenErrorMessage('Apple')
@@ -147,6 +147,7 @@ const Login = (props) => {
 
   const handleErrorResponseApple = (event) => {
     // -- show modal with error message in case of error from apple auth --
+    console.log('apple event', event.error)
     handleOpenErrorMessage('Apple', event.error.replaceAll('_', ' '))
     console.log('apple event', event.error)
   }
@@ -167,9 +168,9 @@ const Login = (props) => {
               clientId={publicRuntimeConfig.GOOGLE_CLIENT_ID}
               render={renderProps => (
                 <AuthIconButton
-                onClick={renderProps.onClick}
-                disabled={renderProps.disabled}
-                color="secondary" startIcon={<GoogleIcon />}>
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                  color="secondary" startIcon={<GoogleIcon />}>
                   Continue with Google
                 </AuthIconButton>
               )}
@@ -183,9 +184,9 @@ const Login = (props) => {
               callback={handleResponseFacebook}
               render={renderProps => (
                 <AuthIconButton
-                onClick={renderProps.onClick}
-                color="primary"
-                startIcon={<FacebookRounded />}>
+                  onClick={renderProps.onClick}
+                  color="primary"
+                  startIcon={<FacebookRounded />}>
                   Continue with Facebook
                 </AuthIconButton>
               )}

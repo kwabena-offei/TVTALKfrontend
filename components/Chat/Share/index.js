@@ -13,7 +13,7 @@ const Share = ({ isMobile, id, type, setShares, ...props }) => {
         console.log("share error", error);
       }
     }
-    console.log(`shared ${type}`, id, type);
+    // console.log(`shared ${type}`, id, type);
   };
 
   if (isMobile) {
