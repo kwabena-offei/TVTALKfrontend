@@ -109,6 +109,7 @@ const Login = (props) => {
     }
     try {
       // -- send request to API and exchange google token with local token --
+      console.log(facebookResponse)
       const apiResponse = await axios.post(`/auth/login_social`, {
         facebook_token: facebookResponse.accessToken,
         facebook_id: facebookResponse.userID,
