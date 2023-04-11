@@ -179,9 +179,9 @@ const Login = (props) => {
               cookiePolicy={'single_host_origin'}
             />
             <FacebookLogin
-              // appId={publicRuntimeConfig.FACEBOOK_APP_ID}
-              appId="206412420236756"
-              // autoLoad
+              appId={publicRuntimeConfig.FACEBOOK_APP_ID}
+              // appId="206412420236756"
+              autoLoad
               callback={handleResponseFacebook}
               render={renderProps => (
                 <AuthIconButton
