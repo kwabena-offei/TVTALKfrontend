@@ -94,7 +94,7 @@ const DisplayAllShows = ({ shows, network }) => {
         </div>
 
         {categories.filter((category) => category.shows.length).map((category, index) =>
-          <div key={index} style={{ margin: '100px 0' }}>
+          <div key={`${network}-${category}-${index}`} style={{ margin: '100px 0' }}>
             <div style={{ marginLeft: 50, paddingLeft: 20, marginBottom: 20 }}>
               <Typography style={{
                 color: '#EFF2FD',
@@ -104,7 +104,7 @@ const DisplayAllShows = ({ shows, network }) => {
                 lineHeight: '130%', /* 52px */
                 letterSpacing: 0.4,
               }}>{category.title}</Typography></div>
-            <Carousel itemsToShow={numberOfObjects} itemsToScroll={1} pagination={false} itemPadding={[0, 10]}>
+            <Carousel itemsToShow={numberOfObjects} itemsToScroll={numberOfObjects / 2} pagination={false} itemPadding={[0, 10]}>
 
               {category.shows.map((tvShow, ind) => {
                 return <Card key={ind} sx={{ background: 'transparent', maxWidth: 360 }}>
