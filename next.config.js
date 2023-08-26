@@ -15,6 +15,9 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  images: {
+    domains: ['wewe.tmsimg.com'],
+  }
 }
 
 module.exports = nextConfig

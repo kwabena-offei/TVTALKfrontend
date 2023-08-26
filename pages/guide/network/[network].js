@@ -1,5 +1,4 @@
 import DisplayAllShows from '../../../components/DisplayAllShows'
-import { genreMap } from "../../../util/genreMap";
 
 export default function StreamingNetwork({ shows, network }) {
   return (
@@ -23,30 +22,4 @@ StreamingNetwork.getInitialProps = async (ctx) => {
   })
 
   return { network, shows: groupedShows }
-}
-
-const groupShowsByGenres = (shows) => {
-  const placedShows = new Set;
-  const genreShows = {};
-
-  shows.forEach((show) => {
-    if (placedShows.has(show.seriesId)) { return };
-
-    const subGenre = (show.genres[0]) || 'Other Stuff';
-    const genre = genreMap[subGenre];
-    if (genreShows[genre]) {
-      genreShows[genre].push(show);
-    } else {
-      genreShows[genre] = [show];
-    }
-
-    placedShows.add(show.seriesId);
-  })
-
-  return Object.entries(genreShows).map((category, shows) => {
-    return {
-      title: category[0],
-      shows: category[1],
-    }
-  })
 }

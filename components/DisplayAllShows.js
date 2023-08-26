@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
 import HeartButton from '../components/HeartButton';
 import BlueButton from '../components/BlueButton';
 import NetworkSelector from '../components/NetworkSelector'
+import Image from 'next/image'
 
 const DisplayAllShows = ({ shows, network }) => {
   const categories = shows;
@@ -92,7 +93,7 @@ const DisplayAllShows = ({ shows, network }) => {
           <NetworkSelector activeNetwork={network} />
         </div>
 
-        {categories.map((category, index) =>
+        {categories.filter((category) => category.shows.length).map((category, index) =>
           <div key={index} style={{ margin: '100px 0' }}>
             <div style={{ marginLeft: 50, paddingLeft: 20, marginBottom: 20 }}>
               <Typography style={{
@@ -108,9 +109,16 @@ const DisplayAllShows = ({ shows, network }) => {
               {category.shows.map((tvShow, ind) => {
                 return <Card key={ind} sx={{ background: 'transparent', maxWidth: 360 }}>
                   <CardMedia
-                    component="img"
-                    src={`https://${tvShow.preferred_image_uri}`}
-                  />
+                    componnt="img"
+                  >
+                    <Image
+                      src={`https://${tvShow.preferred_image_uri}`}
+                      alt={`${tvShow.title} Image`}
+                      width={720}
+                      height={540}
+                      quality={80}
+                    />
+                  </CardMedia>
                   <CardContent sx={{ background: '#131B3F' }}>
                     <Typography sx={{ color: '#EFF2FD' }} gutterBottom variant="h5" component="div">
                       {tvShow.title}
