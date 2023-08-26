@@ -102,9 +102,14 @@ function ResponsiveAppBar({ context }) {
                 mr: 2,
                 display: { xs: 'none', md: 'flex' },
                 fontWeight: 700,
-                letterSpacing: '.3rem',
                 color: 'inherit',
                 textDecoration: 'none',
+                textAlign: 'center',
+                fontFamily: 'Gilroy',
+                fontSize: '40px',
+                fontStyle: 'normal',
+                fontWeight: 700,
+                lineHeight: '40px'
               }}
             >
               TV Talk
@@ -141,7 +146,7 @@ function ResponsiveAppBar({ context }) {
               >
                 {pages.map((page) => (
                   <MenuItem key={page.route} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page.title}</Typography>
+                    <Typography textAlign="center" >{page.title}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
@@ -169,6 +174,14 @@ function ResponsiveAppBar({ context }) {
                   key={page.route}
                   onClick={() => router.push(page.route)}
                   sx={{ my: 2, color: 'white', display: 'block' }}
+                  style={{
+                    textAlign: 'center',
+                    fontFamily: 'Gilroy',
+                    fontSize: 18,
+                    fontStyle: 'normal',
+                    fontWeight: 500,
+                    lineHeight: '24px'
+                  }}
                 >
                   {page.title}
                 </Button>
