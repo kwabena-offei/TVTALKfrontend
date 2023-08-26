@@ -1,9 +1,10 @@
 import { Button, Typography, Accordion, AccordionSummary, AccordionDetails, Box } from '@mui/material';
 import streaming from "./streaming.json";
 import networks from "./networks.json";
+import NetworkIcon from "./NetworkIcon";
 import { useState } from "react";
 
-const ChannelSelector = () => {
+const NetworkSelector = () => {
   const allNetworks = streaming.concat(networks);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -34,20 +35,18 @@ const ChannelSelector = () => {
             flexWrap: 'wrap',
             gap: '20px'
           }}>
-            {allNetworks.map(({ assetName }) => {
-              return <div key={assetName} style={{ width: 178, height: 80 }}>
-                <img src={`assets/networks/assets/${assetName}.svg`} />
-              </div>
+            {allNetworks.map((network) => {
+              return <NetworkIcon network={network} isActive={false} />
             })}
           </section>
         </AccordionDetails>
       </Accordion>
 
       <div style={{ textAlign: 'center' }}>
-        <Button style={{ color: '#FFF' }} variant='outlined' onClick={() => { setIsExpanded(!isExpanded) }}>{isExpanded ? 'Hide' : 'Show All'}</Button>
+        <Button style={{ color: '#FFF' }} variant='outlined' onClick={() => { setIsExpanded(!isExpanded) }}>{isExpanded ? 'Close All' : 'Show All'}</Button>
       </div>
     </div>
   )
 }
 
-export default ChannelSelector;
+export default NetworkSelector;
