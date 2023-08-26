@@ -1,29 +1,38 @@
 [
   {
-    "assetName": "Everything"
+    "assetName": "Everything",
+    "slug": "everything"
   },
   {
-    "assetName": "Live"
+    "assetName": "Live",
+    "slug": "live"
   },
   {
-    "assetName": "Netflix"
+    "assetName": "Netflix",
+    "slug": "netflix"
   },
   {
-    "assetName": "Hulu"
+    "assetName": "Hulu",
+    "slug": "hulu"
   },
   {
-    "assetName": "Prime"
+    "assetName": "Prime",
+    "slug": "prime"
   },
   {
-    "assetName": "Max"
+    "assetName": "Max",
+    "slug": "hbo_max"
   },
   {
-    "assetName": "AppleTV+"
+    "assetName": "AppleTV",
+    "slug": "apple_tv"
   },
   {
-    "assetName": "Paramount+"
+    "assetName": "Paramount+",
+    "slug": "paramount"
   },
   {
-    "assetName": "Peacock"
+    "assetName": "Peacock",
+    "slug": "peacock"
   }
 ]

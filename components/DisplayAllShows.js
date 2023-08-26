@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Grid, Typography, IconButton, Accordion, AccordionSummary, AccordionDetails, Box } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Carousel from 'react-elastic-carousel';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-// import header from '/assets/header.png'
 import { useRouter } from 'next/router'
 import HeartButton from '../components/HeartButton';
 import BlueButton from '../components/BlueButton';
 import NetworkSelector from '../components/NetworkSelector'
 
-const DisplayAllShows = ({ shows }) => {
+const DisplayAllShows = ({ shows, network }) => {
   const categories = shows;
   const router = useRouter()
+  const [windowWidth, setWindowWidth] = useState(null);
 
   const convertToSlug = (name) => {
     let slug = ''
@@ -23,13 +23,31 @@ const DisplayAllShows = ({ shows }) => {
 
   // Pushes tmsID to the about page
   const handleAbout = (tmsId, title) => {
-
     router.push({ pathname: '/about', query: { tmsId: tmsId } })
   }
   const handleChat = (tmsId, title) => {
-
     router.push({ pathname: '/chat/[tmsId]', query: { tmsId: tmsId } })
   }
+
+  useEffect(() => {
+    // This code will only run in the client-side environment
+    setWindowWidth(window.innerWidth);
+
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Clean up the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []); // The empty array means this useEffect will run once when the component mounts
+
+  const objectWidth = 360;
+  // Ensure that windowWidth is defined before performing calculations or rendering dependent content
+  const numberOfObjects = windowWidth ? Math.floor(windowWidth / objectWidth) : 0;
 
   return (
     <>
@@ -85,14 +103,13 @@ const DisplayAllShows = ({ shows }) => {
                 lineHeight: '130%', /* 52px */
                 letterSpacing: 0.4,
               }}>{category.title}</Typography></div>
-            <Carousel itemsToShow={4} itemsToScroll={4} pagination={false} itemPadding={[0, 10]}>
+            <Carousel itemsToShow={numberOfObjects} itemsToScroll={1} pagination={false} itemPadding={[0, 10]}>
 
               {category.shows.map((tvShow, ind) => {
-                return <Card key={ind} sx={{ background: 'transparent' }}>
+                return <Card key={ind} sx={{ background: 'transparent', maxWidth: 360 }}>
                   <CardMedia
                     component="img"
                     src={`https://${tvShow.preferred_image_uri}`}
-
                   />
                   <CardContent sx={{ background: '#131B3F' }}>
                     <Typography sx={{ color: '#EFF2FD' }} gutterBottom variant="h5" component="div">
@@ -118,21 +135,12 @@ const DisplayAllShows = ({ shows }) => {
 
                 </Card>
               }
-
               )}
             </Carousel>
-
-            {/* </AccordionDetails>
-                    </Accordion> */}
-
-
-
           </div>
         )}
       </Box >
     </>
-
-
   );
 };
 
