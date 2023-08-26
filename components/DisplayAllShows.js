@@ -32,14 +32,41 @@ const DisplayAllShows = ({ shows }) => {
 
   return (
     <>
-      <Box style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Box style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 4 }}>
-          <Typography sx={{ color: 'white' }}>Let's start a community of TV fans </Typography>
-          <Typography sx={{ color: 'white' }}>Press "Chat" and post a message!</Typography>
+      <Box>
+        <Box style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: 600,
+          background: `linear-gradient(rgba(9, 15, 39, 0.32), rgba(9, 15, 39, 0.32)), url(/assets/header.jpg)`,
+          backgroundSize: 'cover, cover',
+          backgroundPosition: 'center, center',
+          backgroundRepeat: 'no-repeat, no-repeat'
+        }}>
+          <Typography sx={{ color: 'white' }} style={{
+            textAlign: 'center',
+            fontFeatureSettings: "'calt' off",
+            fontFamily: 'Gilroy',
+            fontSize: '64px',
+            fontStyle: 'normal',
+            fontWeight: 700,
+            lineHeight: '120%',
+            display: 'block'
+          }}>Let's start a community of TV fans </Typography>
+          <Typography sx={{ color: 'white' }} style={{
+            textAlign: 'center',
+            fontFeatureSettings: "'calt' off",
+            fontFamily: 'Gilroy',
+            fontSize: '32px',
+            fontStyle: 'normal',
+            fontWeight: 500,
+            lineHeight: '120%', // This equals 38.4px
+          }}>Press "Chat" and post a message!</Typography>
         </Box>
-        <Box style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, background: 'rgba(9, 15, 39, 0.32)', }} />
-        <img src='/assets/header.jpg' width='100%' />
       </Box>
+
+
       <Box className='wrapper'>
 
 
