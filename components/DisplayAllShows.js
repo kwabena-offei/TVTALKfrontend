@@ -9,6 +9,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useRouter } from 'next/router'
 import HeartButton from '../components/HeartButton';
 import BlueButton from '../components/BlueButton';
+import NetworkSelector from '../components/NetworkSelector'
 
 const DisplayAllShows = ({ shows }) => {
   const categories = shows;
@@ -69,30 +70,10 @@ const DisplayAllShows = ({ shows }) => {
 
       <Box className='wrapper'>
 
+        <div style={{ marginLeft: 50, paddingLeft: 20, marginBottom: 20 }}>
+          <NetworkSelector />
+        </div>
 
-        {/* <Accordion sx={{
-                    boxShadow: 'none',
-                    padding: 0,
-                    '& .MuiCollapse-root': {
-                        minHeight: '200px !important',
-                        visibility: 'visible !important'
-                    },
-                    '& .MuiAccordion-root': {
-                        backgroundColor: 'red !important'
-                    }
-                }} style={{ background: 'blue' }} >
-                    <AccordionSummary
-                        style={{ padding: 0 }}
-                        expandIcon={<Button style={{ color: '#FFF' }} variant='outlined'>Show All</Button>}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography style={{ color: '#FFF' }}>Test</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails style={{ padding: 0 }}>
-                        <Box sx={{ background: '' }}></Box>
-                    </AccordionDetails>
-                </Accordion> */}
         {categories.map((category, index) =>
           <div key={index} style={{ margin: '100px 0' }}>
             <div style={{ marginLeft: 50, paddingLeft: 20, marginBottom: 20 }}>
