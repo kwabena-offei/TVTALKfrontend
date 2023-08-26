@@ -7,7 +7,20 @@ const NetworkIcon = ({ network, isActive, type }) => {
   const { assetName } = network;
   const [isHovered, setIsHovered] = useState(false);
   const assetURL = isHovered || isActive ? `/assets/networks/${assetName}.svg` : `/assets/networks/${assetName}-Inactive.svg`;
-  const url = type == 'network' ? `/guide/network/${network.stationId}` : `/guide/network/${network.slug}`
+
+  let url;
+
+  switch (type) {
+    case 'network':
+      url = `/guide/network/${network.stationId}`;
+      break;
+    case 'streaming':
+      url = `/guide/network/${network.slug}`;
+      break;
+    case 'other':
+      url = network.slug === 'everything' ? '/' : '/guide/live'
+      break;
+  }
 
   return (
     <div key={assetName} style={{ width: 178, height: 80 }}>

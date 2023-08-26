@@ -6,6 +6,20 @@ import { useState } from "react";
 
 const NetworkSelector = ({ activeNetwork }) => {
 
+  const otherTiles = [{
+    title: 'Everything',
+    assetName: 'everything',
+    slug: 'everything',
+    path: '/',
+  }, {
+    title: 'Live',
+    assetName: 'live',
+    slug: 'live',
+    path: '/guide/live'
+  }].map((network) => {
+    return <NetworkIcon key={network.slug} type='other' network={network} isActive={(network.slug) === activeNetwork?.toLowerCase()} />
+  })
+
   const streamingTiles = streaming.map((network) => {
     return <NetworkIcon key={network.slug} type='streaming' network={network} isActive={(network.slug) === activeNetwork?.toLowerCase()} />
   })
@@ -14,7 +28,7 @@ const NetworkSelector = ({ activeNetwork }) => {
     return <NetworkIcon key={network.stationId} type='network' network={network} isActive={(network.stationId) === activeNetwork?.toLowerCase()} />
   })
 
-  const tiles = streamingTiles.concat(networkTiles)
+  const tiles = otherTiles.concat(streamingTiles).concat(networkTiles)
 
   // const allNetworks = streaming.concat(networks);
   const [isExpanded, setIsExpanded] = useState(false);
