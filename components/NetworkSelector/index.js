@@ -4,10 +4,20 @@ import networks from "./networks.json";
 import NetworkIcon from "./NetworkIcon";
 import { useState } from "react";
 
-const NetworkSelector = () => {
-  const allNetworks = streaming.concat(networks);
-  const [isExpanded, setIsExpanded] = useState(false);
+const NetworkSelector = ({ activeNetwork }) => {
 
+  const streamingTiles = streaming.map((network) => {
+    return <NetworkIcon key={network.slug} type='streaming' network={network} isActive={(network.slug) === activeNetwork?.toLowerCase()} />
+  })
+
+  const networkTiles = networks.map((network) => {
+    return <NetworkIcon key={network.stationId} type='network' network={network} isActive={(network.stationId) === activeNetwork?.toLowerCase()} />
+  })
+
+  const tiles = streamingTiles.concat(networkTiles)
+
+  // const allNetworks = streaming.concat(networks);
+  const [isExpanded, setIsExpanded] = useState(false);
   return (
     <div>
       <Accordion
@@ -35,9 +45,7 @@ const NetworkSelector = () => {
             flexWrap: 'wrap',
             gap: '20px'
           }}>
-            {allNetworks.map((network) => {
-              return <NetworkIcon network={network} isActive={false} />
-            })}
+            {tiles}
           </section>
         </AccordionDetails>
       </Accordion>

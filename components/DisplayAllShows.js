@@ -89,7 +89,7 @@ const DisplayAllShows = ({ shows, network }) => {
       <Box className='wrapper'>
 
         <div style={{ marginLeft: 50, paddingLeft: 20, marginBottom: 20 }}>
-          <NetworkSelector />
+          <NetworkSelector activeNetwork={network} />
         </div>
 
         {categories.map((category, index) =>
