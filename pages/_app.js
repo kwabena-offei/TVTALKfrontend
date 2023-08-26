@@ -10,14 +10,31 @@ import AppBar from '../components/AppBar';
 // import '../styles/main.scss'
 
 const GlobalStyle = createGlobalStyle`
-    @font-face {
+  @font-face {
+    font-family: 'Gilroy';
+    src: url('/fonts/Gilroy-Light.otf') format('woff');
+    font-style: normal;
+    font-weight: 300; // Assuming 300 is the weight for light
+    font-display: swap;
+  }
+
+  @font-face {
     font-family: 'Gilroy';
     src: url('/fonts/Gilroy-Regular.woff') format('woff');
     font-style: normal;
     font-weight: 400;
     font-display: swap;
   }
+
+  @font-face {
+    font-family: 'Gilroy';
+    src: url('/fonts/Gilroy-ExtraBold.otf') format('woff');
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+  }
 `;
+
 
 const clientSideEmotionCache = createEmotionCache();
 
