@@ -22,28 +22,16 @@ StreamingNetwork.getInitialProps = async (ctx) => {
   })
 
 
-  // if (liveShows.length) {
-  //   categoryShows.unshift({
-  //     title: 'Upcoming',
-  //     shows: upcomingShows
-  //   })
-  // }
-
-  // if (upcomingShows.length) {
-  //   categoryShows.unshift({
-  //     title: 'Upcoming',
-  //     shows: upcomingShows
-  //   })
-  // }
-
   const liveShows = await fetchShows('live', network, timezone);
-
   // Fetch upcoming shows
   let upcomingShows = await fetchShows('upcoming', network, timezone);
-  console.log(upcomingShows)
   upcomingShows = upcomingShows.filter((show, index) => {
-    if (index === 0) { return true }
-    return show.tmsId == upcomingShows[index - 1].tmsId
+    if (index === 0) {
+      if (liveShows[0].seriesId === show.seriesId) { return false }
+      return true
+    }
+
+    return show.seriesId != upcomingShows[index - 1].seriesId
   })
 
   // Add remaining 'liveShows' (which are now upcoming shows) to the 'Upcoming' category
