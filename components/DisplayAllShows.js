@@ -11,8 +11,7 @@ import BlueButton from '../components/BlueButton';
 import NetworkSelector from '../components/NetworkSelector'
 import Image from 'next/image'
 
-const DisplayAllShows = ({ shows, network }) => {
-  const categories = shows;
+const DisplayAllShows = ({ categories, network }) => {
   const router = useRouter()
   const [windowWidth, setWindowWidth] = useState(null);
 
@@ -104,7 +103,7 @@ const DisplayAllShows = ({ shows, network }) => {
                 lineHeight: '130%', /* 52px */
                 letterSpacing: 0.4,
               }}>{category.title}</Typography></div>
-            <Carousel itemsToShow={numberOfObjects} itemsToScroll={numberOfObjects / 2} pagination={false} itemPadding={[0, 10]}>
+            <Carousel itemsToShow={numberOfObjects} itemsToScroll={numberOfObjects / 2} pagination={false} itemPadding={[0, 10]} itemPosition='START'>
 
               {category.shows.map((tvShow, ind) => {
                 return <Card key={ind} sx={{ background: 'transparent', maxWidth: 360 }}>

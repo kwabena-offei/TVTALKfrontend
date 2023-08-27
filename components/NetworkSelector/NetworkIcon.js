@@ -15,7 +15,7 @@ const NetworkIcon = ({ network, isActive, type }) => {
       url = `/guide/network/${network.stationId}`;
       break;
     case 'streaming':
-      url = `/guide/network/${network.slug}`;
+      url = `/guide/streaming/${network.slug}`;
       break;
     case 'other':
       url = network.slug === 'everything' ? '/' : '/guide/live'
@@ -24,11 +24,15 @@ const NetworkIcon = ({ network, isActive, type }) => {
 
   return (
     <div key={assetName} style={{ width: 178, height: 80 }}>
-      <Link href={url}><img
-        src={assetURL}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      /></Link>
+      <Link href={url}>
+        <a>
+          <img
+            src={assetURL}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          />
+        </a>
+      </Link>
     </div>
   )
 }

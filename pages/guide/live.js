@@ -1,10 +1,10 @@
 import DisplayAllShows from '../../components/DisplayAllShows'
 import { genreMap } from "../../util/genreMap";
 
-export default function StreamingNetwork({ shows, network }) {
+export default function StreamingNetwork({ categories, network }) {
   return (
     <>
-      <DisplayAllShows shows={shows} network={network} />
+      <DisplayAllShows categories={categories} network={network} />
     </>
   )
 }
@@ -18,13 +18,26 @@ StreamingNetwork.getInitialProps = async (ctx) => {
   stations.forEach((station) => {
     station.airings.forEach((airing) => {
       const program = airing.program;
+      program.channel = airing.channel;
+      program.network = station.affiliateCallSign;
+      program.airtime = airing.stateTime; // TODO: format time
       program.preferred_image_uri = program.preferredImage.uri;
       program.preferred_image_uri = program.preferred_image_uri.replace('w=360', 'w=720').replace('h=270', 'h=340');
       shows.push(airing.program)
     })
   })
-  console.log(shows)
-  return { network: 'live', shows: groupShowsByGenres(shows) }
+
+  const categoryShows = groupShowsByGenres(shows);
+  const liveShows = shows;
+
+  if (liveShows.length) {
+    categoryShows.unshift({
+      title: 'Live now',
+      shows: liveShows
+    })
+  }
+
+  return { network: 'live', categories: categoryShows }
 }
 
 const groupShowsByGenres = (shows) => {
@@ -52,3 +65,4 @@ const groupShowsByGenres = (shows) => {
     }
   })
 }
+
