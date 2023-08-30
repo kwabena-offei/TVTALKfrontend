@@ -1,0 +1,30 @@
+[
+  {
+    "assetName": "Netflix",
+    "slug": "netflix"
+  },
+  {
+    "assetName": "Hulu",
+    "slug": "hulu"
+  },
+  {
+    "assetName": "Prime",
+    "slug": "prime"
+  },
+  {
+    "assetName": "Max",
+    "slug": "hbo_max"
+  },
+  {
+    "assetName": "AppleTV",
+    "slug": "apple_tv"
+  },
+  {
+    "assetName": "Paramount+",
+    "slug": "paramount"
+  },
+  {
+    "assetName": "Peacock",
+    "slug": "peacock"
+  }
+]
