@@ -11,8 +11,8 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 export const EditProfileCard = ({ profile }) => {
-const theme = useTheme();
-const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleDateChange = () => {
     console.log("date change");
@@ -36,11 +36,11 @@ const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   return (
     <Card sx={{ paddingX: isMobile ? 0 : 4, paddingY: isMobile ? 0 : 4, backgroundColor: "#131B3F" }}>
       <EditProfileHeader profile={profile} isMobile={isMobile} />
-      <CardContent xs={isMobile ? { paddingX: '20px' } : {} }>
-        <Grid container columnSpacing={5} rowSpacing={isMobile ? 2.5 : 0 }>
+      <CardContent xs={isMobile ? { paddingX: '20px' } : {}}>
+        <Grid container columnSpacing={5} rowSpacing={isMobile ? 2.5 : 0}>
           <Grid item xs={12} md={6}>
             <Stack spacing={isMobile ? 2.5 : 2}>
-              <TextInput id="name" label="Name"/>
+              <TextInput id="name" label="Name" />
               <TextInput id="username" label="Username" value={profile.username} />
               <SelectInput id="gender" label="Gender" value={genders[0].id}>
                 {gendersOptionsList}
@@ -50,8 +50,9 @@ const isMobile = useMediaQuery(theme.breakpoints.down('md'));
                 inputFormat="MM/DD/YYYY"
                 value={"02/24/2022"}
                 onChange={handleDateChange}
-                inputProps={{ variant: 'filled', sx: {
-                  '.MuiInputBase-root': {
+                inputProps={{
+                  variant: 'filled', sx: {
+                    '.MuiInputBase-root': {
                       bgcolor: theme.palette.background.default
                     }
                   }
@@ -64,7 +65,7 @@ const isMobile = useMediaQuery(theme.breakpoints.down('md'));
           </Grid>
           <Grid item xs={12} md={6}>
             <Stack spacing={isMobile ? 2.5 : 2}>
-              <TextInput id="phone" label="Phohe" type="tel" />
+              <TextInput id="phone" label="Phone" type="tel" />
               <SelectInput
                 id="cable-company"
                 label="Cable Company"
@@ -85,10 +86,10 @@ const isMobile = useMediaQuery(theme.breakpoints.down('md'));
                 label="Zip Code"
                 placeholder="Zip Code"
               />
-              { isMobile &&
-              <div>
-                <Actions sx={{ justifyContent: 'center', marginY: 1.25 }} /> 
-              </div>
+              {isMobile &&
+                <div>
+                  <Actions sx={{ justifyContent: 'center', marginY: 1.25 }} />
+                </div>
               }
             </Stack>
           </Grid>
