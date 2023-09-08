@@ -15,9 +15,15 @@ StreamingNetwork.getInitialProps = async (ctx) => {
   const genreShows = await genreShowsReq.json()
 
   const categoryShows = Object.entries(genreShows).map((category, results) => {
+    const shows = category[1].results
     return {
       title: category[0],
-      shows: category[1]?.results
+      shows: shows.filter((show, index) => {
+        if (index === 0) return true
+        const sameTitle = show.title === shows[index - 1].title
+        const sameSeriesId = show.seriesId === shows[index - 1].seriesId
+        return !sameSeriesId && !sameTitle;
+      })
     }
   })
 
