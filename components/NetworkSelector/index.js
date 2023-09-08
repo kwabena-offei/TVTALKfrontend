@@ -9,12 +9,12 @@ const NetworkSelector = ({ activeNetwork }) => {
   const otherTiles = [{
     title: 'Everything',
     assetName: 'everything',
-    slug: 'everything',
+    slug: 'Everything',
     path: '/',
   }, {
     title: 'Live',
     assetName: 'live',
-    slug: 'live',
+    slug: 'Live',
     path: '/guide/live'
   }].map((network) => {
     return <NetworkIcon key={network.slug} type='other' network={network} isActive={(network.slug) === activeNetwork?.toLowerCase()} />
