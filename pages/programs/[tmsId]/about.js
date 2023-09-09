@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/system';
 import { Box, Typography } from '@mui/material';
 import CustomSelect from '../../../components/CustomSelect';
@@ -10,29 +11,32 @@ import CastSlider from '../../../components/CastSlider';
 import SeriesPhotoSlider from '../../../components/SeriesPhotosSlider';
 import Container from '@mui/material/Container';
 import Head from 'next/head';
+import useAxios from "../../../services/api";
+import { useRouter } from 'next/router';
+
 
 const StyledHeader = styled(Box)`
-    height: 960px;
-    width: 100vw;
-    display: flex;
-    justifyContent: center;
-    alignItems: center;
+  height: 960px;
+  width: 100vw;
+  display: flex;
+  justifyContent: center;
+  alignItems: center;
 
-    &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(90deg, rgba(9, 15, 39, 1) 50%, rgba(9, 15, 39, .2) 65%);
-        background-blend-mode: multiply;
-    }
+  &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, rgba(9, 15, 39, 1) 50%, rgba(9, 15, 39, .2) 65%);
+      background-blend-mode: multiply;
+  }
 
-    @media (max-width: 780px) {
-        height: 400px;
-    }
+  @media (max-width: 780px) {
+      height: 400px;
+  }
 `;
 
 const StyledContentWrapper = styled(Box, `
@@ -107,8 +111,6 @@ export async function getServerSideProps({ req, res, query }) {
   const heroImages = await heroImageResponse.json();
   const heroImage = heroImages.find(({ category }) => category === 'Iconic') || heroImages[0];
 
-
-
   if (details.cast) {
     details.cast = await Promise.all(details.cast.map(async (actor) => {
       const actorImagesUrl = `https://api.tvtalk.app/data/v1.1/celebs/${actor.personId}/images?imageSize=Md`;
@@ -131,24 +133,53 @@ export async function getServerSideProps({ req, res, query }) {
   };
 }
 
-const about = ({ heroImage, details, photos }) => {
+
+
+const About = ({ heroImage, details, photos }) => {
+  const { axios } = useAxios();
+  const router = useRouter();
+  const [ratingCache, setRatingCache] = useState(details.rating_percentage_cache);
+  const [userRating, setUserRating] = useState('');
 
   const {
     preferred_image_uri,
-    title, longDescription,
+    title,
+    longDescription,
     releaseYear,
-    genres, tmsId, rating_percentage_cache } = details;
+    genres,
+    tmsId
+  } = details;
 
-  const handleSeasonChange = () => {
+  const handleSeasonChange = () => { /* ... */ }
+  const handleEpisodeChange = () => { /* ... */ }
 
-  }
-
-  const handleEpisodeChange = () => {
-
+  const onRate = async (rating) => {
+    try {
+      const resp = await axios.post(`/shows/${tmsId}/ratings`, { rating });
+      setRatingCache(resp.data);
+      setUserRating(rating);
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        router.push(`/login`);
+      }
+    }
   }
 
   const genresString = genres.join('-');
   const releaseYearAndGenres = [releaseYear, genresString].filter(Boolean).join(' / ');
+
+  useEffect(() => {
+    const fetchUserRating = async () => {
+      try {
+        const resp = await axios.get(`/shows/${tmsId}/ratings`);
+        setUserRating(resp.data.rating);
+      } catch (error) {
+        console.error("Failed to fetch user rating:", error);
+      }
+    };
+
+    fetchUserRating();
+  }, [tmsId]);
 
   return (
     <>
@@ -157,8 +188,6 @@ const about = ({ heroImage, details, photos }) => {
         <meta property="og:title" content={`About ${title} | TV Talk`} />
         <meta property="og:description" content={`Learn and chat about ${title} at TV Talk`} />
         <meta property="og:image" content={heroImage} />
-        {/* <meta property="og:url" content="URL_TO_YOUR_PAGE" /> */}
-        {/* Add other meta tags as needed */}
       </Head>
 
       <Container maxWidth="xl">
@@ -231,28 +260,24 @@ const about = ({ heroImage, details, photos }) => {
             </div>
           </StyledHeader>
 
-
           <div style={{ width: 'calc(100vw)', margin: '0', marginLeft: 0, paddingLeft: 0, position: 'relative' }}>
-
             <StyledBottomBox>
               <RatingButtonsGroup
-                love={rating_percentage_cache.love}
-                like={rating_percentage_cache.like}
-                dislike={rating_percentage_cache.dislike}
+                userRating={userRating}
+                love={ratingCache.love}
+                like={ratingCache.like}
+                dislike={ratingCache.dislike}
+                onRate={onRate}
+                tmsId={tmsId}
               />
-              <CastSlider
-                photos={photos}
-                cast={details.cast}
-              />
-              <SeriesPhotoSlider
-                photos={photos}
-              />
+              <CastSlider photos={photos} cast={details.cast} />
+              <SeriesPhotoSlider photos={photos} />
             </StyledBottomBox>
           </div>
-        </Box >
+        </Box>
       </Container>
     </>
   );
 };
 
-export default about;
+export default About;
