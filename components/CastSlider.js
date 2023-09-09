@@ -5,6 +5,9 @@ import Carousel from 'react-elastic-carousel';
 import { useWindowDimensions } from '../util/useWindowDimensions.js';
 
 const CastSlider = ({ cast }) => {
+  if (!cast || !cast.length) {
+    return <></>;
+  }
 
   const { isMobile } = useWindowDimensions();
   return (

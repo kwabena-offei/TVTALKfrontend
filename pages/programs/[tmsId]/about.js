@@ -23,6 +23,7 @@ const StyledHeader = styled(Box)`
         position: absolute;
         top: 0;
         left: 0;
+        width: 100vw;
         right: 0;
         bottom: 0;
         background: linear-gradient(90deg, rgba(9, 15, 39, 1) 50%, rgba(9, 15, 39, .2) 65%);
@@ -98,7 +99,7 @@ export async function getServerSideProps({ req, res, query }) {
   const [detailsResponse, photosResponse, heroImageResponse] = await Promise.all([
     fetch(detailsUrl),
     fetch(photosUrl),
-    fetch(heroImageUrl)
+    fetch(heroImageUrl),
   ]);
 
   const details = await detailsResponse.json();
@@ -106,14 +107,20 @@ export async function getServerSideProps({ req, res, query }) {
   const heroImages = await heroImageResponse.json();
   const heroImage = heroImages.find(({ category }) => category === 'Iconic') || heroImages[0];
 
-  details.cast = await Promise.all(details.cast.map(async (actor) => {
-    const actorImagesUrl = `https://api.tvtalk.app/data/v1.1/celebs/${actor.personId}/images?imageSize=Md`;
-    const actorImagesResponse = await fetch(actorImagesUrl);
-    const actorImages = await actorImagesResponse.json();
-    const actorImage = actorImages.find((image) => image.seriesId === query.tmsId) || actorImages[0];
-    actor.imageUrl = `https://${actorImage?.uri}`;
-    return actor;
-  }));
+
+
+  if (details.cast) {
+    details.cast = await Promise.all(details.cast.map(async (actor) => {
+      const actorImagesUrl = `https://api.tvtalk.app/data/v1.1/celebs/${actor.personId}/images?imageSize=Md`;
+      const actorImagesResponse = await fetch(actorImagesUrl);
+      const actorImages = await actorImagesResponse.json();
+      const actorImage = actorImages.find((image) => image.seriesId === query.tmsId) || actorImages[0];
+      actor.imageUrl = `https://${actorImage?.uri}`;
+      return actor;
+    }));
+  } else {
+    details.cast = [];
+  }
 
   return {
     props: {
@@ -130,8 +137,7 @@ const about = ({ heroImage, details, photos }) => {
     preferred_image_uri,
     title, longDescription,
     releaseYear,
-    genres, tmsId,
-    rating_percentage_cache } = details;
+    genres, tmsId, rating_percentage_cache } = details;
 
   const handleSeasonChange = () => {
 
@@ -141,8 +147,8 @@ const about = ({ heroImage, details, photos }) => {
 
   }
 
-  console.log({ heroImage })
-
+  const genresString = genres.join('-');
+  const releaseYearAndGenres = [releaseYear, genresString].filter(Boolean).join(' / ');
 
   return (
     <>
@@ -188,7 +194,7 @@ const about = ({ heroImage, details, photos }) => {
                 <Typography
                   sx={{ color: '#454F75', zIndex: 1, fontSize: '20px', fontWeight: 500 }}
                   variant='h1'>
-                  {`${releaseYear} / ${genres.join('-')}`}
+                  {releaseYearAndGenres}
                 </Typography>
               </StyledTitleBox>
               <StyledDetailsBox>
