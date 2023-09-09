@@ -92,7 +92,7 @@ export async function getServerSideProps({ req, res, query }) {
   res.setHeader('Cache-Control', 'public, s-maxage=604800, stale-while-revalidate=86400');
 
   const detailsUrl = `https://api.tvtalk.app/shows/${query.tmsId}`;
-  const photosUrl = `https://api.tvtalk.app/data/v1.1/programs/${query.tmsId}/images?imageSize=Md`;
+  const photosUrl = `https://api.tvtalk.app/data/v1.1/programs/${query.tmsId}/images?imageAspectTV=4x3&imageSize=Md`;
   const heroImageUrl = `https://api.tvtalk.app/data/v1.1/programs/${query.tmsId}/images?imageAspectTV=4x3&imageSize=Ms&imageText=false`;
 
   const [detailsResponse, photosResponse, heroImageResponse] = await Promise.all([

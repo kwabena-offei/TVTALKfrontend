@@ -9,7 +9,7 @@ const CastSlider = ({ cast }) => {
   const { isMobile } = useWindowDimensions();
   return (
     <Box
-      sx={{ marginTop: '60px' }}
+      sx={{ marginTop: '60px', position: 'relative', paddingLeft: 0, marginLeft: 0, marginBottom: '60px' }}
     >
       <Typography sx={{
         fontSize: '36px',
@@ -21,11 +21,13 @@ const CastSlider = ({ cast }) => {
         {'Cast'}
       </Typography>
       <Carousel
-        itemsToShow={isMobile ? 2 : 5}
+        itemsToShow={isMobile ? 2 : 4}
         itemsToScroll={2}
         pagination={false}
-        itemPadding={[0, 10]}
-        showArrows={!isMobile}
+        itemPadding={[0, 15]}
+        showArrows={false}
+        style={{ marginLeft: -25, paddingLeft: 0 }}
+
       >
         {cast.map((actor, index) => (
           <ActorCard

@@ -15,7 +15,7 @@ const SeriesPhotoSlider = ({ photos }) => {
 
   return (
     <Box
-      sx={{ marginTop: '60px', position: 'relative' }}
+      sx={{ marginTop: '60px', position: 'relative', paddingLeft: 0, marginLeft: 0, marginBottom: '60px' }}
     >
       <ViewAllButton
         onClick={handleOpen}
@@ -33,8 +33,9 @@ const SeriesPhotoSlider = ({ photos }) => {
         itemsToShow={isMobile ? 2 : 5}
         itemsToScroll={2}
         pagination={false}
-        itemPadding={[0, 10]}
-        showArrows={!isMobile}
+        itemPadding={[0, 15]}
+        showArrows={false}
+        style={{ marginLeft: -25, paddingLeft: 0 }}
       >
         {photos?.map((photo, index) => (
           <CardMedia
@@ -42,7 +43,6 @@ const SeriesPhotoSlider = ({ photos }) => {
             src={`https://${photo.uri}`}
             component="img"
             alt='Series photo'
-            sx={{ borderRadius: '6px', height: '260px', width: `${photo.width}px` }}
           />
         ))}
       </Carousel>
