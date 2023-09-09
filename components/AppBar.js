@@ -84,7 +84,7 @@ function ResponsiveAppBar({ context }) {
   };
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" style={{ paddingLeft: 0 }}>
       <AppBar position="static">
         <Container maxWidth="xl" sx={{
           backgroundColor: '#090F27',
