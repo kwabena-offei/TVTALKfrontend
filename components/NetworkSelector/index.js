@@ -8,12 +8,12 @@ const NetworkSelector = ({ activeNetwork }) => {
 
   const otherTiles = [{
     title: 'Everything',
-    assetName: 'everything',
+    assetName: 'Everything',
     slug: 'Everything',
     path: '/',
   }, {
     title: 'Live',
-    assetName: 'live',
+    assetName: 'Live',
     slug: 'Live',
     path: '/guide/live'
   }].map((network) => {

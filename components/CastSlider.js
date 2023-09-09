@@ -21,7 +21,7 @@ const CastSlider = ({ cast }) => {
         {'Cast'}
       </Typography>
       <Carousel
-        itemsToShow={isMobile ? 2 : 4}
+        itemsToShow={isMobile ? 2 : 6}
         itemsToScroll={2}
         pagination={false}
         itemPadding={[0, 15]}
