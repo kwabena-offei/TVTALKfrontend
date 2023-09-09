@@ -6,34 +6,51 @@ import { ChatHeader, ChatContent } from "../../../components/Chat";
 import { isAuthenticated } from '../../../services/isAuth'
 import { AuthContext } from '../../../util/AuthContext'
 import useSocket from '../../../hooks/useSocket';
-import useAxios from '../../../services/api';
+// import useAxios from '../../../services/api';
+import axios from 'axios';
 
 export async function getServerSideProps(context) {
-  // res.setHeader(
-  //   'Cache-Control',
-  //   'public, s-maxage=10, stale-while-revalidate=59'
-  // )
+  context.res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=10, stale-while-revalidate=59'
+  )
   const { tmsId } = context.query;
-  const { axios } = useAxios(context)
-  const { data: show } = await axios.get(`/shows/${tmsId}`);
+
+  if (!tmsId) {
+    return {
+      notFound: true
+    };
+  }
+
+  const showResponse = await axios.get(`https://api.tvtalk.app/shows/${tmsId}`);
+  const { data: show } = await axios.get(`https://api.tvtalk.app/shows/${tmsId}`);
   const { data: comments } = await axios.get(
-    `/comments?tms_id=${tmsId}`
+    `https://api.tvtalk.app/comments?tms_id=${tmsId}`
   );
   // -- If User is not authorized profile data will return null and isAuth will be false --
   const isAuth = isAuthenticated(context)
   const { data: profile } = isAuth ? await axios.get('/profile') : { data: null }
+
+
+  const heroImageUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageAspectTV=16x9&imageSize=Ms&imageText=false`;
+  console.log({ heroImageUrl })
+  const heroImageResponse = await fetch(heroImageUrl);
+  const heroImages = await heroImageResponse.json();
+  let heroImage = heroImages.find(({ category }) => category === 'Iconic') || heroImages[0];
+  heroImage = `https://${heroImage.uri}`;
 
   return {
     props: {
       show,
       comments,
       profile,
-      isAuth
+      isAuth,
+      heroImage
     }, // will be passed to the page component as props
   };
 }
 
-const Chat = ({ show, comments: serverComments, profile, isAuth }) => {
+const Chat = ({ show, comments: serverComments, profile, isAuth, heroImage }) => {
   const { tmsId } = show;
   const [comments, setComments] = useState(serverComments)
 
@@ -54,7 +71,7 @@ const Chat = ({ show, comments: serverComments, profile, isAuth }) => {
 
   return (
     <>
-      <ChatHeader show={show} />
+      <ChatHeader show={show} heroImage={heroImage} />
       <AuthContext.Provider value={isAuth}>
         <ChatContent show={show} comments={comments.results} profile={profile} />
       </AuthContext.Provider>

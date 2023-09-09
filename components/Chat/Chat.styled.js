@@ -6,18 +6,18 @@ import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 export const DESCTOP_BUTTON_WIDTH = 115;
 export const MOBILE_BUTTON_WIDTH = 36;
 
-const StyledHeader = styled(Box, {}) ({
+const StyledHeader = styled(Box, {})({
   height: '500px',
-  display: 'flex', 
-  justifyContent: 'center', 
+  display: 'flex',
+  justifyContent: 'center',
   alignItems: 'center',
-  ['@media (max-width:780px)'] : {
-      height: '240px',
-    }
+  ['@media (max-width:780px)']: {
+    height: '240px',
+  }
 });
 
 export const ChatHeaderImage = ({ children, image }) => {
-  return(
+  return (
     <StyledHeader
       sx={{
         backgroundImage: `url(${image})`,
@@ -54,16 +54,16 @@ export const ButtonBack = ({ ...props }) => {
 };
 
 export const ButtonBackMobile = ({ ...props }) => {
-const RoundedButton = styled(IconButton, {
-  name: 'IconButton',
-  slot: 'custom-styled'
-}) ({
-  boxSizing: 'inherit',
-  border: '1px solid #131B3F',
-  color: '#EFF2FD',
-  fontSize: '1.25rem',
-  backgroundColor: 'transparent'
-})
+  const RoundedButton = styled(IconButton, {
+    name: 'IconButton',
+    slot: 'custom-styled'
+  })({
+    boxSizing: 'inherit',
+    border: '1px solid #131B3F',
+    color: '#EFF2FD',
+    fontSize: '1.25rem',
+    backgroundColor: 'transparent'
+  })
   return (
     <Box width={MOBILE_BUTTON_WIDTH} height={MOBILE_BUTTON_WIDTH}>
       <RoundedButton

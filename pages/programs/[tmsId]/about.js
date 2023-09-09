@@ -60,7 +60,7 @@ const StyledSelectsBox = styled(Box, {})
 
 const StyledBottomBox = styled(Box, {})
   ({
-    marginLeft: '194px',
+    // marginLeft: '194px',
     ['@media (max-width:780px)']: {
       marginLeft: '18px',
     }
@@ -226,21 +226,23 @@ const about = ({ heroImage, details, photos }) => {
           </StyledHeader>
 
 
+          <div style={{ width: 'calc(100vw)', margin: '0', marginLeft: 0, paddingLeft: 0, position: 'relative' }}>
 
-          <StyledBottomBox>
-            <RatingButtonsGroup
-              love={rating_percentage_cache.love}
-              like={rating_percentage_cache.like}
-              dislike={rating_percentage_cache.dislike}
-            />
-            <CastSlider
-              photos={photos}
-              cast={details.cast}
-            />
-            <SeriesPhotoSlider
-              photos={photos}
-            />
-          </StyledBottomBox>
+            <StyledBottomBox>
+              <RatingButtonsGroup
+                love={rating_percentage_cache.love}
+                like={rating_percentage_cache.like}
+                dislike={rating_percentage_cache.dislike}
+              />
+              <CastSlider
+                photos={photos}
+                cast={details.cast}
+              />
+              <SeriesPhotoSlider
+                photos={photos}
+              />
+            </StyledBottomBox>
+          </div>
         </Box >
       </Container>
     </>

@@ -15,16 +15,16 @@ import MainContent from './MainContent';
 import { useRouter } from "next/router";
 import NewPostCard from "./NewPostCard";
 
-export const ChatHeader = ({ show }) => {
+export const ChatHeader = ({ show, heroImage }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const router = useRouter()
   const handleGoBack = () => router.back()
   return (
-    <ChatHeaderImage image={show.preferred_image_uri}>
+    <ChatHeaderImage image={heroImage}>
       <Container maxWidth='xl' sx={{ height: 'inherit' }}>
         <Stack direction="row" sx={{ my: isMobile ? 2 : 5, width: '100%', height: 'inherit' }}>
-          { isMobile 
+          {isMobile
             ? <ButtonBackMobile onClick={handleGoBack} />
             : <ButtonBack onClick={handleGoBack} />
           }
@@ -38,16 +38,16 @@ export const ChatHeader = ({ show }) => {
               textAlign: 'center'
             }}
           >
-            { isMobile
+            {isMobile
               ? <Typography fontSize={48} fontWeight={700}>
-                  {show.title}
-                </Typography>
+                {show.title}
+              </Typography>
               : <Typography fontSize={64} fontWeight={700}>
-                  {show.title}
-                </Typography>
+                {show.title}
+              </Typography>
             }
           </Box>
-        </Stack>  
+        </Stack>
       </Container>
     </ChatHeaderImage>
   )
