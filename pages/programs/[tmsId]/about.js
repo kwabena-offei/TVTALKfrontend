@@ -9,6 +9,7 @@ import RatingButtonsGroup from '../../../components/RatingButtonsGroup';
 import CastSlider from '../../../components/CastSlider';
 import SeriesPhotoSlider from '../../../components/SeriesPhotosSlider';
 import Container from '@mui/material/Container';
+import Head from 'next/head';
 
 const StyledHeader = styled(Box)`
     height: 960px;
@@ -144,94 +145,105 @@ const about = ({ heroImage, details, photos }) => {
 
 
   return (
-    <Container maxWidth="xl">
-      <Box className="about" sx={{ position: 'relative' }} >
+    <>
+      <Head>
+        <title>About {title} | TV Talk</title>
+        <meta property="og:title" content={`About ${title} | TV Talk`} />
+        <meta property="og:description" content={`Learn and chat about ${title} at TV Talk`} />
+        <meta property="og:image" content={heroImage} />
+        {/* <meta property="og:url" content="URL_TO_YOUR_PAGE" /> */}
+        {/* Add other meta tags as needed */}
+      </Head>
 
-        <StyledHeader
-          className="about__header"
-          style={{
-            background: `url(${heroImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundBlendMode: 'multiply',
-            backgroundPositionX: 'calc(20vw)'
-          }}
-        >
-          <div style={{ width: '100%', margin: '0 auto', position: 'relative' }}>
+      <Container maxWidth="xl">
+        <Box className="about" sx={{ position: 'relative' }} >
 
-            <BackButton
-              title='Back'
-            />
-            <StyledTitleBox
-              sx={{
-                zIndex: 10,
-                textAlign: 'left',
-                marginTop: '136px'
-              }}
-            >
-              <Typography
-                sx={{ color: '#EFF2FD', zIndex: 1, fontWeight: 700, textAlign: 'left' }}
-                variant='h2'>
-                {title}
-              </Typography>
-              <Typography
-                sx={{ color: '#454F75', zIndex: 1, fontSize: '20px', fontWeight: 500 }}
-                variant='h1'>
-                {`${releaseYear} / ${genres.join('-')}`}
-              </Typography>
-            </StyledTitleBox>
-            <StyledDetailsBox>
-              <StyledSelectsBox sx={{ display: 'flex', gap: '29px', marginBottom: '22px' }}>
-                <CustomSelect
-                  selectList={['1', '2', '3']}
-                  label='Select Season'
-                  labelId='selectSeason'
-                  selectId='selectSeason'
-                  handleChange={handleSeasonChange}
-                />
-                <CustomSelect
-                  selectList={['1', '2', '3']}
-                  label='Select Episode'
-                  labelId='selectEpisode'
-                  selectId='selectEpisode'
-                  handleChange={handleEpisodeChange}
-                />
-              </StyledSelectsBox>
-              <StyledDescription sx={{ zIndex: 1, textAlign: 'left' }}>
+          <StyledHeader
+            className="about__header"
+            style={{
+              background: `url(${heroImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundBlendMode: 'multiply',
+              backgroundPositionX: 'calc(20vw)'
+            }}
+          >
+            <div style={{ width: '100%', margin: '0 auto', position: 'relative' }}>
+
+              <BackButton
+                title='Back'
+              />
+              <StyledTitleBox
+                sx={{
+                  zIndex: 10,
+                  textAlign: 'left',
+                  marginTop: '136px'
+                }}
+              >
                 <Typography
-                  sx={{ color: '#A5B0D6', fontSize: '16px', lineHeight: '1.8em', textAlign: 'left' }}
-                  variant='string'>
-                  {longDescription}
+                  sx={{ color: '#EFF2FD', zIndex: 1, fontWeight: 700, textAlign: 'left' }}
+                  variant='h2'>
+                  {title}
                 </Typography>
-              </StyledDescription>
-              <Box sx={{ display: 'flex', gap: '20px', marginTop: '36px' }}>
-                <BlueButton
-                  title='Chat'
-                />
-                <HeartButton />
-              </Box>
-            </StyledDetailsBox>
-          </div>
-        </StyledHeader>
+                <Typography
+                  sx={{ color: '#454F75', zIndex: 1, fontSize: '20px', fontWeight: 500 }}
+                  variant='h1'>
+                  {`${releaseYear} / ${genres.join('-')}`}
+                </Typography>
+              </StyledTitleBox>
+              <StyledDetailsBox>
+                <StyledSelectsBox sx={{ display: 'flex', gap: '29px', marginBottom: '22px' }}>
+                  <CustomSelect
+                    selectList={['1', '2', '3']}
+                    label='Select Season'
+                    labelId='selectSeason'
+                    selectId='selectSeason'
+                    handleChange={handleSeasonChange}
+                  />
+                  <CustomSelect
+                    selectList={['1', '2', '3']}
+                    label='Select Episode'
+                    labelId='selectEpisode'
+                    selectId='selectEpisode'
+                    handleChange={handleEpisodeChange}
+                  />
+                </StyledSelectsBox>
+                <StyledDescription sx={{ zIndex: 1, textAlign: 'left' }}>
+                  <Typography
+                    sx={{ color: '#A5B0D6', fontSize: '16px', lineHeight: '1.8em', textAlign: 'left' }}
+                    variant='string'>
+                    {longDescription}
+                  </Typography>
+                </StyledDescription>
+                <Box sx={{ display: 'flex', gap: '20px', marginTop: '36px' }}>
+                  <BlueButton
+                    title='Chat'
+                  />
+                  <HeartButton />
+                </Box>
+              </StyledDetailsBox>
+            </div>
+          </StyledHeader>
 
 
 
-        <StyledBottomBox>
-          <RatingButtonsGroup
-            love={rating_percentage_cache.love}
-            like={rating_percentage_cache.like}
-            dislike={rating_percentage_cache.dislike}
-          />
-          <CastSlider
-            photos={photos}
-            cast={details.cast}
-          />
-          <SeriesPhotoSlider
-            photos={photos}
-          />
-        </StyledBottomBox>
-      </Box >
-    </Container>
+          <StyledBottomBox>
+            <RatingButtonsGroup
+              love={rating_percentage_cache.love}
+              like={rating_percentage_cache.like}
+              dislike={rating_percentage_cache.dislike}
+            />
+            <CastSlider
+              photos={photos}
+              cast={details.cast}
+            />
+            <SeriesPhotoSlider
+              photos={photos}
+            />
+          </StyledBottomBox>
+        </Box >
+      </Container>
+    </>
   );
 };
 
