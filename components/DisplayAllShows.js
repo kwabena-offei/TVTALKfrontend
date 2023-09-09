@@ -23,7 +23,7 @@ const DisplayAllShows = ({ categories, network }) => {
 
   // Pushes tmsID to the about page
   const handleAbout = (tmsId, title) => {
-    router.push({ pathname: '/about', query: { tmsId: tmsId } })
+    router.push({ pathname: '/programs/[tmsId]/about', query: { tmsId: tmsId } })
   }
   const handleChat = (tmsId, title) => {
     router.push({ pathname: '/chat/[tmsId]', query: { tmsId: tmsId } })

@@ -1,13 +1,13 @@
 import React from 'react';
 import { styled } from '@mui/system';
 import { Box, Typography } from '@mui/material';
-import CustomSelect from '../components/CustomSelect';
-import BackButton from '../components/BackButton';
-import HeartButton from '../components/HeartButton';
-import BlueButton from '../components/BlueButton';
-import RatingButtonsGroup from '../components/RatingButtonsGroup';
-import CastSlider from '../components/CastSlider';
-import SeriesPhotoSlider from '../components/SeriesPhotosSlider';
+import CustomSelect from '../../../components/CustomSelect';
+import BackButton from '../../../components/BackButton';
+import HeartButton from '../../../components/HeartButton';
+import BlueButton from '../../../components/BlueButton';
+import RatingButtonsGroup from '../../../components/RatingButtonsGroup';
+import CastSlider from '../../../components/CastSlider';
+import SeriesPhotoSlider from '../../../components/SeriesPhotosSlider';
 import Container from '@mui/material/Container';
 
 const StyledHeader = styled(Box)`
@@ -24,7 +24,7 @@ const StyledHeader = styled(Box)`
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(90deg, rgba(9, 15, 39, 1) 40%, rgba(9, 15, 39, .2) 60%);
+        background: linear-gradient(90deg, rgba(9, 15, 39, 1) 50%, rgba(9, 15, 39, .2) 65%);
         background-blend-mode: multiply;
     }
 
@@ -86,23 +86,41 @@ const StyledTitleBox = styled(Box, {})
     }
   });
 
-export async function getServerSideProps(context) {
-  let detailsResult = await fetch(`https://api.tvtalk.app/shows/${context.query.tmsId}`)
-  let photosResults = await fetch(`https://api.tvtalk.app/data/v1.1/programs/${context.query.tmsId}/images?imageSize=Md`)
-  let heroImageResult = await fetch(
-    `https://api.tvtalk.app/data/v1.1/programs/${context.query.tmsId}/images?imageAspectTV=4x3&imageSize=Ms&imageText=false`)
-  let details = await detailsResult.json()
-  let photos = await photosResults.json()
-  let heroImages = await heroImageResult.json()
-  let heroImage = heroImages.find(({ category }) => { return category === 'Iconic' }) || heroImages[0]
+export async function getServerSideProps({ req, res, query }) {
+  // Set cache for a week
+  res.setHeader('Cache-Control', 'public, s-maxage=604800, stale-while-revalidate=86400');
+
+  const detailsUrl = `https://api.tvtalk.app/shows/${query.tmsId}`;
+  const photosUrl = `https://api.tvtalk.app/data/v1.1/programs/${query.tmsId}/images?imageSize=Md`;
+  const heroImageUrl = `https://api.tvtalk.app/data/v1.1/programs/${query.tmsId}/images?imageAspectTV=4x3&imageSize=Ms&imageText=false`;
+
+  const [detailsResponse, photosResponse, heroImageResponse] = await Promise.all([
+    fetch(detailsUrl),
+    fetch(photosUrl),
+    fetch(heroImageUrl)
+  ]);
+
+  const details = await detailsResponse.json();
+  const photos = await photosResponse.json();
+  const heroImages = await heroImageResponse.json();
+  const heroImage = heroImages.find(({ category }) => category === 'Iconic') || heroImages[0];
+
+  details.cast = await Promise.all(details.cast.map(async (actor) => {
+    const actorImagesUrl = `https://api.tvtalk.app/data/v1.1/celebs/${actor.personId}/images?imageSize=Md`;
+    const actorImagesResponse = await fetch(actorImagesUrl);
+    const actorImages = await actorImagesResponse.json();
+    const actorImage = actorImages.find((image) => image.seriesId === query.tmsId) || actorImages[0];
+    actor.imageUrl = `https://${actorImage?.uri}`;
+    return actor;
+  }));
 
   return {
     props: {
-      details: details,
-      photos: photos,
+      details,
+      photos,
       heroImage: `https://${heroImage?.uri}`
-    }, // will be passed to the page component as props
-  }
+    }
+  };
 }
 
 const about = ({ heroImage, details, photos }) => {
@@ -113,7 +131,6 @@ const about = ({ heroImage, details, photos }) => {
     releaseYear,
     genres, tmsId,
     rating_percentage_cache } = details;
-  // let image = preferred_image_uri.match(/(^.*)?\?/)[1];
 
   const handleSeasonChange = () => {
 

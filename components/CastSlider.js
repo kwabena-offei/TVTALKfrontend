@@ -7,7 +7,6 @@ import { useWindowDimensions } from '../util/useWindowDimensions.js';
 const CastSlider = ({ cast }) => {
 
   const { isMobile } = useWindowDimensions();
-
   return (
     <Box
       sx={{ marginTop: '60px' }}
@@ -32,6 +31,7 @@ const CastSlider = ({ cast }) => {
           <ActorCard
             key={index}
             name={actor.name}
+            imageUrl={actor.imageUrl}
             characterName={actor.characterName}
           />
         ))}
