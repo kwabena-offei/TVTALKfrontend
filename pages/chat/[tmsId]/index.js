@@ -6,8 +6,8 @@ import { ChatHeader, ChatContent } from "../../../components/Chat";
 import { isAuthenticated } from '../../../services/isAuth'
 import { AuthContext } from '../../../util/AuthContext'
 import useSocket from '../../../hooks/useSocket';
-// import useAxios from '../../../services/api';
-import axios from 'axios';
+import useAxios from '../../../services/api';
+// import axios from 'axios';
 
 export async function getServerSideProps(context) {
   context.res.setHeader(
@@ -15,6 +15,7 @@ export async function getServerSideProps(context) {
     'public, s-maxage=10, stale-while-revalidate=59'
   )
   const { tmsId } = context.query;
+  const { axios } = useAxios();
 
   if (!tmsId) {
     return {
@@ -29,10 +30,15 @@ export async function getServerSideProps(context) {
   );
   // -- If User is not authorized profile data will return null and isAuth will be false --
   const isAuth = isAuthenticated(context)
-  const { data: profile } = isAuth ? await axios.get('/profile') : { data: null }
-
+  let profile = {}
+  try {
+    let profileResponse = await axios.get('/profile');
+    profile = profileResponse.data;
+  } catch (error) {
+  }
 
   const heroImageUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageAspectTV=16x9&imageSize=Ms&imageText=false`;
+
   const heroImageResponse = await fetch(heroImageUrl);
   const heroImages = await heroImageResponse.json();
   let heroImage = heroImages.find(({ category }) => category === 'Iconic') || heroImages[0];

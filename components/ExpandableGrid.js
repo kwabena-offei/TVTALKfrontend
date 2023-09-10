@@ -8,6 +8,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Button, Grid, Typography, IconButton, Accordion, AccordionSummary, AccordionDetails, Box } from '@mui/material';
 import HeartButton from '../components/HeartButton';
 import BlueButton from '../components/BlueButton';
+import Link from 'next/link';
 
 
 function ExpandableGrid({ tvShows, title }) {
@@ -115,10 +116,12 @@ function ExpandableGrid({ tvShows, title }) {
                 </Typography>
                 <Grid container spacing={1}>
                   <Grid item>
-                    <BlueButton
-                      title='Chat'
-                      onClick={() => handleChat(tvShow.tmsId)}
-                    />
+                    <Link href={`/chat/${tvShow.tmsId}`} passHref>
+                      <BlueButton
+                        title='Chat'
+                      />
+                    </Link>
+
                   </Grid>
                   <Grid item>
                     <Button onClick={() => handleAbout(tvShow.tmsId)} style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
