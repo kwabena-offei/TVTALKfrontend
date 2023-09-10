@@ -9,18 +9,19 @@ export default function StreamingNetwork({ categories, network }) {
   )
 }
 
-StreamingNetwork.getInitialProps = async (ctx) => {
+export async function getStaticProps({ params }) {
   const timezone = 'EST';
   const res = await fetch(`https://api.tvtalk.app/guide/live?timezone=${timezone}`)
   const json = await res.json()
   const stations = json;
   const shows = [];
+
   stations.forEach((station) => {
     station.airings.forEach((airing) => {
       const program = airing.program;
-      program.channel = airing.channel;
-      program.network = station.affiliateCallSign;
-      program.airtime = airing.stateTime; // TODO: format time
+      program.channel = airing.channel || station.channel || '';
+      program.network = station.affiliateCallSign || station.channel || '';
+      program.airtime = airing.stateTime || ''; // TODO: format time
       program.preferred_image_uri = program.preferredImage.uri;
       program.preferred_image_uri = program.preferred_image_uri.replace('w=360', 'w=720').replace('h=270', 'h=340');
       shows.push(airing.program)
@@ -37,7 +38,7 @@ StreamingNetwork.getInitialProps = async (ctx) => {
     })
   }
 
-  return { network: 'live', categories: categoryShows }
+  return { props: { network: 'live', categories: categoryShows }, revalidate: 60 * 5 }
 }
 
 const groupShowsByGenres = (shows) => {

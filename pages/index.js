@@ -13,3 +13,4 @@ export async function getStaticProps() {
 
   return { props: { categories: json }, revalidate: 60 * 5 }
 }
+
