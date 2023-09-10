@@ -92,13 +92,12 @@ const StyledTitleBox = styled(Box, {})
     }
   });
 
-export async function getServerSideProps({ req, res, query }) {
-  // Set cache for a week
-  res.setHeader('Cache-Control', 'public, s-maxage=604800, stale-while-revalidate=86400');
+export async function getStaticProps({ params }) {
+  const { tmsId } = params;
 
-  const detailsUrl = `https://api.tvtalk.app/shows/${query.tmsId}`;
-  const photosUrl = `https://api.tvtalk.app/data/v1.1/programs/${query.tmsId}/images?imageAspectTV=4x3&imageSize=Md`;
-  const heroImageUrl = `https://api.tvtalk.app/data/v1.1/programs/${query.tmsId}/images?imageAspectTV=4x3&imageSize=Ms&imageText=false`;
+  const detailsUrl = `https://api.tvtalk.app/shows/${tmsId}`;
+  const photosUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageAspectTV=4x3&imageSize=Md`;
+  const heroImageUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageAspectTV=4x3&imageSize=Ms&imageText=false`;
 
   const [detailsResponse, photosResponse, heroImageResponse] = await Promise.all([
     fetch(detailsUrl),
@@ -106,7 +105,14 @@ export async function getServerSideProps({ req, res, query }) {
     fetch(heroImageUrl),
   ]);
 
-  const details = await detailsResponse.json();
+  let details = await detailsResponse.json();
+
+  if (!details) {
+    const otherDetailsUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}`;
+    const otherDetailsResponse = await fetch(otherDetailsUrl);
+    details = await otherDetailsResponse.json();
+  }
+
   const photos = await photosResponse.json();
   const heroImages = await heroImageResponse.json();
   const heroImage = heroImages.find(({ category }) => category === 'Iconic') || heroImages[0];
@@ -116,12 +122,16 @@ export async function getServerSideProps({ req, res, query }) {
       const actorImagesUrl = `https://api.tvtalk.app/data/v1.1/celebs/${actor.personId}/images?imageSize=Md`;
       const actorImagesResponse = await fetch(actorImagesUrl);
       const actorImages = await actorImagesResponse.json();
-      const actorImage = actorImages.find((image) => image.seriesId === query.tmsId) || actorImages[0];
+      const actorImage = actorImages.find((image) => image.seriesId === tmsId) || actorImages[0];
       actor.imageUrl = `https://${actorImage?.uri}`;
       return actor;
     }));
   } else {
     details.cast = [];
+  }
+
+  if (!details.ranking_cache) {
+    details.ranking_cache = {}
   }
 
   return {
@@ -130,6 +140,16 @@ export async function getServerSideProps({ req, res, query }) {
       photos,
       heroImage: `https://${heroImage?.uri}`
     }
+  };
+}
+
+export async function getStaticPaths() {
+  // If you can fetch a list of all possible tmsId values, do it here.
+  // For this example, I'll assume you can't, so we'll use fallback mode.
+
+  return {
+    paths: [], // Empty array means no paths are pre-rendered.
+    fallback: 'blocking' // 'blocking' means new paths will be generated on-demand without showing a loading state.
   };
 }
 

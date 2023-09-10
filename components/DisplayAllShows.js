@@ -10,6 +10,9 @@ import HeartButton from '../components/HeartButton';
 import BlueButton from '../components/BlueButton';
 import NetworkSelector from '../components/NetworkSelector'
 import Image from 'next/image'
+import styled from 'styled-components';
+import ExpandableGrid from '../components/ExpandableGrid';
+import Container from '@mui/material/Container';
 
 const DisplayAllShows = ({ categories, network }) => {
   const router = useRouter()
@@ -23,132 +26,109 @@ const DisplayAllShows = ({ categories, network }) => {
 
   // Pushes tmsID to the about page
   const handleAbout = (tmsId, title) => {
-    router.push({ pathname: '/programs/[tmsId]/about', query: { tmsId: tmsId } })
+    router.push({ pathname: '/programs/[tmsId]/about', query: { tmsId } })
   }
   const handleChat = (tmsId, title) => {
-    router.push({ pathname: '/chat/[tmsId]', query: { tmsId: tmsId } })
+    router.push({ pathname: '/chat/[tmsId]', query: { tmsId } })
   }
 
+  const Title = styled.h1`
+  color: var(--text-color, #EFF2FD);
+  text-align: center;
+  font-feature-settings: 'calt' off;
+  font-family: 'Gilroy';
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 36px */
+  text-transform: capitalize;
+
+
+  @media (max-width: 600px) { 
+    width: 335px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 600px) { 
+    font-size: 64px;
+    line-height: 120%; /* This equals 76.8px */
+  }
+`;
+
+  const Subtitle = styled.h2`
+  color: var(--text-color, #EFF2FD);
+  text-align: center;
+  font-feature-settings: 'calt' off;
+  font-family: 'Gilroy';
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%; /* 19.2px */
+
+  @media (min-width: 600px) { 
+    font-size: 32px;
+    line-height: 120%; /* This equals 38.4px */
+  }
+`;
+
+
+  const StyledBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 600px;
+  background: linear-gradient(rgba(9, 15, 39, 0.32), rgba(9, 15, 39, 0.32)), url(/assets/header.jpg);
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+
+  @media (max-width: 600px) { /* Adjust the breakpoint as needed */
+    height: calc(45vh);
+  }
+`;
+
   useEffect(() => {
-    // This code will only run in the client-side environment
-    setWindowWidth(window.innerWidth);
+    // If an item ID was provided, scroll it into view
+    if (network) {
+      const itemElement = document.getElementById(`network-${network}`);
+      console.log({ id: `network-${network}` })
+      if (itemElement) {
+        itemElement.scrollIntoView({ inline: 'start', behavior: 'instant' });
+        // itemElement.scrollIntoView({ inline: 'start', block: 'nearest', behavior: 'instant' });
+      }
+    }
+  }, [network]);
 
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    // Clean up the event listener when the component is unmounted
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []); // The empty array means this useEffect will run once when the component mounts
-
-  const objectWidth = 360;
-  // Ensure that windowWidth is defined before performing calculations or rendering dependent content
-  const numberOfObjects = windowWidth ? Math.floor(windowWidth / objectWidth) : 0;
 
   return (
     <>
       <Box>
-        <Box style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: 600,
-          background: `linear-gradient(rgba(9, 15, 39, 0.32), rgba(9, 15, 39, 0.32)), url(/assets/header.jpg)`,
-          backgroundSize: 'cover, cover',
-          backgroundPosition: 'center, center',
-          backgroundRepeat: 'no-repeat, no-repeat'
-        }}>
-          <Typography sx={{ color: 'white' }} style={{
-            textAlign: 'center',
-            fontFeatureSettings: "'calt' off",
-            fontFamily: 'Gilroy',
-            fontSize: '64px',
-            fontStyle: 'normal',
-            fontWeight: 700,
-            lineHeight: '120%',
-            display: 'block'
-          }}>Let's start a community of TV fans </Typography>
-          <Typography sx={{ color: 'white' }} style={{
-            textAlign: 'center',
-            fontFeatureSettings: "'calt' off",
-            fontFamily: 'Gilroy',
-            fontSize: '32px',
-            fontStyle: 'normal',
-            fontWeight: 500,
-            lineHeight: '120%', // This equals 38.4px
-          }}>Press "Chat" and post a message!</Typography>
-        </Box>
+        <StyledBox>
+          <Title>Let's start a community of TV fans</Title>
+          <Subtitle>Press "Chat" and post a message!</Subtitle>
+        </StyledBox>
       </Box>
 
 
-      <Box className='wrapper'>
-
-        <div style={{ marginLeft: 50, paddingLeft: 20, marginBottom: 20 }}>
+      <Box className='wrapper' >
+        <Container maxWidth="xl">
           <NetworkSelector activeNetwork={network} />
-        </div>
 
-        {categories.filter((category) => category.shows.length).map((category, index) =>
-          <div key={`${network}-${category}-${index}`} style={{ margin: '100px 0' }}>
-            <div style={{ marginLeft: 50, paddingLeft: 20, marginBottom: 20 }}>
-              <Typography style={{
-                color: '#EFF2FD',
-                fontFamily: 'Gilroy',
-                fontSize: 40,
-                fontWeight: 700,
-                lineHeight: '130%', /* 52px */
-                letterSpacing: 0.4,
-              }}>{category.title}</Typography></div>
-            <Carousel itemsToShow={numberOfObjects} itemsToScroll={numberOfObjects / 2} pagination={false} itemPadding={[0, 10]} itemPosition='START'>
+          {categories.filter((category) => category.shows.length).map((category, index) =>
+            <div key={`${network}-${category}-${index}`} style={{ margin: '100px 0' }}>
+              <div>
+                <ExpandableGrid tvShows={category.shows} handleChat={handleChat} title={category.title} />
 
-              {category.shows.map((tvShow, ind) => {
-                return <Card key={ind} sx={{ background: 'transparent', maxWidth: 360 }}>
-                  <CardMedia
-                    componnt="img"
-                  >
-                    <Image
-                      src={`https://${tvShow.preferred_image_uri}`}
-                      alt={`${tvShow.title} Image`}
-                      width={720}
-                      height={540}
-                      quality={80}
-                    />
-                  </CardMedia>
-                  <CardContent sx={{ background: '#131B3F' }}>
-                    <Typography sx={{ color: '#EFF2FD' }} gutterBottom variant="h5" component="div">
-                      {tvShow.title}
-                    </Typography>
-                    <Grid container spacing={1}>
-                      <Grid item>
-                        <BlueButton
-                          title='Chat'
-                          onClick={() => handleChat(tvShow.tmsId)}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Button onClick={() => handleAbout(tvShow.tmsId)} style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
-                          <Typography sx={{ color: '#919CC0' }} variant='string'>About</Typography>
-                        </Button>
-                      </Grid>
-                      <Grid item>
-                        <HeartButton />
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-
-                </Card>
-              }
-              )}
-            </Carousel>
-          </div>
-        )}
+              </div>
+            </div>
+          )}
+        </Container>
       </Box >
     </>
   );
 };
 
 export default DisplayAllShows;
+
+// style={{ marginLeft: 50, paddingLeft: 20, marginBottom: 20 }}

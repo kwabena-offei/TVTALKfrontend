@@ -23,7 +23,7 @@ const ReactionsCardHeader = ({ userData, setShares, isMobile, commentType, tmsId
       <CardHeader
         {...props}
         classes={{ action: "align-self-center" }}
-        sx={ isMobile ? cardHeaderMobileProps : { paddingX: 3.75, paddingY: 2.5, alignItems: "center" }}
+        sx={isMobile ? cardHeaderMobileProps : { paddingX: 3.75, paddingY: 2.5, alignItems: "center" }}
         avatar={
           <Avatar
             sx={isMobile ? { width: 40, height: 40 } : { width: 60, height: 60, border: "1.5px solid #090F27" }}
@@ -36,8 +36,8 @@ const ReactionsCardHeader = ({ userData, setShares, isMobile, commentType, tmsId
         }
         action={
           isMobile
-          ? <ActionsMenuMobile id={id} commentType={commentType} tmsId={tmsId} header={header} />
-          : <ActionsMenuDesktop id={id} commentType={commentType} tmsId={tmsId} header={header} />
+            ? <ActionsMenuMobile id={id} commentType={commentType} tmsId={tmsId} header={header} />
+            : <ActionsMenuDesktop id={id} commentType={commentType} tmsId={tmsId} header={header} />
         }
         title={username}
         subheader={timeAgo}
@@ -54,7 +54,7 @@ const ReactionsCardHeader = ({ userData, setShares, isMobile, commentType, tmsId
         setShares={setShares}
       />
     </ShareContext.Provider>
-    
+
   );
 };
 
