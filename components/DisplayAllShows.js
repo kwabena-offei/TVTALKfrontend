@@ -92,7 +92,6 @@ const DisplayAllShows = ({ categories, network }) => {
     // If an item ID was provided, scroll it into view
     if (network) {
       const itemElement = document.getElementById(`network-${network}`);
-      console.log({ id: `network-${network}` })
       if (itemElement) {
         itemElement.scrollIntoView({ inline: 'start', behavior: 'instant' });
         // itemElement.scrollIntoView({ inline: 'start', block: 'nearest', behavior: 'instant' });

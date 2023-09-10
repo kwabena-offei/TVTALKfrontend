@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import { useState } from "react";
 
 const NetworkSelector = ({ activeNetwork }) => {
-  console.log({ activeNetwork })
   const StyledTile = styled(NetworkIcon)`
     scroll-snap-align: start;
   `

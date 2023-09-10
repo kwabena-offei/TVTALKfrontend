@@ -19,7 +19,7 @@ export async function getStaticProps({ params }) {
     const shows = category[1].results
     return {
       title: category[0],
-      shows: shows.? filter((show, index) => {
+      shows: shows?.filter((show, index) => {
         if (index === 0) return true
         const sameTitle = show.title === shows[index - 1].title
         const sameSeriesId = show.seriesId === shows[index - 1].seriesId
@@ -73,7 +73,6 @@ export async function getStaticPaths() {
 }
 
 function transformAiringsData(station) {
-  console.log({ station })
   return station.airings.map((airing) => {
     const program = { ...airing.program };
     program.channel = airing.channel || station.channel || '';

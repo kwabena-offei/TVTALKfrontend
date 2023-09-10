@@ -33,7 +33,6 @@ export async function getServerSideProps(context) {
 
 
   const heroImageUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageAspectTV=16x9&imageSize=Ms&imageText=false`;
-  console.log({ heroImageUrl })
   const heroImageResponse = await fetch(heroImageUrl);
   const heroImages = await heroImageResponse.json();
   let heroImage = heroImages.find(({ category }) => category === 'Iconic') || heroImages[0];
