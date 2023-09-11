@@ -38,12 +38,15 @@ const NetworkSelector = ({ activeNetwork }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const TileWrapper = styled('div')(({ expanded }) => ({
-    display: 'flex',
-    gap: '15px',
-    overflowX: expanded ? 'hidden' : 'auto',
+    gap: 15,
+    overflowX: 'auto',
+    overflowY: expanded ? 'auto' : 'hidden', // Allow vertical scrolling when expanded
     flexWrap: expanded ? 'wrap' : 'nowrap',
-    overflowY: 'hidden',
-    scrollSnapType: 'x mandatory',
+    display: expanded ? 'grid' : 'flex',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    WebkitOverflowScrolling: 'touch',
+    scrollSnapY: 'mandatory',
+    scrollSnapType: 'both mandatory',
     '&::-webkit-scrollbar': {
       display: 'none',
     },
@@ -51,14 +54,16 @@ const NetworkSelector = ({ activeNetwork }) => {
     '& > div': {
       scrollSnapAlign: 'start',
     },
-    ...(expanded && {
+    '@media (min-width: 900px)': {
       display: 'grid',
-      gridTemplateColumns: 'repeat(2, 1fr)',
-    }),
-    '@media (max-width: 900px)': {
-      // Adjust styles for mobile if necessary
-    },
+      gridTemplateColumns: 'repeat(6, 1fr)',
+      overflowX: 'initial',
+      maxHeight: expanded ? 'auto' : '360px',
+      overflow: 'hidden',
+    }
   }));
+
+
 
 
   return (

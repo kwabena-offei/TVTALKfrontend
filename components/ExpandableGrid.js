@@ -59,6 +59,7 @@ function ExpandableGrid({ tvShows, title }) {
     fontWeight: 700,
     lineHeight: '130%',
     letterSpacing: '0.4px',
+    scrollSnapAlign: 'start',
     marginBottom: '25px',
     '@media (max-width: 600px)': {
       fontSize: '20px',
@@ -99,7 +100,7 @@ function ExpandableGrid({ tvShows, title }) {
                 </Typography>
                 <Grid container spacing={1}>
                   <Grid item>
-                    <Link href={`/chat/${tvShow.tmsId}`} passHref>
+                    <Link href={`/chat/${tvShow.tmsId}`}>
                       <BlueButton
                         title='Chat'
                       />

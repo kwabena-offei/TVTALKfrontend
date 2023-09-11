@@ -23,7 +23,7 @@ const NetworkIcon = ({ network, isActive, type }) => {
   }
 
   return (
-    <div key={assetName} style={{ width: 178, height: 80 }} id={`network-${network.slug || network.stationId}`}>
+    <div key={assetName} id={`network-${network.slug || network.stationId}`}>
       <Link href={url}>
         <a>
           <img
