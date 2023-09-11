@@ -108,9 +108,12 @@ function ExpandableGrid({ tvShows, title }) {
 
                   </Grid>
                   <Grid item>
-                    <Button onClick={() => handleAbout(tvShow.tmsId)} style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
-                      <Typography sx={{ color: '#919CC0' }} variant='string'>About</Typography>
-                    </Button>
+                    <Link href={`/programs/${tvShow.tmsId}/about`}>
+                      <Button style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
+
+                        <Typography sx={{ color: '#919CC0' }} variant='string'>About</Typography>
+                      </Button>
+                    </Link>
                   </Grid>
                   <Grid item>
                     <HeartButton />

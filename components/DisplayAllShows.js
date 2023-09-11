@@ -77,13 +77,7 @@ const DisplayAllShows = ({ categories, network }) => {
 
 
   useEffect(() => {
-    // If an item ID was provided, scroll it into view
     if (network) {
-      const itemElement = document.getElementById(`network-${network}`);
-      if (itemElement) {
-        itemElement.scrollIntoView({ inline: 'start', behavior: 'instant' });
-        // itemElement.scrollIntoView({ inline: 'start', block: 'nearest', behavior: 'instant' });
-      }
     }
   }, [network]);
 

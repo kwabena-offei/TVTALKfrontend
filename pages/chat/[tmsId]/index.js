@@ -37,12 +37,16 @@ export async function getServerSideProps(context) {
   } catch (error) {
   }
 
-  const heroImageUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageAspectTV=16x9&imageSize=Ms&imageText=false`;
-
-  const heroImageResponse = await fetch(heroImageUrl);
-  const heroImages = await heroImageResponse.json();
-  let heroImage = heroImages.find(({ category }) => category === 'Iconic') || heroImages[0];
-  heroImage = `https://${heroImage.uri}`;
+  let heroImage = `https://${show.preferred_image_uri}`;
+  try {
+    const heroImageUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageAspectTV=16x9&imageSize=Ms&imageText=false`;
+    const heroImageResponse = await fetch(heroImageUrl);
+    const heroImages = await heroImageResponse.json();
+    heroImage = heroImages.find(({ category }) => category === 'Iconic') || heroImages[0];
+    heroImage = `https://${heroImage.uri}`;
+  } catch (error) {
+    console.log(`Error fetching hero image`, error)
+  }
 
   return {
     props: {
@@ -50,7 +54,7 @@ export async function getServerSideProps(context) {
       comments,
       profile,
       isAuth,
-      heroImage
+      heroImage: heroImage || ''
     }, // will be passed to the page component as props
   };
 }

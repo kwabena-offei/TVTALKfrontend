@@ -12,6 +12,7 @@ import SeriesPhotoSlider from '../../../components/SeriesPhotosSlider';
 import Container from '@mui/material/Container';
 import Head from 'next/head';
 import useAxios from "../../../services/api";
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 
@@ -114,18 +115,29 @@ export async function getStaticProps({ params }) {
   }
 
   const photos = await photosResponse.json();
-  const heroImages = await heroImageResponse.json();
-  const heroImage = heroImages.find(({ category }) => category === 'Iconic') || heroImages[0];
+  let heroImage = `https://${details.preferred_image_uri}`;
+
+  try {
+    heroImages = await heroImageResponse.json();
+    heroImage = heroImages.find(({ category }) => category === 'Iconic') || heroImages[0];
+    heroImage = `https://${heroImage?.uri}`;
+  } catch (error) {
+    console.error("Error fetching hero image:", error);
+  }
 
   if (details.cast) {
-    details.cast = await Promise.all(details.cast.map(async (actor) => {
-      const actorImagesUrl = `https://api.tvtalk.app/data/v1.1/celebs/${actor.personId}/images?imageSize=Md`;
-      const actorImagesResponse = await fetch(actorImagesUrl);
-      const actorImages = await actorImagesResponse.json();
-      const actorImage = actorImages.find((image) => image.seriesId === tmsId) || actorImages[0];
-      actor.imageUrl = `https://${actorImage?.uri}`;
-      return actor;
-    }));
+    try {
+      details.cast = await Promise.all(details.cast.map(async (actor) => {
+        const actorImagesUrl = `https://api.tvtalk.app/data/v1.1/celebs/${actor.personId}/images?imageSize=Md`;
+        const actorImagesResponse = await fetch(actorImagesUrl);
+        const actorImages = await actorImagesResponse.json();
+        const actorImage = actorImages.find((image) => image.seriesId === tmsId) || actorImages[0];
+        actor.imageUrl = `https://${actorImage?.uri}`;
+        return actor;
+      }));
+    } catch (error) {
+      console.error("Error fetching cast images:", error);
+    }
   } else {
     details.cast = [];
   }
@@ -138,7 +150,7 @@ export async function getStaticProps({ params }) {
     props: {
       details,
       photos,
-      heroImage: `https://${heroImage?.uri}`
+      heroImage
     }
   };
 }
@@ -271,9 +283,11 @@ const About = ({ heroImage, details, photos }) => {
                   </Typography>
                 </StyledDescription>
                 <Box sx={{ display: 'flex', gap: '20px', marginTop: '36px' }}>
-                  <BlueButton
-                    title='Chat'
-                  />
+                  <Link href={`/chat/${tmsId}`}>
+                    <BlueButton
+                      title='Chat'
+                    />
+                  </Link>
                   <HeartButton />
                 </Box>
               </StyledDetailsBox>
