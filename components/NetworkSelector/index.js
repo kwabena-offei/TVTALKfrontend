@@ -2,22 +2,22 @@ import { Button, Typography, Accordion, AccordionSummary, AccordionDetails, Box 
 import streaming from "./streaming.json";
 import networks from "./networks.json";
 import NetworkIcon from "./NetworkIcon";
-import styled from 'styled-components';
 import { useState } from "react";
+import { styled } from '@mui/system';
 
 const NetworkSelector = ({ activeNetwork }) => {
-  const StyledTile = styled(NetworkIcon)`
-    scroll-snap-align: start;
-  `
+  const StyledTile = styled(NetworkIcon)({
+    scrollSnapAlign: 'start',
+  });
 
   const otherTiles = [{
     title: 'Everything',
-    assetName: 'Everything',
+    assetName: 'everything',
     slug: 'everything',
     path: '/',
   }, {
     title: 'Live',
-    assetName: 'Live',
+    assetName: 'live',
     slug: 'live',
     path: '/guide/live'
   }].map((network) => {
@@ -36,40 +36,29 @@ const NetworkSelector = ({ activeNetwork }) => {
   // tiles = tiles.sort((a, b) => (a.slug === activeNetwork ? -1 : b.slug === activeNetwork ? 1 : 0));
 
   const [isExpanded, setIsExpanded] = useState(false);
-  const TileWrapper = styled.div`
-  display: flex;
-  gap: 15px;
-  overflow-x: ${props => props.expanded ? 'hidden' : 'auto'};
-  flex-wrap: ${props => props.expanded ? 'wrap' : 'nowrap'};
-  overflow-y: hidden;
-  
-  /* Scroll Snap */
-  scroll-snap-type: x mandatory;
 
-  /* Hide scrollbar for Chrome, Safari, and Opera */
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Hide scrollbar for IE and Edge */
-  -ms-overflow-style: none;
-
-  /* Grid styles for expanded view */
-  ${props => props.expanded && `
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-  `}
-  
-  /* Children styles */
-  & > div {
-    /* Snap alignment */
-    scroll-snap-align: start;
-  }
-
-  @media (max-width: 900px) {
-    // Adjust styles for mobile if necessary
-  }
-`;
+  const TileWrapper = styled('div')(({ expanded }) => ({
+    display: 'flex',
+    gap: '15px',
+    overflowX: expanded ? 'hidden' : 'auto',
+    flexWrap: expanded ? 'wrap' : 'nowrap',
+    overflowY: 'hidden',
+    scrollSnapType: 'x mandatory',
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
+    msOverflowStyle: 'none',
+    '& > div': {
+      scrollSnapAlign: 'start',
+    },
+    ...(expanded && {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+    }),
+    '@media (max-width: 900px)': {
+      // Adjust styles for mobile if necessary
+    },
+  }));
 
 
   return (

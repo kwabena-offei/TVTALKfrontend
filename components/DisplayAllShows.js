@@ -6,23 +6,16 @@ import CardMedia from '@mui/material/CardMedia';
 import Carousel from 'react-elastic-carousel';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useRouter } from 'next/router'
-import HeartButton from '../components/HeartButton';
-import BlueButton from '../components/BlueButton';
-import NetworkSelector from '../components/NetworkSelector'
+import HeartButton from './HeartButton';
+import BlueButton from './BlueButton';
+import NetworkSelector from './NetworkSelector'
 import Image from 'next/image'
-import styled from 'styled-components';
-import ExpandableGrid from '../components/ExpandableGrid';
+import { styled } from '@mui/system';
+import ExpandableGrid from './ExpandableGrid';
 import Container from '@mui/material/Container';
 
 const DisplayAllShows = ({ categories, network }) => {
   const router = useRouter()
-  const [windowWidth, setWindowWidth] = useState(null);
-
-  const convertToSlug = (name) => {
-    let slug = ''
-    slug = name.replace('%20', '-').toLowerCase()
-    return slug
-  }
 
   // Pushes tmsID to the about page
   const handleAbout = (tmsId, title) => {
@@ -32,61 +25,56 @@ const DisplayAllShows = ({ categories, network }) => {
     router.push({ pathname: '/chat/[tmsId]', query: { tmsId } })
   }
 
-  const Title = styled.h1`
-  color: var(--text-color, #EFF2FD);
-  text-align: center;
-  font-feature-settings: 'calt' off;
-  font-family: 'Gilroy';
-  font-size: 30px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 120%; /* 36px */
-  text-transform: capitalize;
+  const Title = styled('h1')({
+    color: 'var(--text-color, #EFF2FD)',
+    textAlign: 'center',
+    fontFeatureSettings: "'calt' off",
+    fontFamily: 'Gilroy',
+    fontSize: '30px',
+    fontStyle: 'normal',
+    fontWeight: 700,
+    lineHeight: '120%', // 36px
+    textTransform: 'capitalize',
+    '@media (max-width: 600px)': {
+      width: '335px',
+      margin: '0 auto',
+    },
+    '@media (min-width: 600px)': {
+      fontSize: '64px',
+      lineHeight: '120%', // This equals 76.8px
+    },
+  });
 
+  const Subtitle = styled('h2')({
+    color: 'var(--text-color, #EFF2FD)',
+    textAlign: 'center',
+    fontFeatureSettings: "'calt' off",
+    fontFamily: 'Gilroy',
+    fontSize: '16px',
+    fontStyle: 'normal',
+    fontWeight: 500,
+    lineHeight: '120%', // 19.2px
+    '@media (min-width: 600px)': {
+      fontSize: '32px',
+      lineHeight: '120%', // This equals 38.4px
+    },
+  });
 
-  @media (max-width: 600px) { 
-    width: 335px;
-    margin: 0 auto;
-  }
+  const StyledBox = styled('div')({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '600px',
+    background: "linear-gradient(rgba(9, 15, 39, 0.32), rgba(9, 15, 39, 0.32)), url('/assets/header.jpg')",
+    backgroundSize: 'cover, cover',
+    backgroundPosition: 'center, center',
+    backgroundRepeat: 'no-repeat, no-repeat',
+    '@media (max-width: 600px)': {
+      height: 'calc(45vh)',
+    },
+  });
 
-  @media (min-width: 600px) { 
-    font-size: 64px;
-    line-height: 120%; /* This equals 76.8px */
-  }
-`;
-
-  const Subtitle = styled.h2`
-  color: var(--text-color, #EFF2FD);
-  text-align: center;
-  font-feature-settings: 'calt' off;
-  font-family: 'Gilroy';
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 120%; /* 19.2px */
-
-  @media (min-width: 600px) { 
-    font-size: 32px;
-    line-height: 120%; /* This equals 38.4px */
-  }
-`;
-
-
-  const StyledBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 600px;
-  background: linear-gradient(rgba(9, 15, 39, 0.32), rgba(9, 15, 39, 0.32)), url(/assets/header.jpg);
-  background-size: cover, cover;
-  background-position: center, center;
-  background-repeat: no-repeat, no-repeat;
-
-  @media (max-width: 600px) { /* Adjust the breakpoint as needed */
-    height: calc(45vh);
-  }
-`;
 
   useEffect(() => {
     // If an item ID was provided, scroll it into view
@@ -102,12 +90,10 @@ const DisplayAllShows = ({ categories, network }) => {
 
   return (
     <>
-      <Box>
-        <StyledBox>
-          <Title>Let's start a community of TV fans</Title>
-          <Subtitle>Press "Chat" and post a message!</Subtitle>
-        </StyledBox>
-      </Box>
+      <StyledBox>
+        <Title>Let's start a community of TV fans</Title>
+        <Subtitle>Press "Chat" and post a message!</Subtitle>
+      </StyledBox>
 
 
       <Box className='wrapper' >

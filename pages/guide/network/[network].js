@@ -73,7 +73,11 @@ export async function getStaticPaths() {
 }
 
 function transformAiringsData(station) {
-  return station.airings.map((airing) => {
+  if (!station?.airings?.length) {
+    return []
+  }
+
+  return station?.airings.map((airing) => {
     const program = { ...airing.program };
     program.channel = airing.channel || station.channel || '';
     program.network = station.affiliateCallSign || station.channel || '';

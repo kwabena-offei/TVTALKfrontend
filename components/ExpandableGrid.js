@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react';
 import Image from 'next/image';
-import styled from 'styled-components';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -9,6 +8,7 @@ import { Button, Grid, Typography, IconButton, Accordion, AccordionSummary, Acco
 import HeartButton from '../components/HeartButton';
 import BlueButton from '../components/BlueButton';
 import Link from 'next/link';
+import { styled } from '@mui/system';
 
 
 function ExpandableGrid({ tvShows, title }) {
@@ -17,71 +17,54 @@ function ExpandableGrid({ tvShows, title }) {
   const collapsedCount = 4;
   const displayedShows = expanded ? tvShows : tvShows.slice(0, collapsedCount);
 
-  const Container = styled.div`
-  gap: 30px;
-  overflow-x: ${props => props.expanded ? 'hidden' : 'auto'};
-  overflow-y: hidden; /* Prevent vertical scrolling */
-  flex-wrap: ${props => props.expanded ? 'wrap' : 'nowrap'};
-  display: flex;
-  -webkit-overflow-scrolling: touch;
-  flex-grow: 1;
+  const Container = styled('div')(({ expanded }) => ({
+    gap: '30px',
+    overflowX: expanded ? 'hidden' : 'auto',
+    overflowY: 'hidden',
+    flexWrap: expanded ? 'wrap' : 'nowrap',
+    display: 'flex',
+    WebkitOverflowScrolling: 'touch',
+    flexGrow: 1,
+    scrollSnapType: 'both mandatory',
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
+    msOverflowStyle: 'none',
+    '& > div': {
+      scrollSnapAlign: 'start',
+    },
+    '@media (min-width: 900px)': {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      overflowX: 'initial',
+      maxHeight: expanded ? 'auto' : '360px',
+      overflow: 'hidden',
+    },
+  }));
 
-  /* Scroll Snap */
-  scroll-snap-type: both mandatory;
+  const Item = styled('div')(({ expanded }) => ({
+    flex: '0 0 calc(80% - 30px)',
+    ...(expanded && {
+      flex: '0 0 100%',
+    }),
+    '@media (min-width: 900px)': {
+      flex: 'initial',
+    },
+  }));
 
-  /* Hide scrollbar for Chrome, Safari, and Opera */
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Hide scrollbar for IE and Edge */
-  -ms-overflow-style: none;
-
-  /* Children styles for scroll snap */
-  & > div {
-    scroll-snap-align: start;
-  }
-
-  /* Desktop */
-  @media (min-width: 900px) {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    overflow-x: initial;
-    max-height: ${props => props.expanded ? 'auto' : '360px'};
-    overflow: hidden;
-  }
-`;
-
-  const Item = styled.div`
-    flex: 0 0 calc(80% - 30px); /* Default for mobile horizontal scrolling, 1.25 items visible */
-
-    /* Expanded state on mobile */
-    ${props => props.expanded && `
-      flex: 0 0 100%; /* Take full width when expanded */
-    `}
-
-    /* Desktop */
-    @media (min-width: 900px) {
-      flex: initial;
-    }
-  `;
-
-
-  const StyledTypography = styled(Typography)`
-    color: #EFF2FD;
-    font-family: 'Gilroy';
-    font-size: 40px;
-    font-weight: 700;
-    line-height: 130%;
-    letter-spacing: 0.4px;
-    margin-bottom: 25px;
-
-    /* Mobile */
-    @media (max-width: 600px) {
-      font-size: 20px;
-      margin-bottom: 15px;
-    }
-  `;
+  const StyledTypography = styled(Typography)({
+    color: '#EFF2FD',
+    fontFamily: 'Gilroy',
+    fontSize: '40px',
+    fontWeight: 700,
+    lineHeight: '130%',
+    letterSpacing: '0.4px',
+    marginBottom: '25px',
+    '@media (max-width: 600px)': {
+      fontSize: '20px',
+      marginBottom: '15px',
+    },
+  });
 
 
   return (
