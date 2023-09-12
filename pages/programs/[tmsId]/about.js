@@ -137,10 +137,12 @@ export async function getStaticProps({ params }) {
     details = await otherDetailsResponse.json();
   }
 
-  let heroImageDesktop = `https://${details.preferred_image_uri}`;
-  let heroImageMobile = `https://${details.preferred_image_uri}`;
+  let defaultImage = `https://${details.preferred_image_uri}`;
+  let heroImageDesktop = defaultImage;
+  let heroImageMobile = defaultImage;
   try {
     heroImageDesktop = photos.find((photo) => photo.aspect === '16x9' && photo.category === 'Iconic') || photos[0];
+    console.log("NOW IT IS", heroImageDesktop)
     heroImageDesktop = `https://${heroImageDesktop.uri}`;
 
     heroImageMobile = photos.find((photo) => photo.aspect === '2x3' && photo.category === 'Iconic') || photos[0];
@@ -172,8 +174,8 @@ export async function getStaticProps({ params }) {
     props: {
       details,
       photos,
-      heroImageDesktop,
-      heroImageMobile
+      heroImageDesktop: heroImageDesktop || defaultImage,
+      heroImageMobile: heroImageMobile || defaultImage
     }
   };
 }
