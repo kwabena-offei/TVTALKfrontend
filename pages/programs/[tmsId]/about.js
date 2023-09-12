@@ -16,22 +16,24 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 
-const StyledHeader = styled(Box)(({ backgroundImage }) => ({
-  // maxHeight: '80vh',
+const StyledHeader = styled(Box)(({ backgroundImageDesktop, backgroundImageMobile }) => ({
   width: '100vw',
   display: 'block',
   justifyContent: 'center',
   marginLeft: -15,
   paddingLeft: 15,
   alignItems: 'center',
-  backgroundSize: 'cover',
+  backgroundSize: 'contain',
   backgroundBlendMode: 'multiply',
   backgroundPositionX: 'center',
-  backgroundImage: `url(${backgroundImage})`,
+  backgroundRepeat: 'no-repeat',
+  backgroundImage: `url(${backgroundImageMobile})`,
   paddingBottom: 30,
   '@media (min-width: 780px)': {
     height: '960px',
-    backgroundPositionX: 'calc(20vw)'
+    backgroundSize: 'cover',
+    backgroundPositionX: 'calc(20vw)',
+    backgroundImage: `url(${backgroundImageDesktop})`,
   }
 }));
 
@@ -44,7 +46,7 @@ const GradientOverlay = styled(Box)({
   marginLeft: -15,
   bottom: 0,
   backgroundBlendMode: 'multiply',
-  backgroundImage: 'linear-gradient(0deg, rgba(9, 15, 39, 1) 50%, rgba(9, 15, 39, 0) 65%)',
+  backgroundImage: 'linear-gradient(0deg, rgba(9, 15, 39, 1) 50%, rgba(9, 15, 39, 0) 70%)',
   '@media (min-width: 780px)': {
     backgroundImage: 'linear-gradient(90deg, rgba(9, 15, 39, 1) 50%, rgba(9, 15, 39, .2) 65%)'
   }
@@ -106,13 +108,11 @@ export async function getStaticProps({ params }) {
   const { tmsId } = params;
 
   const detailsUrl = `https://api.tvtalk.app/shows/${tmsId}`;
-  const photosUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageAspectTV=4x3&imageSize=Md`;
-  const heroImageUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageAspectTV=4x3&imageSize=Ms&imageText=false`;
+  const photosUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageSize=Ms&imageText=false`;
 
-  const [detailsResponse, photosResponse, heroImageResponse] = await Promise.all([
+  const [detailsResponse, photosResponse] = await Promise.all([
     fetch(detailsUrl),
     fetch(photosUrl),
-    fetch(heroImageUrl),
   ]);
 
 
@@ -130,20 +130,23 @@ export async function getStaticProps({ params }) {
   } catch (error) {
     console.error("Error parsing photos response:", error);
   }
+
   if (!details) {
     const otherDetailsUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}`;
     const otherDetailsResponse = await fetch(otherDetailsUrl);
     details = await otherDetailsResponse.json();
   }
 
-  let heroImage = `https://${details.preferred_image_uri}`;
-
+  let heroImageDesktop = `https://${details.preferred_image_uri}`;
+  let heroImageMobile = `https://${details.preferred_image_uri}`;
   try {
-    let heroImages = await heroImageResponse.json();
-    heroImage = heroImages.find(({ category }) => category === 'Iconic') || heroImages[0];
-    heroImage = `https://${heroImage?.uri}`;
+    heroImageDesktop = photos.find((photo) => photo.aspect === '16x9' && photo.category === 'Iconic') || photos[0];
+    heroImageDesktop = `https://${heroImageDesktop.uri}`;
+
+    heroImageMobile = photos.find((photo) => photo.aspect === '2x3' && photo.category === 'Iconic') || photos[0];
+    heroImageMobile = `https://${heroImageMobile.uri}`;
   } catch (error) {
-    console.error("Error fetching hero image:", error);
+    console.log(error)
   }
 
   if (details.cast) {
@@ -169,7 +172,8 @@ export async function getStaticProps({ params }) {
     props: {
       details,
       photos,
-      heroImage
+      heroImageDesktop,
+      heroImageMobile
     }
   };
 }
@@ -186,7 +190,7 @@ export async function getStaticPaths() {
 
 
 
-const About = ({ heroImage, details, photos }) => {
+const About = ({ heroImageDesktop, heroImageMobile, details, photos }) => {
   const { axios } = useAxios();
   const router = useRouter();
   const [ratingCache, setRatingCache] = useState(details.rating_percentage_cache);
@@ -238,13 +242,13 @@ const About = ({ heroImage, details, photos }) => {
         <title>About {title} | TV Talk</title>
         <meta property="og:title" content={`About ${title} | TV Talk`} />
         <meta property="og:description" content={`Learn and chat about ${title} at TV Talk`} />
-        <meta property="og:image" content={heroImage} />
+        <meta property="og:image" content={heroImageDesktop} />
       </Head>
 
       <Container maxWidth="xl">
         <Box sx={{ position: 'relative' }} >
           <GradientOverlay />
-          <StyledHeader backgroundImage={heroImage} >
+          <StyledHeader backgroundImageDesktop={heroImageDesktop} backgroundImageMobile={heroImageMobile} >
             <div style={{ width: '100%', margin: '0 auto', position: 'relative' }}>
               <BackButton
                 title='Back'
