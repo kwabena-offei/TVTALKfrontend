@@ -6,7 +6,7 @@ import StarSmile from './StarSmile';
 import RollingEyesSmile from './RollingEyesSmile';
 import { styled } from '@mui/system';
 
-const StyledTitle = styled(Typography, {})
+const StyledTitle = styled(Typography)
   ({
     color: '#EFF2FD',
     fontSize: '36px',
@@ -17,7 +17,7 @@ const StyledTitle = styled(Typography, {})
     }
   });
 
-const StyledButtonsWrapper = styled(Box, {})
+const StyledButtonsWrapper = styled(Box)
   ({
     ['@media (max-width:780px)']: {
       display: 'flex',
@@ -28,7 +28,7 @@ const RatingButtonsGroup = ({ love, like, dislike, tmsId, onRate, userRating }) 
 
   return (
     <Box
-      sx={{ marginTop: '60px', display: 'flex', alignItems: 'flex-end' }}
+      sx={{ marginTop: '60px' }}
     >
       <StyledTitle
         variant='string'>

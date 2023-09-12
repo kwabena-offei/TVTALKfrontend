@@ -16,34 +16,41 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 
-const StyledHeader = styled(Box)`
-  height: 960px;
-  width: 100vw;
-  display: flex;
-  justifyContent: center;
-  alignItems: center;
-
-  &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, rgba(9, 15, 39, 1) 50%, rgba(9, 15, 39, .2) 65%);
-      background-blend-mode: multiply;
+const StyledHeader = styled(Box)(({ backgroundImage }) => ({
+  // maxHeight: '80vh',
+  width: '100vw',
+  display: 'block',
+  justifyContent: 'center',
+  marginLeft: -15,
+  paddingLeft: 15,
+  alignItems: 'center',
+  backgroundSize: 'cover',
+  backgroundBlendMode: 'multiply',
+  backgroundPositionX: 'center',
+  backgroundImage: `url(${backgroundImage})`,
+  paddingBottom: 30,
+  '@media (min-width: 780px)': {
+    height: '960px',
+    backgroundPositionX: 'calc(20vw)'
   }
+}));
 
-  @media (max-width: 780px) {
-      height: 400px;
+const GradientOverlay = styled(Box)({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100vw',
+  right: 0,
+  marginLeft: -15,
+  bottom: 0,
+  backgroundBlendMode: 'multiply',
+  backgroundImage: 'linear-gradient(0deg, rgba(9, 15, 39, 1) 50%, rgba(9, 15, 39, 0) 65%)',
+  '@media (min-width: 780px)': {
+    backgroundImage: 'linear-gradient(90deg, rgba(9, 15, 39, 1) 50%, rgba(9, 15, 39, .2) 65%)'
   }
-`;
+});
 
-const StyledContentWrapper = styled(Box, `
-`)
-
-const StyledDescription = styled(Box, {})
+const StyledDescription = styled(Box)
   ({
     width: '700px',
     ['@media (max-width:780px)']: {
@@ -51,7 +58,7 @@ const StyledDescription = styled(Box, {})
     }
   });
 
-const StyledSelectsBox = styled(Box, {})
+const StyledSelectsBox = styled(Box)
   ({
     width: '491px',
     marginTop: '10px',
@@ -64,7 +71,7 @@ const StyledSelectsBox = styled(Box, {})
     }
   });
 
-const StyledBottomBox = styled(Box, {})
+const StyledBottomBox = styled(Box)
   ({
     // marginLeft: '194px',
     ['@media (max-width:780px)']: {
@@ -72,7 +79,7 @@ const StyledBottomBox = styled(Box, {})
     }
   });
 
-const StyledDetailsBox = styled(Box, {})
+const StyledDetailsBox = styled(Box)
   ({
     marginTop: 36,
     marginBottom: 24,
@@ -84,8 +91,10 @@ const StyledDetailsBox = styled(Box, {})
     }
   });
 
-const StyledTitleBox = styled(Box, {})
+const StyledTitleBox = styled(Box)
   ({
+    paddingTop: 145,
+    marginBottom: 30,
     textAlign: 'left',
     ['@media (max-width:780px)']: {
       position: 'relative',
@@ -106,19 +115,31 @@ export async function getStaticProps({ params }) {
     fetch(heroImageUrl),
   ]);
 
-  let details = await detailsResponse.json();
 
+  let details;
+  let photos = [];
+
+  try {
+    details = await detailsResponse.json();
+  } catch (error) {
+    console.error("Error parsing details response:", error);
+  }
+
+  try {
+    photos = await photosResponse.json();
+  } catch (error) {
+    console.error("Error parsing photos response:", error);
+  }
   if (!details) {
     const otherDetailsUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}`;
     const otherDetailsResponse = await fetch(otherDetailsUrl);
     details = await otherDetailsResponse.json();
   }
 
-  const photos = await photosResponse.json();
   let heroImage = `https://${details.preferred_image_uri}`;
 
   try {
-    heroImages = await heroImageResponse.json();
+    let heroImages = await heroImageResponse.json();
     heroImage = heroImages.find(({ category }) => category === 'Iconic') || heroImages[0];
     heroImage = `https://${heroImage?.uri}`;
   } catch (error) {
@@ -142,9 +163,7 @@ export async function getStaticProps({ params }) {
     details.cast = [];
   }
 
-  if (!details.ranking_cache) {
-    details.ranking_cache = {}
-  }
+  details.ranking_cache = details.ranking_cache || {};
 
   return {
     props: {
@@ -223,20 +242,10 @@ const About = ({ heroImage, details, photos }) => {
       </Head>
 
       <Container maxWidth="xl">
-        <Box className="about" sx={{ position: 'relative' }} >
-
-          <StyledHeader
-            className="about__header"
-            style={{
-              background: `url(${heroImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundBlendMode: 'multiply',
-              backgroundPositionX: 'calc(20vw)'
-            }}
-          >
+        <Box sx={{ position: 'relative' }} >
+          <GradientOverlay />
+          <StyledHeader backgroundImage={heroImage} >
             <div style={{ width: '100%', margin: '0 auto', position: 'relative' }}>
-
               <BackButton
                 title='Back'
               />
@@ -248,7 +257,7 @@ const About = ({ heroImage, details, photos }) => {
                 }}
               >
                 <Typography
-                  sx={{ color: '#EFF2FD', zIndex: 1, fontWeight: 700, textAlign: 'left' }}
+                  sx={{ color: '#EFF2FD', fontWeight: 700, textAlign: 'left' }}
                   variant='h2'>
                   {title}
                 </Typography>
@@ -293,23 +302,21 @@ const About = ({ heroImage, details, photos }) => {
               </StyledDetailsBox>
             </div>
           </StyledHeader>
-
-          <div style={{ width: 'calc(100vw)', margin: '0', marginLeft: 0, paddingLeft: 0, position: 'relative' }}>
-            <StyledBottomBox>
-              <RatingButtonsGroup
-                userRating={userRating}
-                love={ratingCache.love}
-                like={ratingCache.like}
-                dislike={ratingCache.dislike}
-                onRate={onRate}
-                tmsId={tmsId}
-              />
-              <CastSlider photos={photos} cast={details.cast} />
-              <SeriesPhotoSlider photos={photos} />
-            </StyledBottomBox>
-          </div>
         </Box>
-      </Container>
+
+        <StyledBottomBox>
+          <RatingButtonsGroup
+            userRating={userRating}
+            love={ratingCache.love}
+            like={ratingCache.like}
+            dislike={ratingCache.dislike}
+            onRate={onRate}
+            tmsId={tmsId}
+          />
+          <CastSlider photos={photos} cast={details.cast} />
+          <SeriesPhotoSlider photos={photos} />
+        </StyledBottomBox>
+      </Container >
     </>
   );
 };
