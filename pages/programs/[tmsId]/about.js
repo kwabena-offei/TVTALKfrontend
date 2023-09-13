@@ -12,37 +12,47 @@ import SeriesPhotoSlider from '../../../components/SeriesPhotosSlider';
 import Container from '@mui/material/Container';
 import Head from 'next/head';
 import useAxios from "../../../services/api";
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 
-const StyledHeader = styled(Box)`
-  height: 960px;
-  width: 100vw;
-  display: flex;
-  justifyContent: center;
-  alignItems: center;
-
-  &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, rgba(9, 15, 39, 1) 50%, rgba(9, 15, 39, .2) 65%);
-      background-blend-mode: multiply;
+const StyledHeader = styled(Box)(({ backgroundImageDesktop, backgroundImageMobile }) => ({
+  width: '100vw',
+  display: 'block',
+  justifyContent: 'center',
+  marginLeft: -15,
+  paddingLeft: 15,
+  alignItems: 'center',
+  backgroundSize: 'contain',
+  backgroundBlendMode: 'multiply',
+  backgroundPositionX: 'center',
+  backgroundRepeat: 'no-repeat',
+  backgroundImage: `url(${backgroundImageMobile})`,
+  paddingBottom: 30,
+  '@media (min-width: 780px)': {
+    height: '960px',
+    backgroundSize: 'cover',
+    backgroundPositionX: 'calc(20vw)',
+    backgroundImage: `url(${backgroundImageDesktop})`,
   }
+}));
 
-  @media (max-width: 780px) {
-      height: 400px;
+const GradientOverlay = styled(Box)({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100vw',
+  right: 0,
+  marginLeft: -15,
+  bottom: 0,
+  backgroundBlendMode: 'multiply',
+  backgroundImage: 'linear-gradient(0deg, rgba(9, 15, 39, 1) 50%, rgba(9, 15, 39, 0) 70%)',
+  '@media (min-width: 780px)': {
+    backgroundImage: 'linear-gradient(90deg, rgba(9, 15, 39, 1) 50%, rgba(9, 15, 39, .2) 65%)'
   }
-`;
+});
 
-const StyledContentWrapper = styled(Box, `
-`)
-
-const StyledDescription = styled(Box, {})
+const StyledDescription = styled(Box)
   ({
     width: '700px',
     ['@media (max-width:780px)']: {
@@ -50,7 +60,7 @@ const StyledDescription = styled(Box, {})
     }
   });
 
-const StyledSelectsBox = styled(Box, {})
+const StyledSelectsBox = styled(Box)
   ({
     width: '491px',
     marginTop: '10px',
@@ -63,7 +73,7 @@ const StyledSelectsBox = styled(Box, {})
     }
   });
 
-const StyledBottomBox = styled(Box, {})
+const StyledBottomBox = styled(Box)
   ({
     // marginLeft: '194px',
     ['@media (max-width:780px)']: {
@@ -71,7 +81,7 @@ const StyledBottomBox = styled(Box, {})
     }
   });
 
-const StyledDetailsBox = styled(Box, {})
+const StyledDetailsBox = styled(Box)
   ({
     marginTop: 36,
     marginBottom: 24,
@@ -83,8 +93,10 @@ const StyledDetailsBox = styled(Box, {})
     }
   });
 
-const StyledTitleBox = styled(Box, {})
+const StyledTitleBox = styled(Box)
   ({
+    paddingTop: 145,
+    marginBottom: 30,
     textAlign: 'left',
     ['@media (max-width:780px)']: {
       position: 'relative',
@@ -92,50 +104,95 @@ const StyledTitleBox = styled(Box, {})
     }
   });
 
-export async function getServerSideProps({ req, res, query }) {
-  // Set cache for a week
-  res.setHeader('Cache-Control', 'public, s-maxage=604800, stale-while-revalidate=86400');
+export async function getStaticProps({ params }) {
+  const { tmsId } = params;
 
-  const detailsUrl = `https://api.tvtalk.app/shows/${query.tmsId}`;
-  const photosUrl = `https://api.tvtalk.app/data/v1.1/programs/${query.tmsId}/images?imageAspectTV=4x3&imageSize=Md`;
-  const heroImageUrl = `https://api.tvtalk.app/data/v1.1/programs/${query.tmsId}/images?imageAspectTV=4x3&imageSize=Ms&imageText=false`;
+  const detailsUrl = `https://api.tvtalk.app/shows/${tmsId}`;
+  const photosUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageSize=Ms&imageText=false`;
 
-  const [detailsResponse, photosResponse, heroImageResponse] = await Promise.all([
+  const [detailsResponse, photosResponse] = await Promise.all([
     fetch(detailsUrl),
     fetch(photosUrl),
-    fetch(heroImageUrl),
   ]);
 
-  const details = await detailsResponse.json();
-  const photos = await photosResponse.json();
-  const heroImages = await heroImageResponse.json();
-  const heroImage = heroImages.find(({ category }) => category === 'Iconic') || heroImages[0];
+
+  let details;
+  let photos = [];
+
+  try {
+    details = await detailsResponse.json();
+  } catch (error) {
+    console.error("Error parsing details response:", error);
+  }
+
+  try {
+    photos = await photosResponse.json();
+  } catch (error) {
+    console.error("Error parsing photos response:", error);
+  }
+
+  if (!details) {
+    const otherDetailsUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}`;
+    const otherDetailsResponse = await fetch(otherDetailsUrl);
+    details = await otherDetailsResponse.json();
+  }
+
+  let defaultImage = `https://${details.preferred_image_uri}`;
+  let heroImageDesktop = defaultImage;
+  let heroImageMobile = defaultImage;
+  try {
+    heroImageDesktop = photos.find((photo) => photo.aspect === '16x9' && photo.category === 'Iconic') || photos[0];
+    console.log("NOW IT IS", heroImageDesktop)
+    heroImageDesktop = `https://${heroImageDesktop.uri}`;
+
+    heroImageMobile = photos.find((photo) => photo.aspect === '2x3' && photo.category === 'Iconic') || photos[0];
+    heroImageMobile = `https://${heroImageMobile.uri}`;
+  } catch (error) {
+    console.log(error)
+  }
 
   if (details.cast) {
-    details.cast = await Promise.all(details.cast.map(async (actor) => {
-      const actorImagesUrl = `https://api.tvtalk.app/data/v1.1/celebs/${actor.personId}/images?imageSize=Md`;
-      const actorImagesResponse = await fetch(actorImagesUrl);
-      const actorImages = await actorImagesResponse.json();
-      const actorImage = actorImages.find((image) => image.seriesId === query.tmsId) || actorImages[0];
-      actor.imageUrl = `https://${actorImage?.uri}`;
-      return actor;
-    }));
+    try {
+      details.cast = await Promise.all(details.cast.map(async (actor) => {
+        const actorImagesUrl = `https://api.tvtalk.app/data/v1.1/celebs/${actor.personId}/images?imageSize=Md`;
+        const actorImagesResponse = await fetch(actorImagesUrl);
+        const actorImages = await actorImagesResponse.json();
+        const actorImage = actorImages.find((image) => image.seriesId === tmsId) || actorImages[0];
+        actor.imageUrl = `https://${actorImage?.uri}`;
+        return actor;
+      }));
+    } catch (error) {
+      console.error("Error fetching cast images:", error);
+    }
   } else {
     details.cast = [];
   }
+
+  details.ranking_cache = details.ranking_cache || {};
 
   return {
     props: {
       details,
       photos,
-      heroImage: `https://${heroImage?.uri}`
+      heroImageDesktop: heroImageDesktop || defaultImage,
+      heroImageMobile: heroImageMobile || defaultImage
     }
+  };
+}
+
+export async function getStaticPaths() {
+  // If you can fetch a list of all possible tmsId values, do it here.
+  // For this example, I'll assume you can't, so we'll use fallback mode.
+
+  return {
+    paths: [], // Empty array means no paths are pre-rendered.
+    fallback: 'blocking' // 'blocking' means new paths will be generated on-demand without showing a loading state.
   };
 }
 
 
 
-const About = ({ heroImage, details, photos }) => {
+const About = ({ heroImageDesktop, heroImageMobile, details, photos }) => {
   const { axios } = useAxios();
   const router = useRouter();
   const [ratingCache, setRatingCache] = useState(details.rating_percentage_cache);
@@ -187,24 +244,14 @@ const About = ({ heroImage, details, photos }) => {
         <title>About {title} | TV Talk</title>
         <meta property="og:title" content={`About ${title} | TV Talk`} />
         <meta property="og:description" content={`Learn and chat about ${title} at TV Talk`} />
-        <meta property="og:image" content={heroImage} />
+        <meta property="og:image" content={heroImageDesktop} />
       </Head>
 
       <Container maxWidth="xl">
-        <Box className="about" sx={{ position: 'relative' }} >
-
-          <StyledHeader
-            className="about__header"
-            style={{
-              background: `url(${heroImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundBlendMode: 'multiply',
-              backgroundPositionX: 'calc(20vw)'
-            }}
-          >
+        <Box sx={{ position: 'relative' }} >
+          <GradientOverlay />
+          <StyledHeader backgroundImageDesktop={heroImageDesktop} backgroundImageMobile={heroImageMobile} >
             <div style={{ width: '100%', margin: '0 auto', position: 'relative' }}>
-
               <BackButton
                 title='Back'
               />
@@ -216,7 +263,7 @@ const About = ({ heroImage, details, photos }) => {
                 }}
               >
                 <Typography
-                  sx={{ color: '#EFF2FD', zIndex: 1, fontWeight: 700, textAlign: 'left' }}
+                  sx={{ color: '#EFF2FD', fontWeight: 700, textAlign: 'left' }}
                   variant='h2'>
                   {title}
                 </Typography>
@@ -251,31 +298,31 @@ const About = ({ heroImage, details, photos }) => {
                   </Typography>
                 </StyledDescription>
                 <Box sx={{ display: 'flex', gap: '20px', marginTop: '36px' }}>
-                  <BlueButton
-                    title='Chat'
-                  />
+                  <Link href={`/chat/${tmsId}`}>
+                    <BlueButton
+                      title='Chat'
+                    />
+                  </Link>
                   <HeartButton />
                 </Box>
               </StyledDetailsBox>
             </div>
           </StyledHeader>
-
-          <div style={{ width: 'calc(100vw)', margin: '0', marginLeft: 0, paddingLeft: 0, position: 'relative' }}>
-            <StyledBottomBox>
-              <RatingButtonsGroup
-                userRating={userRating}
-                love={ratingCache.love}
-                like={ratingCache.like}
-                dislike={ratingCache.dislike}
-                onRate={onRate}
-                tmsId={tmsId}
-              />
-              <CastSlider photos={photos} cast={details.cast} />
-              <SeriesPhotoSlider photos={photos} />
-            </StyledBottomBox>
-          </div>
         </Box>
-      </Container>
+
+        <StyledBottomBox>
+          <RatingButtonsGroup
+            userRating={userRating}
+            love={ratingCache.love}
+            like={ratingCache.like}
+            dislike={ratingCache.dislike}
+            onRate={onRate}
+            tmsId={tmsId}
+          />
+          <CastSlider photos={photos} cast={details.cast} />
+          <SeriesPhotoSlider photos={photos} />
+        </StyledBottomBox>
+      </Container >
     </>
   );
 };

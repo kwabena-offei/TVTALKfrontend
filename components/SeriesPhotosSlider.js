@@ -30,7 +30,7 @@ const SeriesPhotoSlider = ({ photos }) => {
         {'Photos'}
       </Typography>
       <Carousel
-        itemsToShow={isMobile ? 2 : 5}
+        itemsToShow={isMobile ? 1.4 : 5}
         itemsToScroll={2}
         pagination={false}
         itemPadding={[0, 15]}

@@ -24,12 +24,12 @@ const CastSlider = ({ cast }) => {
         {'Cast'}
       </Typography>
       <Carousel
-        itemsToShow={isMobile ? 2 : 6}
+        itemsToShow={isMobile ? 1.3 : 4}
         itemsToScroll={2}
         pagination={false}
         itemPadding={[0, 15]}
         showArrows={false}
-        style={{ marginLeft: -25, paddingLeft: 0 }}
+        style={{ marginLeft: -10, paddingLeft: 0 }}
 
       >
         {cast.map((actor, index) => (

@@ -1,4 +1,5 @@
 import DisplayAllShows from '../../../components/DisplayAllShows'
+import networks from '../../../components/NetworkSelector/networks.json';
 
 export default function StreamingNetwork({ categories, network }) {
   return (
@@ -8,8 +9,8 @@ export default function StreamingNetwork({ categories, network }) {
   )
 }
 
-StreamingNetwork.getInitialProps = async (ctx) => {
-  const { network } = ctx.query;
+export async function getStaticProps({ params }) {
+  const { network } = params;
   const timezone = 'EST';
   const genreShowsReq = await fetch(`https://api.tvtalk.app/shows/genres?station_id=${network}`)
   const genreShows = await genreShowsReq.json()
@@ -18,7 +19,7 @@ StreamingNetwork.getInitialProps = async (ctx) => {
     const shows = category[1].results
     return {
       title: category[0],
-      shows: shows.filter((show, index) => {
+      shows: shows?.filter((show, index) => {
         if (index === 0) return true
         const sameTitle = show.title === shows[index - 1].title
         const sameSeriesId = show.seriesId === shows[index - 1].seriesId
@@ -31,7 +32,7 @@ StreamingNetwork.getInitialProps = async (ctx) => {
   const liveShows = await fetchShows('live', network, timezone);
   // Fetch upcoming shows
   let upcomingShows = await fetchShows('upcoming', network, timezone);
-  upcomingShows = upcomingShows.filter((show, index) => {
+  upcomingShows = upcomingShows?.filter((show, index) => {
     if (index === 0) {
       if (liveShows[0].seriesId === show.seriesId) { return false }
       return true
@@ -56,16 +57,31 @@ StreamingNetwork.getInitialProps = async (ctx) => {
     });
   }
 
+  return { props: { network, categories: categoryShows }, revalidate: 60 * 5 }
+}
 
-  return { network, categories: categoryShows }
+
+export async function getStaticPaths() {
+  const paths = networks.map((network) => {
+    return `/guide/network/${network.stationId}`
+  })
+
+  return {
+    paths,
+    fallback: 'blocking'
+  };
 }
 
 function transformAiringsData(station) {
-  return station.airings.map((airing) => {
+  if (!station?.airings?.length) {
+    return []
+  }
+
+  return station?.airings.map((airing) => {
     const program = { ...airing.program };
-    program.channel = airing.channel;
-    program.network = station.affiliateCallSign;
-    program.airtime = airing.stateTime; // TODO: format time
+    program.channel = airing.channel || station.channel || '';
+    program.network = station.affiliateCallSign || station.channel || '';
+    program.airtime = airing.stateTime || ''; // TODO: format time
     program.preferred_image_uri = program.preferredImage.uri;
     program.preferred_image_uri = program.preferred_image_uri.replace('w=360', 'w=720').replace('h=270', 'h=340');
     return program;

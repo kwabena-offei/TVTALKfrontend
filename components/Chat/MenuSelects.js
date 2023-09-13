@@ -4,7 +4,7 @@ import { useMediaQuery } from '@mui/material'
 import OutlinedSelect from "../OutlinedSelect";
 import { Stack } from "@mui/system";
 
-function parsed (string) {
+function parsed(string) {
   const parsedInt = Number.parseInt(string, 10)
   if (parsedInt === NaN) {
     return 0
@@ -19,8 +19,8 @@ export const MenuSelects = ({ episodes, seasons }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const totalEpisodes = parsed(episodes);
-  const totalSeasons = parsed(seasons);
+  const totalEpisodes = parsed(episodes) || 0;
+  const totalSeasons = parsed(seasons) || 0;
   const episodesList = new Array(totalEpisodes).fill('0').map((_, index) => (`${index + 1}`))
   const seasonsList = new Array(totalSeasons).fill('0').map((_, index) => (`${index + 1}`))
   const sortByList = ['Season', 'Episode']

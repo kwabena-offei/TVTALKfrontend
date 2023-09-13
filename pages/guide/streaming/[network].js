@@ -1,4 +1,5 @@
 import DisplayAllShows from '../../../components/DisplayAllShows'
+import streaming from '../../../components/NetworkSelector/streaming.json';
 
 export default function StreamingNetwork({ categories, network }) {
   return (
@@ -8,8 +9,8 @@ export default function StreamingNetwork({ categories, network }) {
   )
 }
 
-StreamingNetwork.getInitialProps = async (ctx) => {
-  const { network } = ctx.query;
+export async function getStaticProps({ params }) {
+  const { network } = params;
 
   const res = await fetch(`https://api.tvtalk.app/shows/genres?station_id=${network}`)
   const json = await res.json()
@@ -21,5 +22,15 @@ StreamingNetwork.getInitialProps = async (ctx) => {
     }
   })
 
-  return { network, categories: categoryShows }
+  return { props: { network, categories: categoryShows }, revalidate: 60 * 60 }
+}
+
+export async function getStaticPaths() {
+  const paths = streaming.map((network) => {
+    return `/guide/streaming/${network.slug}`
+  })
+  return {
+    paths,
+    fallback: 'blocking'
+  };
 }
