@@ -45,7 +45,7 @@ const FavoriteCard = ({ tvShow, favorites, ...props }) => {
 
   return (
     <StyledCard key={`favorite-show-${id}`}>
-      <CardMedia component="img" image={image} height={240} width={360} />
+      <CardMedia component="img" image={`https://${image}`} height={240} width={360} />
       <CardContent sx={{ paddingX: 2.5, paddingTop: 1.5, paddingBottom: 0.75 }}>
         <Typography
           // gutterBottom

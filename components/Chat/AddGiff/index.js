@@ -40,14 +40,14 @@ const Components = ({ open, handleClose, onGifClick }) => {
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
       maxWidth='md'
-      >
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <DialogTitle>
-            Add Giff to your post
-          </DialogTitle>
-          <SearchBar className={styles.search} />
-        </Box>
-        
+    >
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <DialogTitle>
+          Add Gif to your post
+        </DialogTitle>
+        <SearchBar className={styles.search} />
+      </Box>
+
       <DialogContent sx={{
         height: '50vh'
       }}>
