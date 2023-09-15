@@ -116,7 +116,7 @@ function ExpandableGrid({ tvShows, title }) {
                     </Link>
                   </Grid>
                   <Grid item>
-                    <HeartButton />
+                    <HeartButton identifier={{ tmsId: tvShow.tmsId }} itemId={tvShow.tmsId} itemType={'shows'} />
                   </Grid>
                 </Grid>
               </CardContent>
