@@ -19,7 +19,7 @@ export default function SearchGif({ gifs, open, handleClose, onGifClick }) {
   return (
     <SearchContextManager
       apiKey={apiKey}
-      // shouldDefaultToTrending={false}
+    // shouldDefaultToTrending={false}
     >
       <Components open={open} handleClose={handleClose} onGifClick={onGifClick} />
     </SearchContextManager>

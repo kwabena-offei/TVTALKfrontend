@@ -20,12 +20,12 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 const StyledCard = styled(Card, {
   name: "Favorite",
   slot: "custom-card"
-}) ({
+})({
   backgroundColor: '#131B3F',
   borderRadius: '6px'
 })
 
-const FavoriteCard = ({ tvShow, ...props }) => {
+const FavoriteCard = ({ tvShow, favorites, ...props }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { id, image, title, tmsId } = tvShow;

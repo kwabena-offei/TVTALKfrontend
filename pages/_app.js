@@ -7,6 +7,7 @@ import createEmotionCache from '../util/createEmotionCache';
 import theme from '../styles/theme/theme';
 import { createGlobalStyle } from "styled-components";
 import AppBar from '../components/AppBar';
+import { AuthProvider } from '../util/AuthContext';
 // import '../styles/main.scss'
 
 const GlobalStyle = createGlobalStyle`
@@ -39,32 +40,32 @@ const GlobalStyle = createGlobalStyle`
 const clientSideEmotionCache = createEmotionCache();
 
 function App(props) {
-
   const { Component, emotionCache = clientSideEmotionCache, pageProps, ctx } = props;
-  const getLayout = Component.getLayout || ((page) => page)
+  const getLayout = Component.getLayout || ((page) => page);
+
   return (
     <>
       <CacheProvider value={emotionCache}>
-        <GlobalStyle />
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Box
-            sx={{
-              display: 'flex',
-              minHeight: '100vh',
-              flexDirection: 'column'
-            }}
-          >
-            {/* <Header /> */}
-            <AppBar context={ctx} />
-            {getLayout(<Component {...pageProps} />)}
-            <Footer />
-          </Box>
-        </ThemeProvider>
+        <AuthProvider>
+          <GlobalStyle />
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Box
+              sx={{
+                display: 'flex',
+                minHeight: '100vh',
+                flexDirection: 'column'
+              }}
+            >
+              <AppBar context={ctx} />
+              {getLayout(<Component {...pageProps} />)}
+              <Footer />
+            </Box>
+          </ThemeProvider>
+        </AuthProvider>
       </CacheProvider>
     </>
-
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { IconButton } from '@mui/material';
+import { AuthContext } from '../util/AuthContext';
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
-const HeartButton = ({ onClick }) => {
-
-
-
-
+const HeartButton = ({ itemId, itemType, identifier, onClick }) => {
+  const { isAuthenticated, favorites, toggleFavorite } = useContext(AuthContext);
+  const isFavorited = isAuthenticated && favorites[itemType] && favorites[itemType].includes(itemId);
   return (
     <IconButton
       style={{
@@ -17,10 +17,16 @@ const HeartButton = ({ onClick }) => {
         border: '1.5px solid var(--card-color, #131B3F)'
       }}
       variant='contained'
-      onClick={onClick}
+      onClick={() => toggleFavorite({ identifier: identifier, liked: !isFavorited })}
     >
-      <FavoriteBorderIcon htmlColor='#919CC0' />
-    </IconButton>
+      {
+        isFavorited ? (
+          <FavoriteIcon htmlColor='#919CC0' />
+        ) : (
+          <FavoriteBorderIcon htmlColor='#919CC0' />
+        )
+      }
+    </IconButton >
   );
 };
 
