@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useRouter } from 'next/router';
 import { ChatHeader, ChatContent } from "../../../components/Chat";
 import { isAuthenticated } from '../../../services/isAuth'
@@ -9,12 +9,8 @@ import useSocket from '../../../hooks/useSocket';
 import useAxios from '../../../services/api';
 // import axios from 'axios';
 
-export async function getServerSideProps(context) {
-  context.res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=10, stale-while-revalidate=59'
-  )
-  const { tmsId } = context.query;
+export async function getStaticProps({ params }) {
+  const { tmsId } = params;
   const { axios } = useAxios();
 
   if (!tmsId) {
@@ -23,19 +19,11 @@ export async function getServerSideProps(context) {
     };
   }
 
-  const showResponse = await axios.get(`https://api.tvtalk.app/shows/${tmsId}`);
   const { data: show } = await axios.get(`https://api.tvtalk.app/shows/${tmsId}`);
   const { data: comments } = await axios.get(
     `https://api.tvtalk.app/comments?tms_id=${tmsId}`
   );
-  // -- If User is not authorized profile data will return null and isAuth will be false --
-  const isAuth = isAuthenticated(context)
-  let profile = {}
-  try {
-    let profileResponse = await axios.get('/profile');
-    profile = profileResponse.data;
-  } catch (error) {
-  }
+
 
   let heroImage = `https://${show.preferred_image_uri}`;
   try {
@@ -52,16 +40,42 @@ export async function getServerSideProps(context) {
     props: {
       show,
       comments,
-      profile,
-      isAuth,
       heroImage: heroImage || ''
     }, // will be passed to the page component as props
   };
 }
 
-const Chat = ({ show, comments: serverComments, profile, isAuth, heroImage }) => {
+export async function getStaticPaths() {
+  // If you can fetch a list of all possible tmsId values, do it here.
+  // For this example, I'll assume you can't, so we'll use fallback mode.
+
+  return {
+    paths: [], // Empty array means no paths are pre-rendered.
+    fallback: true
+  };
+}
+
+const Chat = ({ show, comments: serverComments, heroImage }) => {
+  if (!show) {
+    return <></>;
+  }
   const { tmsId } = show;
-  const [comments, setComments] = useState(serverComments)
+  const [comments, setComments] = useState(serverComments);
+  const [profile, setProfile] = useState({});
+  const { isAuthenticated } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        let profileResponse = await axios.get('/profile');
+        setProfile(profileResponse.data);
+      } catch (error) {
+      }
+    }
+
+    fetchProfile();
+  }, [tmsId]);
+
 
   const socket = useSocket(
     'comments',
@@ -81,7 +95,7 @@ const Chat = ({ show, comments: serverComments, profile, isAuth, heroImage }) =>
   return (
     <>
       <ChatHeader show={show} heroImage={heroImage} />
-      <AuthContext.Provider value={isAuth}>
+      <AuthContext.Provider value={isAuthenticated}>
         <ChatContent show={show} comments={comments.results} profile={profile} />
       </AuthContext.Provider>
     </>
