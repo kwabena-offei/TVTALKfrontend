@@ -303,7 +303,7 @@ const About = ({ heroImageDesktop, heroImageMobile, details, photos }) => {
                       title='Chat'
                     />
                   </Link>
-                  <HeartButton />
+                  <HeartButton identifier={{ tmsId }} itemId={tmsId} itemType={'shows'} />
                 </Box>
               </StyledDetailsBox>
             </div>
