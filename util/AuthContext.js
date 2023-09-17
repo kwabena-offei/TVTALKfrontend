@@ -2,6 +2,7 @@ import { createContext } from 'react';
 import { hasCookie } from 'cookies-next';
 import React, { useState, useEffect } from 'react';
 import useAxios from '../services/api';
+import { useRouter } from "next/router";
 
 export const AuthContext = createContext({
   isAuthenticated: false,
@@ -26,6 +27,7 @@ export const hasCookieToken = (context) => {
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(hasCookieToken());
   const [favorites, setFavorites] = useState({});
+  const router = useRouter();
   const { axios } = useAxios();
 
   const login = () => {
@@ -50,6 +52,8 @@ export const AuthProvider = ({ children }) => {
     if (isAuthenticated) {
       const updatedFavorites = await axios.post('/likes', { ...identifier, liked });
       setFavorites(updatedFavorites.data);
+    } else {
+      router.push('/login');
     }
   };
 
