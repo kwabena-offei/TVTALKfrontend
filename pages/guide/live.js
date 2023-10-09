@@ -48,7 +48,7 @@ const groupShowsByGenres = (shows) => {
   shows.forEach((show) => {
     if (placedShows.has(show.seriesId)) { return };
 
-    const subGenre = (show.genres[0]) || 'Other Stuff';
+    const subGenre = (show.genres && show.genres[0]) || 'Other Stuff';
     const genre = genreMap[subGenre];
     if (genreShows[genre]) {
       genreShows[genre].push(show);
