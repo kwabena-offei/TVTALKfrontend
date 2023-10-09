@@ -320,7 +320,7 @@ const About = ({ heroImageDesktop, heroImageMobile, details, photos }) => {
             tmsId={tmsId}
           />
           <CastSlider photos={photos} cast={details.cast} />
-          <SeriesPhotoSlider photos={photos} />
+          <SeriesPhotoSlider photos={photos} tmsId={details.tmsId} />
         </StyledBottomBox>
       </Container >
     </>
