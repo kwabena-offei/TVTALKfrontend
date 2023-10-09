@@ -3,9 +3,9 @@ import { Box, Typography, CardMedia } from '@mui/material';
 import Carousel from 'react-elastic-carousel';
 import { useWindowDimensions } from '../util/useWindowDimensions.js';
 import ViewAllButton from '../components/ViewAllButton';
-import FullsizeModal from '../components/FullsizeModal';
+import Link from 'next/link';
 
-const SeriesPhotoSlider = ({ photos }) => {
+const SeriesPhotoSlider = ({ photos, tmsId }) => {
 
   const { isMobile } = useWindowDimensions();
 
@@ -17,9 +17,9 @@ const SeriesPhotoSlider = ({ photos }) => {
     <Box
       sx={{ marginTop: '60px', position: 'relative', paddingLeft: 0, marginLeft: 0, marginBottom: '60px' }}
     >
-      <ViewAllButton
-        onClick={handleOpen}
-      />
+      <Link href={`/programs/${tmsId}/photos`} passHref>
+        <ViewAllButton />
+      </Link>
       <Typography sx={{
         fontSize: '36px',
         lineHeight: '47px',
@@ -46,13 +46,6 @@ const SeriesPhotoSlider = ({ photos }) => {
           />
         ))}
       </Carousel>
-      <FullsizeModal
-        isOpen={modalOpen}
-        onClose={handleClose}
-        title='Photos'
-      >
-        <div>Photos</div>
-      </FullsizeModal>
     </Box>
   );
 };
