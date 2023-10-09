@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/system';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Card } from '@mui/material';
 import BackButton from '../../../components/BackButton';
 import Head from 'next/head';
 import useAxios from "../../../services/api";
@@ -11,16 +11,13 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Container from '@mui/material/Container';
 
-
 export async function getStaticProps({ params }) {
   const { tmsId } = params;
 
   const detailsUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}`;
-  const photosUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageSize=Ms&imageText=false`;
 
   const [detailsResponse, photosResponse] = await Promise.all([
     fetch(detailsUrl),
-    fetch(photosUrl),
   ]);
 
   let details;
@@ -32,17 +29,30 @@ export async function getStaticProps({ params }) {
     console.error("Error parsing details response:", error);
   }
 
-  try {
-    photos = await photosResponse.json();
-  } catch (error) {
-    console.error("Error parsing photos response:", error);
-  }
 
   if (!details) {
     const otherDetailsUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}`;
     const otherDetailsResponse = await fetch(otherDetailsUrl);
     details = await otherDetailsResponse.json();
   }
+
+  if (details.cast) {
+    try {
+      details.cast = await Promise.all(details.cast.map(async (actor) => {
+        const actorImagesUrl = `https://api.tvtalk.app/data/v1.1/celebs/${actor.personId}/images?imageSize=Md`;
+        const actorImagesResponse = await fetch(actorImagesUrl);
+        const actorImages = await actorImagesResponse.json();
+        const actorImage = actorImages.find((image) => image.seriesId === tmsId) || actorImages[0];
+        actor.imageUrl = `https://${actorImage?.uri}`;
+        return actor;
+      }));
+    } catch (error) {
+      console.error("Error fetching cast images:", error);
+    }
+  } else {
+    details.cast = [];
+  }
+
 
 
 
@@ -66,7 +76,9 @@ export async function getStaticPaths() {
 
 
 
-const About = ({ heroImageDesktop, heroImageMobile, details, photos }) => {
+const Cast = ({ details }) => {
+  console.log({ details })
+  const cast = details.cast;
   const { axios } = useAxios();
   const router = useRouter();
   const [ratingCache, setRatingCache] = useState(details.rating_percentage_cache || {});
@@ -83,15 +95,15 @@ const About = ({ heroImageDesktop, heroImageMobile, details, photos }) => {
     tmsId,
     totalSeasons
   } = details;
-
-  const defaultPhoto = photos ? `https://${photos[0].src}` : null;
+  console.log({ cast })
+  const defaultPhoto = cast ? `https://${cast[0].src}` : null;
 
   return (
     <>
       <Head>
-        <title>{title} Photos | TV Talk</title>
+        <title>{title} Cast | TV Talk</title>
         <meta property="og:title" content={`About ${title} | TV Talk`} />
-        <meta property="og:description" content={`${title} Photos at TV Talk`} />
+        <meta property="og:description" content={`${title} Cast at TV Talk`} />
         <meta property="og:image" content={defaultPhoto} />
       </Head>
 
@@ -113,26 +125,48 @@ const About = ({ heroImageDesktop, heroImageMobile, details, photos }) => {
           marginBottom: '16px',
           textAlign: 'center'
         }}>
-          {'Photos'}
+          {'Cast'}
         </Typography>
 
         <Masonry
-          columns={isMd ? 1 : 3}
+          columns={isMd ? 1 : 2}
           spacing={isMobile ? 2.5 : 3.5}
           defaultColumns={1}
           defaultSpacing={2.5}
           sx={{ margin: 0 }}
         >
-          {photos?.map((photo) => (
-            <img
-              src={`https://${photo.uri}`}
-              alt={`${details.title} ${photo.category}`}
-            />
+          {cast?.map((cast) => (
+            <Card style={{ height: 260, display: 'flex' }}>
+              <img
+                src={cast.imageUrl}
+                alt={`${cast.name}`}
+                height={260}
+              />
+              <div style={{ padding: isMobile ? 15 : 30 }}>
+                <Typography sx={{
+                  fontSize: isMobile ? '16px' : '32px',
+                  lineHeight: '1.5em',
+                  color: '#EFF2FD',
+                  fontWeight: '500',
+                }}>
+                  {cast.name}
+                </Typography>
+                <Typography sx={{
+                  fontSize: isMobile ? '14px' : '16px',
+                  lineHeight: '1.2em',
+                  color: '#636D92',
+                  fontWeight: '400',
+                }}>
+                  ({cast.characterName})
+                </Typography>
+              </div>
+            </Card>
           ))}
+
         </Masonry>
       </Container >
     </>
   );
 };
 
-export default About;
+export default Cast;
