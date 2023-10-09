@@ -3,8 +3,10 @@ import { Box, Typography } from '@mui/material';
 import ActorCard from '../components/ActorCard';
 import Carousel from 'react-elastic-carousel';
 import { useWindowDimensions } from '../util/useWindowDimensions.js';
+import ViewAllButton from '../components/ViewAllButton';
+import Link from 'next/link';
 
-const CastSlider = ({ cast }) => {
+const CastSlider = ({ cast, tmsId }) => {
   if (!cast || !cast.length) {
     return <></>;
   }
@@ -14,6 +16,9 @@ const CastSlider = ({ cast }) => {
     <Box
       sx={{ marginTop: '60px', position: 'relative', paddingLeft: 0, marginLeft: 0, marginBottom: '60px' }}
     >
+      <Link href={`/programs/${tmsId}/cast`} passHref>
+        <ViewAllButton />
+      </Link>
       <Typography sx={{
         fontSize: '36px',
         lineHeight: '47px',
