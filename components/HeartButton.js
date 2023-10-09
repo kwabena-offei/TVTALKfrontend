@@ -8,6 +8,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 const HeartButton = ({ itemId, itemType, identifier, onClick }) => {
   const { isAuthenticated, favorites, toggleFavorite } = useContext(AuthContext);
   const isFavorited = isAuthenticated && favorites[itemType] && favorites[itemType].includes(itemId);
+
   return (
     <IconButton
       style={{

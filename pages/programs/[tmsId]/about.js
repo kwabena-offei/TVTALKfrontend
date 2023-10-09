@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/system';
 import { Box, Typography } from '@mui/material';
-import CustomSelect from '../../../components/CustomSelect';
 import BackButton from '../../../components/BackButton';
 import HeartButton from '../../../components/HeartButton';
 import BlueButton from '../../../components/BlueButton';
+import SeasonEpisodeSelector from '../../../components/SeasonEpisodeSelector';
 import RatingButtonsGroup from '../../../components/RatingButtonsGroup';
 import CastSlider from '../../../components/CastSlider';
 import SeriesPhotoSlider from '../../../components/SeriesPhotosSlider';
@@ -108,13 +108,13 @@ export async function getStaticProps({ params }) {
   const { tmsId } = params;
 
   const detailsUrl = `https://api.tvtalk.app/shows/${tmsId}`;
+  // const detailsUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}`;
   const photosUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageSize=Ms&imageText=false`;
 
   const [detailsResponse, photosResponse] = await Promise.all([
     fetch(detailsUrl),
     fetch(photosUrl),
   ]);
-
 
   let details;
   let photos = [];
@@ -142,7 +142,6 @@ export async function getStaticProps({ params }) {
   let heroImageMobile = defaultImage;
   try {
     heroImageDesktop = photos.find((photo) => photo.aspect === '16x9' && photo.category === 'Iconic') || photos[0];
-    console.log("NOW IT IS", heroImageDesktop)
     heroImageDesktop = `https://${heroImageDesktop.uri}`;
 
     heroImageMobile = photos.find((photo) => photo.aspect === '2x3' && photo.category === 'Iconic') || photos[0];
@@ -168,7 +167,8 @@ export async function getStaticProps({ params }) {
     details.cast = [];
   }
 
-  details.ranking_cache = details.ranking_cache || {};
+  console.log({ details })
+  details.rating_percentage_cache = details.rating_percentage_cache || {};
 
   return {
     props: {
@@ -195,7 +195,7 @@ export async function getStaticPaths() {
 const About = ({ heroImageDesktop, heroImageMobile, details, photos }) => {
   const { axios } = useAxios();
   const router = useRouter();
-  const [ratingCache, setRatingCache] = useState(details.rating_percentage_cache);
+  const [ratingCache, setRatingCache] = useState(details.rating_percentage_cache || {});
   const [userRating, setUserRating] = useState('');
 
   const {
@@ -204,8 +204,11 @@ const About = ({ heroImageDesktop, heroImageMobile, details, photos }) => {
     longDescription,
     releaseYear,
     genres,
-    tmsId
+    tmsId,
+    totalSeasons
   } = details;
+
+  console.log({ ratingCache })
 
   const handleSeasonChange = () => { /* ... */ }
   const handleEpisodeChange = () => { /* ... */ }
@@ -275,20 +278,7 @@ const About = ({ heroImageDesktop, heroImageMobile, details, photos }) => {
               </StyledTitleBox>
               <StyledDetailsBox>
                 <StyledSelectsBox sx={{ display: 'flex', gap: '29px', marginBottom: '22px' }}>
-                  <CustomSelect
-                    selectList={['1', '2', '3']}
-                    label='Select Season'
-                    labelId='selectSeason'
-                    selectId='selectSeason'
-                    handleChange={handleSeasonChange}
-                  />
-                  <CustomSelect
-                    selectList={['1', '2', '3']}
-                    label='Select Episode'
-                    labelId='selectEpisode'
-                    selectId='selectEpisode'
-                    handleChange={handleEpisodeChange}
-                  />
+                  <SeasonEpisodeSelector totalSeasons={totalSeasons} tmsId={tmsId} />
                 </StyledSelectsBox>
                 <StyledDescription sx={{ zIndex: 1, textAlign: 'left' }}>
                   <Typography

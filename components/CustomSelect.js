@@ -23,7 +23,7 @@ const StyledInputLabel = styled(InputLabel, {})({
 
 const CustomSelect = props => {
 
-  const { selectList, label, labelId, selectId, handleChange } = props;
+  const { selectList, label, labelId, selectId, handleChange, value } = props;
 
   return (
     <FormControl
@@ -56,10 +56,11 @@ const CustomSelect = props => {
       >
         {selectList.map((item, index) => (
           <MenuItem
+            value={item.value}
             key={index}
             sx={{ color: '#EFF2FD', fontSize: '16px' }}
           >
-            {item}
+            {item.label}
           </MenuItem>
         ))}
       </StyledSelect>
