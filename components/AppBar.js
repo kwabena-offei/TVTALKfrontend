@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,6 +16,16 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
 import { deleteCookie, hasCookie } from "cookies-next";
 import { LoginButton } from './LoginButton'
+import useAxios from '../services/api';
+import { userAgent } from 'next/server';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import { styled } from '@mui/material/styles';
+import HouseButton from '../components/HouseButton';
+import HeartButton from '../components/FavoritesButton';
+import NotificationButton from '../components/NotificationButton';
+import Link from 'next/link';
 
 const pages = [
   {
@@ -26,31 +36,49 @@ const pages = [
     route: '/news'
   }];
 
+const HeaderButtonGroup = styled(Box)({
+  display: 'flex',
+  columnGap: '8px',
+  marginRight: '12px',
+  flexDirection: 'row',
+})
+
 function ResponsiveAppBar({ context }) {
+  const { axios } = useAxios(context);
   const token = hasCookie('token', context);
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const settings = [
     {
       title: 'Profile',
+      icon: <AccountCircleOutlinedIcon />,
       route: '/profile/reactions'
     },
     {
-      title: 'Notifications',
-      route: '/notifications'
-    },
-    {
       title: 'Account Settings',
+      icon: <SettingsOutlinedIcon />,
       route: '/profile'
     },
     {
       title: 'Logout',
+      icon: <LogoutOutlinedIcon />,
       route: '/logout'
     }
   ];
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      let resp = await axios.get('/profile');
+      setProfile(resp.data);
+    };
+
+    fetchProfile();
+  }, [token]);
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -139,9 +167,17 @@ function ResponsiveAppBar({ context }) {
                   horizontal: 'left',
                 }}
                 open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
+                PaperProps={{
+                  style: {
+                    backgroundImage: 'none',
+                  },
+                }}
+
                 sx={{
                   display: { xs: 'block', md: 'none' },
+                  '.MuiMenu-list': {
+                    backgroundImage: 'none',
+                  },
                 }}
               >
                 {pages.map((page) => (
@@ -190,11 +226,30 @@ function ResponsiveAppBar({ context }) {
 
             {token
               ? <Box sx={{ flexGrow: 0 }}>
+                <Link href='/' >
+                  <a style={{ marginRight: 8 }}><HouseButton /></a>
+                </Link>
+                <Link href='/profile/favorites' >
+                  <a style={{ marginRight: 8 }}><HeartButton /></a>
+                </Link>
+                <Link href='/notifications'>
+                  <a style={{ marginRight: 12 }}><NotificationButton token={token} /></a>
+                </Link>
+
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src="https://placekitten.com/300/300" />
+                    <Avatar alt={`{profile?.username} profile`} src={profile?.image} />
                   </IconButton>
                 </Tooltip>
+                {profile && !isMobile && <span style={{
+                  marginLeft: 10, color: '#EFF2FD',
+                  textAlign: 'right',
+                  fontFamily: 'Gilroy',
+                  fontSize: 18,
+                  fontStyle: 'normal',
+                  fontWeight: 600,
+                  lineHeight: 1.2
+                }}>Hi, {profile.username}</span>}
                 <Menu
                   sx={{ mt: '45px' }}
                   id="menu-appbar"
@@ -212,7 +267,10 @@ function ResponsiveAppBar({ context }) {
                   onClose={handleCloseUserMenu}
                 >
                   {settings.map((setting) => (
-                    <MenuItem key={setting.route} onClick={() => handleCloseUserMenu(setting.route)}>
+                    <MenuItem key={setting.route} onClick={() => handleCloseUserMenu(setting.route)} sx={{
+                      backgroundColor: '#131B3F',
+                    }}>
+                      {setting.icon}
                       <Typography textAlign="center">{setting.title}</Typography>
                     </MenuItem>
                   ))}
@@ -221,8 +279,8 @@ function ResponsiveAppBar({ context }) {
               : <LoginButton />}
           </Toolbar>
         </Container>
-      </AppBar>
-    </Container>
+      </AppBar >
+    </Container >
   );
 }
 export default ResponsiveAppBar;

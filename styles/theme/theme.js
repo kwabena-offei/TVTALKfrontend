@@ -65,9 +65,9 @@ const theme = createTheme({
     },
     MuiOutlinedInput: {
       styleOverrides: {
-      //   root: {
-      //     borderRadius: 30
-      //   },
+        //   root: {
+        //     borderRadius: 30
+        //   },
         // input: {
         //   paddingLeft: '1.875rem',
         //   paddingRight: '1.875rem',
@@ -75,12 +75,12 @@ const theme = createTheme({
         // adornedEnd: {
         //   paddingRight: '1.875rem',
         // },
-      //   notchedOutline: {
-      //     border: '1px solid #090F27',
-      //     ":focus": {
-      //       border: '1px solid #090F27'
-      //     }
-      //   }
+        //   notchedOutline: {
+        //     border: '1px solid #090F27',
+        //     ":focus": {
+        //       border: '1px solid #090F27'
+        //     }
+        //   }
       }
     },
     MuiTextField: {
@@ -147,6 +147,20 @@ const theme = createTheme({
           marginRight: '1.25rem'
         })
       }
+    },
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          backgroundImage: 'none',
+          ul: {
+            li: {
+              svg: {
+                marginRight: 8
+              }
+            }
+          }
+        },
+      },
     },
     MuiTab: {
       styleOverrides: {
