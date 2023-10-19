@@ -49,7 +49,7 @@ export default function Results({ results, visible, closeResults }) {
   return (
     <>
       <div style={{ position: 'fixed', zIndex: 99, top: isMobile ? 50 : 100, left: 0, width: '100%', height: '100%' }} onClick={closeResults}></div>
-      <div style={{ position: 'absolute', zIndex: 100, width: isMobile ? 'calc(90vw)' : '100%', left: isMobile ? 'calc(-30vw - 5px)' : 'inherit' }}>
+      <div style={{ position: 'absolute', zIndex: 100, width: isMobile ? 'calc(90vw)' : '100%' }}>
         {visible && (
           <List
             ref={listRef}
