@@ -24,6 +24,7 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { styled } from '@mui/material/styles';
 import HouseButton from '../components/HouseButton';
 import HeartButton from '../components/FavoritesButton';
+import SiteSearch from '../components/SiteSearch';
 import NotificationButton from '../components/NotificationButton';
 import Link from 'next/link';
 
@@ -113,7 +114,7 @@ function ResponsiveAppBar({ context }) {
 
   return (
     <Container maxWidth="xl" style={{ paddingLeft: 0 }}>
-      <AppBar position="static">
+      <AppBar position="static" style={{ justifyContent: 'space-between' }}>
         <Container maxWidth="xl" sx={{
           backgroundColor: '#090F27',
           paddingY: { md: 2 }
@@ -143,7 +144,7 @@ function ResponsiveAppBar({ context }) {
               TV Talk
             </Typography>
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -204,7 +205,7 @@ function ResponsiveAppBar({ context }) {
             >
               TV Talk
             </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
               {pages.map((page) => (
                 <Button
                   key={page.route}
@@ -222,6 +223,10 @@ function ResponsiveAppBar({ context }) {
                   {page.title}
                 </Button>
               ))}
+            </Box>
+
+            <Box sx={{ width: isMobile ? 150 : 490, flexGrow: 2, display: { xs: 'flex', md: 'flex' } }}>
+              <SiteSearch />
             </Box>
 
             {token
