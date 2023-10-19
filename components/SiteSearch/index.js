@@ -35,10 +35,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
-    // width: '100%',
     width: '335px',
     [theme.breakpoints.up('md')]: {
       width: '490px',
@@ -60,13 +58,13 @@ const SiteSearch = () => {
     setListVisible(true)
   };
 
-  useEffect(() => {
-    const handleRouteChange = () => {
-      setListVisible(false);
-      setSearchValue('')
-      setResults([])
-    };
+  const handleRouteChange = () => {
+    setListVisible(false);
+    setSearchValue('')
+    setResults([])
+  };
 
+  useEffect(() => {
     router.events.on('routeChangeStart', handleRouteChange);
 
     return () => {
@@ -101,11 +99,12 @@ const SiteSearch = () => {
       </SearchIconWrapper>
       <StyledInputBase
         value={searchValue}
+        onFocus={setListVisible.bind(this, true)}
         onChange={handleInputChange}
         placeholder="Search…"
         inputProps={{ 'aria-label': 'search' }}
       />
-      <Resuls results={results} visible={isListVisible} />
+      <Resuls results={results} visible={isListVisible} closeResults={setListVisible.bind(this, false)} />
     </Search>
   )
 };

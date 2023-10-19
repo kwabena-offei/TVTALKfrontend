@@ -20,7 +20,7 @@ import Link from 'next/link';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-export default function Results({ results, visible }) {
+export default function Results({ results, visible, closeResults }) {
   const listRef = useRef(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -47,108 +47,112 @@ export default function Results({ results, visible }) {
   }
 
   return (
-    <div style={{ position: 'absolute', zIndex: 99, width: isMobile ? 'calc(90vw)' : '100%', left: isMobile ? 'calc(-30vw - 5px)' : 'inherit' }}>
-      {visible && (
-        <List
-          ref={listRef}
-          sx={{
-            width: '100%',
-            bgcolor: 'background.paper',
-            marginTop: '10px',
-            borderRadius: '10px',
-            maxHeight: 'calc(75vh)',
-            overflowY: 'scroll',
-          }}
-        >
-          {shows?.map((show) => (
-            <>
-              <Link href={`/programs/${show.value}/about`} key={show.value} passHref >
-                <ListItem component="a" key={show.value} sx={{
-                  gap: '20px', alignItems: 'initial', '&:hover': {
-                    bgcolor: '#090F27',
-                  },
-                }}>
-                  <div style={{ maxWidth: 150, position: 'relative', width: '100%', height: '100%' }}>
-                    <Image
-                      src={show.image}
-                      alt={show.label}
-                      width={720}
-                      height={540}
-                      objectFit="cover"
+    <>
+      <div style={{ position: 'fixed', zIndex: 99, top: isMobile ? 50 : 100, left: 0, width: '100%', height: '100%' }} onClick={closeResults}></div>
+      <div style={{ position: 'absolute', zIndex: 100, width: isMobile ? 'calc(90vw)' : '100%', left: isMobile ? 'calc(-30vw - 5px)' : 'inherit' }}>
+        {visible && (
+          <List
+            ref={listRef}
+            sx={{
+              width: '100%',
+              bgcolor: 'background.paper',
+              marginTop: '10px',
+              borderRadius: '10px',
+              maxHeight: 'calc(75vh)',
+              overflowY: 'scroll',
+            }}
+          >
+            {shows?.map((show) => (
+              <>
+                <Link href={`/programs/${show.value}/about`} key={show.value} passHref >
+                  <ListItem component="a" key={show.value} sx={{
+                    gap: '20px', alignItems: 'initial', '&:hover': {
+                      bgcolor: '#090F27',
+                    },
+                  }}>
+                    <div style={{ maxWidth: 150, position: 'relative', width: '100%', height: '100%' }}>
+                      <Image
+                        src={show.image}
+                        alt={show.label}
+                        width={720}
+                        height={540}
+                        objectFit="cover"
+                      />
+                    </div>
+                    <ListItemText
+
+                      secondary={
+                        <React.Fragment>
+                          <Typography
+                            sx={{ display: 'block', fontSize: 18, fontWeight: 600 }}
+                            component="span"
+                            variant="body2"
+                            color="text.primary"
+                          >
+                            {show.label}
+                          </Typography>
+                          <Typography
+                            sx={{ display: 'block', fontSize: 14 }}
+                            component="span"
+                            variant="body2"
+                            color="text.primary"
+                          >
+                            {[show.year, show.genre, show.type].join(' / ')}
+                          </Typography>
+                          <Typography
+                            sx={{ display: 'inline' }}
+                            component="span"
+                            variant="body2"
+                            color="text.primary"
+                          >
+                            {show.cast}
+                          </Typography>
+                        </React.Fragment>
+                      }
                     />
-                  </div>
-                  <ListItemText
+                  </ListItem>
+                </Link>
+                <Divider variant="inset" component="li" />
+              </>
+            ))}
 
-                    secondary={
-                      <React.Fragment>
-                        <Typography
-                          sx={{ display: 'block', fontSize: 18, fontWeight: 600 }}
-                          component="span"
-                          variant="body2"
-                          color="text.primary"
-                        >
-                          {show.label}
-                        </Typography>
-                        <Typography
-                          sx={{ display: 'block', fontSize: 14 }}
-                          component="span"
-                          variant="body2"
-                          color="text.primary"
-                        >
-                          {[show.year, show.genre, show.type].join(' / ')}
-                        </Typography>
-                        <Typography
-                          sx={{ display: 'inline' }}
-                          component="span"
-                          variant="body2"
-                          color="text.primary"
-                        >
-                          {show.cast}
-                        </Typography>
-                      </React.Fragment>
-                    }
-                  />
-                </ListItem>
-              </Link>
-              <Divider variant="inset" component="li" />
-            </>
-          ))}
+            {comments?.map((comment) => (
+              <>
+                <Link href={`/chat/${comment.show_tms_id}##{comment.value}`} key={comment.value} passHref>
+                  <ListItem component="a" alignItems="flex-start" key={comment.value} sx={{
+                    gap: '20px', alignItems: 'initial', color: '#fff', '&:hover': {
+                      bgcolor: '#090F27',
+                    },
+                  }}>
+                    <ListItemAvatar>
+                      <Avatar alt={`${comment.username} profile image`} src={comment.image} />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={comment.username}
+                      secondary={
+                        <React.Fragment>
+                          <Typography
+                            sx={{ display: 'inline' }}
+                            component="span"
+                            variant="body2"
+                            color="text.primary"
+                          >
+                            {comment.label.length > 150 ? comment.label.substring(0, 150) + ' ... Read More' : comment.label}
+                          </Typography>
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
+                </Link >
+                <Divider variant="inset" component="li" />
+              </>
+            ))}
+            <Divider variant="inset" component="li" />
+          </List>
+        )
+        }
+      </div >
 
-          {comments?.map((comment) => (
-            <>
-              <Link href={`/chat/${comment.show_tms_id}##{comment.value}`} key={comment.value} passHref>
-                <ListItem component="a" alignItems="flex-start" key={comment.value} sx={{
-                  gap: '20px', alignItems: 'initial', color: '#fff', '&:hover': {
-                    bgcolor: '#090F27',
-                  },
-                }}>
-                  <ListItemAvatar>
-                    <Avatar alt={`${comment.username} profile image`} src={comment.image} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={comment.username}
-                    secondary={
-                      <React.Fragment>
-                        <Typography
-                          sx={{ display: 'inline' }}
-                          component="span"
-                          variant="body2"
-                          color="text.primary"
-                        >
-                          {comment.label.length > 150 ? comment.label.substring(0, 150) + ' ... Read More' : comment.label}
-                        </Typography>
-                      </React.Fragment>
-                    }
-                  />
-                </ListItem>
-              </Link >
-              <Divider variant="inset" component="li" />
-            </>
-          ))}
-          <Divider variant="inset" component="li" />
-        </List>
-      )
-      }
-    </div >
+    </>
   );
 }
