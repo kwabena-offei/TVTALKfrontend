@@ -73,6 +73,7 @@ function ResponsiveAppBar({ context }) {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      if (!token) return;
       let resp = await axios.get('/profile');
       setProfile(resp.data);
     };
@@ -225,9 +226,12 @@ function ResponsiveAppBar({ context }) {
               ))}
             </Box>
 
-            <Box sx={{ width: isMobile ? 150 : 490, flexGrow: 2, display: { xs: 'flex', md: 'flex' } }}>
-              <SiteSearch />
-            </Box>
+            {!isMobile && (
+
+              <Box sx={{ width: 490, flexGrow: 2, display: { xs: 'flex', md: 'flex' } }}>
+                <SiteSearch />
+              </Box>
+            )}
 
             {token
               ? <Box sx={{ flexGrow: 0 }}>
@@ -284,6 +288,17 @@ function ResponsiveAppBar({ context }) {
               : <LoginButton />}
           </Toolbar>
         </Container>
+        {isMobile && (
+          <Container maxWidth="xl" sx={{
+            backgroundColor: '#090F27',
+            paddingY: { xs: 3, md: 2 },
+          }}>
+            <Box sx={{ width: 29, flexGrow: 2, display: { xs: 'flex', md: 'flex' } }}>
+              <SiteSearch />
+            </Box>
+          </Container>
+        )}
+
       </AppBar >
     </Container >
   );

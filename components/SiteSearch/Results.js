@@ -118,7 +118,7 @@ export default function Results({ results, visible, closeResults }) {
 
             {comments?.map((comment) => (
               <>
-                <Link href={`/chat/${comment.show_tms_id}##{comment.value}`} key={comment.value} passHref>
+                <Link href={`/chat/${comment.show_tms_id}#${comment.value}`} key={comment.value} passHref>
                   <ListItem component="a" alignItems="flex-start" key={comment.value} sx={{
                     gap: '20px', alignItems: 'initial', color: '#fff', '&:hover': {
                       bgcolor: '#090F27',
