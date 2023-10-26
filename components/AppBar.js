@@ -29,13 +29,15 @@ import NotificationButton from '../components/NotificationButton';
 import Link from 'next/link';
 
 const pages = [
-  {
-    title: 'Chat By Show',
-    route: '/chat',
-  }, {
-    title: 'News',
-    route: '/news'
-  }];
+  // {
+  //   title: 'Chat By Show',
+  //   route: '/chat',
+  // }, 
+  // {
+  //   title: 'News',
+  //   route: '/news'
+  // }
+];
 
 const HeaderButtonGroup = styled(Box)({
   display: 'flex',
@@ -53,6 +55,9 @@ function ResponsiveAppBar({ context }) {
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
+  const isDesktop = useMediaQuery(theme.breakpoints.down('xl'));
+
   const settings = [
     {
       title: 'Profile',
@@ -250,7 +255,7 @@ function ResponsiveAppBar({ context }) {
                     <Avatar alt={`{profile?.username} profile`} src={profile?.image} />
                   </IconButton>
                 </Tooltip>
-                {profile && !isMobile && <span style={{
+                {profile && !isMobile && !isTablet && <span style={{
                   marginLeft: 10, color: '#EFF2FD',
                   textAlign: 'right',
                   fontFamily: 'Gilroy',
