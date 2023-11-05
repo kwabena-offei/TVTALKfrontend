@@ -14,6 +14,7 @@ const Search = styled('div')(({ theme }) => ({
   backgroundColor: '#131B3F',
   marginRight: theme.spacing(2),
   marginLeft: 0,
+  margin: '0 auto'
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -33,7 +34,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '335px',
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('lg')]: {
       width: '490px',
     },
   },

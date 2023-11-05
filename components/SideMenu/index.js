@@ -22,18 +22,18 @@ function SideMenu() {
       label: "Edit Profile",
       href: '/profile',
     },
-    {
-      label: "Terms & Conditions",
-      href: "/profile/terms_and_conditions",
-    },
+    // {
+    //   label: "Terms & Conditions",
+    //   href: "/profile/terms_and_conditions",
+    // },
     {
       label: "Privacy Policy",
       href: "/profile/policy",
     },
-    {
-      label: "Feedback",
-      href: "/profile/feedback",
-    },
+    // {
+    //   label: "Feedback",
+    //   href: "/profile/feedback",
+    // },
     {
       label: "Change Password",
       href: "/profile/change_password",
