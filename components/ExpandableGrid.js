@@ -37,7 +37,7 @@ function ExpandableGrid({ tvShows, title }) {
       display: 'grid',
       gridTemplateColumns: 'repeat(4, 1fr)',
       overflowX: 'initial',
-      maxHeight: expanded ? 'auto' : '360px',
+      maxHeight: expanded ? 'auto' : 'auto',
       overflow: 'hidden',
     },
   }));
