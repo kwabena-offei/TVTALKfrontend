@@ -3,10 +3,15 @@ import { IconButton } from '@mui/material';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import Badge from '@mui/material/Badge';
 import useAxios from '../services/api';
+import { styled } from '@mui/material/styles';
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from '@mui/material/styles';
 
 const NotificationButton = ({ token }) => {
   const { axios } = useAxios();
   const [notifications, setNotifications] = useState([]);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -16,9 +21,17 @@ const NotificationButton = ({ token }) => {
     fetchNotifications();
   }, [token]);
 
+  const StyledBadge = styled(Badge)(({ theme }) => ({
+    '& .MuiBadge-badge': {
+      right: -3,
+      top: isMobile ? 10 : 0,
+      border: `2px solid ${theme.palette.background.paper}`,
+      padding: '0 4px',
+    },
+  }));
 
   return (
-    <Badge badgeContent={notifications.length} color="primary">
+    <StyledBadge badgeContent={notifications.length} color="primary">
       <IconButton
         style={{
           background: 'var(--background-color, #090F27)',
@@ -30,7 +43,7 @@ const NotificationButton = ({ token }) => {
       >
         <NotificationsOutlinedIcon htmlColor='#919CC0' />
       </IconButton >
-    </Badge>
+    </StyledBadge>
   );
 };
 
