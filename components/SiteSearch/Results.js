@@ -40,7 +40,7 @@ export default function Results({ results, visible, closeResults }) {
   };
 
   const commentCategory = results.find((result) => result.label === 'Comments');
-  const comments = commentCategory?.options?.filter((comment) => comment.image && comment.show_tms_id);
+  const comments = commentCategory?.options?.filter((comment) => comment.show_tms_id);
 
   if (!visible || !shows?.length && !comments?.length) {
     return null;
