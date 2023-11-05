@@ -15,8 +15,8 @@ const NotificationButton = ({ token }) => {
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      let resp = await axios.get('/notifications');
-      setNotifications(resp.data.results.filter((notification) => !notification.read_at));
+      let resp = await axios.get('/notifications/unread');
+      setNotifications(resp.data.results);
     };
     fetchNotifications();
   }, [token]);
