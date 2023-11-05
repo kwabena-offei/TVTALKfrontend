@@ -74,7 +74,11 @@ export const EditProfileCard = ({ profile }) => {
             <Stack spacing={isMobile ? 2.5 : 2}>
               <TextInput id="name" label="Name" value={draftProfile.name} onChange={(e) => setDraftProfile({ ...draftProfile, name: e.target.value })} />
               <TextInput id="username" label="Username" value={draftProfile.username} onChange={(e) => setDraftProfile({ ...draftProfile, username: e.target.value })} />
-              <SelectInput id="gender" label="Gender" value={genders[0].id}>
+              <SelectInput id="gender" label="Gender" value={draftProfile.gender}
+                onChange={(e) => {
+                  setDraftProfile({ ...draftProfile, gender: e.target.value.toLowerCase() })
+                }}
+              >
                 {gendersOptionsList}
               </SelectInput>
               <CalendarInput
