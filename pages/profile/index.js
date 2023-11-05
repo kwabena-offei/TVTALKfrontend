@@ -34,21 +34,21 @@ const prepareMenuList = (profile) => {
       id: "profile-edit",
       content: <EditProfileCard profile={profile} />
     },
-    {
-      label: "Terms & Conditions",
-      id: "terms-and-conditions",
-      content: <LoremIpsumText subtitle="Terms & Conditions" />
-    },
+    // {
+    //   label: "Terms & Conditions",
+    //   id: "terms-and-conditions",
+    //   content: <LoremIpsumText subtitle="Terms & Conditions" />
+    // },
     {
       label: "Privacy Policy",
       id: "policy",
       content: <LoremIpsumText subtitle="Privacy Policy" />
     },
-    {
-      label: "Feedback",
-      id: "feedback",
-      content: <LoremIpsumText subtitle="Feedback" />
-    },
+    // {
+    //   label: "Feedback",
+    //   id: "feedback",
+    //   content: <LoremIpsumText subtitle="Feedback" />
+    // },
     {
       label: "Change Password",
       id: "change-password",
