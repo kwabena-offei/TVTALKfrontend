@@ -8,7 +8,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 export async function getServerSideProps({ req, res }) {
   const { axios } = useAxios({ req, res });
-  const { data: notifications } = await axios(`/notifications/unread`);
+  const { data: notifications } = await axios(`/notifications`);
   return {
     props: {
       notifications,
