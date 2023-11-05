@@ -46,11 +46,21 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  // If you can fetch a list of all possible tmsId values, do it here.
-  // For this example, I'll assume you can't, so we'll use fallback mode.
+  const categoryResponse = await fetch('https://api.tvtalk.app/categories')
+  const json = await categoryResponse.json()
+  const paths = []
+  json.map((category) => {
+    category.shows.map((show) => {
+      paths.push({
+        params: {
+          tmsId: show.tmsId
+        }
+      })
+    })
+  })
 
   return {
-    paths: [], // Empty array means no paths are pre-rendered.
+    paths: paths,
     fallback: true
   };
 }
