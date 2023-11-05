@@ -127,7 +127,11 @@ export async function getStaticProps({ params }) {
 
   try {
     photos = await photosResponse.json();
+    if (!Array.isArray(photos)) {
+      photos = [];
+    }
   } catch (error) {
+    photos = []
     console.error("Error parsing photos response:", error);
   }
 
