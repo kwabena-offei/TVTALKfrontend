@@ -8,6 +8,7 @@ import {
 } from "./EditProfile.styled";
 import { gendersOptionsList, genders } from "../../pages/registration";
 import { CalendarInput } from "../CalendarInput";
+import { Toast } from "../Toast";
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useAxios from "../../services/api";
@@ -15,6 +16,7 @@ import useAxios from "../../services/api";
 export const EditProfileCard = ({ profile }) => {
   const [draftProfile, setDraftProfile] = useState(profile);
   const [lineups, setLineups] = useState([]);
+  const [showToast, setShowToast] = useState(false);
   const [lineupOptions, setLineupOptions] = useState([]);
   const [selectedStreamingService, setSelectedStreamingService] = useState(draftProfile.streaming_service);
   const theme = useTheme();
@@ -23,6 +25,7 @@ export const EditProfileCard = ({ profile }) => {
 
   const onSave = async () => {
     const results = await axios.put(`/users/${profile.username}`, { ...draftProfile, streaming_service: selectedStreamingService?.toLowerCase() });
+    setShowToast(true);
   }
 
   const streamingOptions = ['Hulu', 'Netflix', 'Prime', 'Not Specified'];
@@ -66,7 +69,7 @@ export const EditProfileCard = ({ profile }) => {
   };
 
   return (
-    <Card sx={{ paddingX: isMobile ? 0 : 4, paddingY: isMobile ? 0 : 4, backgroundColor: "#131B3F" }}>
+    [<Card sx={{ paddingX: isMobile ? 0 : 4, paddingY: isMobile ? 0 : 4, backgroundColor: "#131B3F" }}>
       <EditProfileHeader profile={profile} isMobile={isMobile} onSave={onSave} />
       <CardContent xs={isMobile ? { paddingX: '20px' } : {}}>
         <Grid container columnSpacing={5} rowSpacing={isMobile ? 2.5 : 0}>
@@ -134,6 +137,8 @@ export const EditProfileCard = ({ profile }) => {
           </Grid>
         </Grid>
       </CardContent>
-    </Card >
+    </Card >, <Toast open={showToast} handleClose={
+      () => setShowToast(false)
+    } text="Profile Updated" severity="success" />]
   );
 };
