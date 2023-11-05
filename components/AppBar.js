@@ -252,7 +252,7 @@ function ResponsiveAppBar({ context }) {
 
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt={`{profile?.username} profile`} src={profile?.image} />
+                    <Avatar alt={profile?.username} src={profile?.image} />
                   </IconButton>
                 </Tooltip>
                 {profile && !isMobile && !isTablet && <span style={{

@@ -11,7 +11,7 @@ export const StyledActionsButton = styled(Button)({
   height: '50px'
 })
 
-export const EditProfileHeader = ({ profile, isMobile }) => {
+export const EditProfileHeader = ({ profile, isMobile, ...props }) => {
   const { image, username } = profile;
   return (
     <CardHeader
@@ -24,7 +24,7 @@ export const EditProfileHeader = ({ profile, isMobile }) => {
           alt={`${username}-photo`}
         />
       }
-      action={isMobile ? '' : <Actions />}
+      action={isMobile ? '' : <Actions {...props} />}
       title={username}
       subheader={<SubheaderLink href={"#"} />}
       classes={{ action: "align-self-center" }}
@@ -43,11 +43,11 @@ export const EditProfileHeader = ({ profile, isMobile }) => {
   );
 };
 
-export const Actions = ({...props}) => {
+export const Actions = ({ ...props }) => {
   return (
     <Stack direction="row" spacing={1.5} {...props}>
-      <CancelButton />
-      <SaveButton />
+      <CancelButton onClick={props.onCancel} />
+      <SaveButton onClick={props.onSave} />
     </Stack>
   );
 };
@@ -69,15 +69,15 @@ export const SubheaderLink = ({ href, ...props }) => (
   </Link>
 );
 
-export const TextInput = ({label, id, value, children, ...props}) => {
-  return(
+export const TextInput = ({ label, id, value, children, ...props }) => {
+  return (
     <Stack direction='column' spacing={1}>
       <InputLabel htmlFor={id}>{label}</InputLabel>
       <TextField
         variant="filled"
         sx={{
           '.MuiInputBase-root': {
-              bgcolor: 'background.default'
+            bgcolor: 'background.default'
           }
         }}
         {...props}
@@ -85,7 +85,7 @@ export const TextInput = ({label, id, value, children, ...props}) => {
         value={value}
         fullWidth
       >{children}</TextField>
-      {!!props.helpertext && 
+      {!!props.helpertext &&
         <FormHelperText
         >
           {props.helpertext}
@@ -95,8 +95,8 @@ export const TextInput = ({label, id, value, children, ...props}) => {
   )
 }
 
-export const SelectInput = ({label, id, children, ...props}) => {
-  return(
+export const SelectInput = ({ label, id, children, ...props }) => {
+  return (
     <Stack direction='column' spacing={1}>
       <InputLabel htmlFor={id}>{label}</InputLabel>
       <Select
