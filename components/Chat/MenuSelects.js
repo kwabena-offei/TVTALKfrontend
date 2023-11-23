@@ -13,7 +13,7 @@ function parsed(string) {
   return parsedInt;
 }
 
-export const MenuSelects = ({ tmsId, episodes, seasons, onEpisodeSelect }) => {
+export const MenuSelects = ({ tmsId, episodes, seasons, onEpisodeSelect, onSortChange }) => {
   const { axios } = useAxios();
   const [season, setSeason] = useState('')
   const [episode, setEpisode] = useState('')
@@ -25,7 +25,7 @@ export const MenuSelects = ({ tmsId, episodes, seasons, onEpisodeSelect }) => {
   const totalEpisodes = parsed(episodes) || 0;
   const totalSeasons = parsed(seasons) || 0;
   const seasonsList = new Array(totalSeasons).fill('0').map((_, index) => ({ label: `Season ${index + 1}`, value: index + 1 }));
-  const sortByList = [{ label: 'Season', value: 'season' }, { label: 'Episode', value: 'episode' }];
+  const sortByList = [{ label: 'Recent', value: 'recent' }, { label: 'Popularity', value: 'popularity' }];
 
   const handleSeasonChange = async (e) => {
     const season = e.target.value;
@@ -45,11 +45,12 @@ export const MenuSelects = ({ tmsId, episodes, seasons, onEpisodeSelect }) => {
 
   const handleEpisodeChange = (e) => {
     setEpisode(e.target.value);
-    // onEpisodeSelect(e.target.value);
+    onEpisodeSelect(e.target.value);
   };
 
   const handleSortChange = (e) => {
     setSort(e.target.value)
+    onSortChange(e.target.value)
   };
 
   return (
@@ -69,13 +70,13 @@ export const MenuSelects = ({ tmsId, episodes, seasons, onEpisodeSelect }) => {
           handleChange={handleEpisodeChange}
           value={episode}
         />
-        <OutlinedSelect
+        {/* <OutlinedSelect
           selectList={sortByList}
           label="Sort By"
           id="sortBy"
           handleChange={handleSortChange}
           value={sort}
-        />
+        /> */}
       </Stack>
     </>
   );

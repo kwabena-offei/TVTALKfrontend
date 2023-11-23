@@ -14,6 +14,7 @@ import { MenuSelects } from './MenuSelects';
 import MainContent from './MainContent';
 import { useRouter } from "next/router";
 import NewPostCard from "./NewPostCard";
+import SeasonEpisodeSelector from '../SeasonEpisodeSelector';
 
 export const ChatHeader = ({ show, heroImage }) => {
   const theme = useTheme();
@@ -53,7 +54,8 @@ export const ChatHeader = ({ show, heroImage }) => {
   )
 }
 
-export const ChatContent = ({ comments, profile, show }) => {
+export const ChatContent = ({ comments, profile, show, onEpisodeSelect, onSortChange }) => {
+  const [sortedComments, setSortedComments] = useState(comments);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isNotLarge = useMediaQuery(theme.breakpoints.down("lg"));
@@ -68,7 +70,7 @@ export const ChatContent = ({ comments, profile, show }) => {
         alignItems={isMobile ? "flex-start" : "stretch"}
       >
         <Grid xs={12} md={3} lg={2.5}>
-          <MenuSelects tmsId={show.tmsId} episodes={show.totalEpisodes} seasons={show.totalSeasons} onEpisodeSelect={onEpisodeSelect} />
+          <MenuSelects tmsId={show.tmsId} episodes={show.totalEpisodes} seasons={show.totalSeasons} onEpisodeSelect={onEpisodeSelect} onSortChange={onSortChange} />
         </Grid>
         <Grid xs={12} md={9} lg={7}>
           <NewPostCard isMobile={isMobile} profile={profile} show_id={tmsId} />
