@@ -87,9 +87,9 @@ const Login = (props) => {
       setCookie('token', apiResponse.data.token);
       // -- redirect user to profile page --
       router.push('/profile/reactions');
-    } catch (error) {
+    } catch (event) {
       // -- show modal with error message in case of error from API --
-      handleOpenErrorMessage('Google')
+      handleOpenErrorMessage('Google', event.response.data.error)
       // console.log('error', apiResponse.error)
       return false;
     }
