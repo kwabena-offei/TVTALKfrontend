@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import { useMediaQuery } from '@mui/material'
 import OutlinedSelect from "../OutlinedSelect";
 import { Stack } from "@mui/system";
+import useAxios from "../../services/api";
 
 function parsed(string) {
   const parsedInt = Number.parseInt(string, 10)
@@ -12,25 +13,39 @@ function parsed(string) {
   return parsedInt;
 }
 
-export const MenuSelects = ({ episodes, seasons }) => {
+export const MenuSelects = ({ tmsId, episodes, seasons, onEpisodeSelect }) => {
+  const { axios } = useAxios();
   const [season, setSeason] = useState('')
   const [episode, setEpisode] = useState('')
+  const [episodesList, setEpisodesList] = useState([])
   const [sort, setSort] = useState('')
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const totalEpisodes = parsed(episodes) || 0;
   const totalSeasons = parsed(seasons) || 0;
-  const episodesList = new Array(totalEpisodes).fill('0').map((_, index) => (`${index + 1}`))
-  const seasonsList = new Array(totalSeasons).fill('0').map((_, index) => (`${index + 1}`))
-  const sortByList = ['Season', 'Episode']
+  const seasonsList = new Array(totalSeasons).fill('0').map((_, index) => ({ label: `Season ${index + 1}`, value: index + 1 }));
+  const sortByList = [{ label: 'Season', value: 'season' }, { label: 'Episode', value: 'episode' }];
 
-  const handleSeasonChange = (e) => {
-    setSeason(e.target.value)
+  const handleSeasonChange = async (e) => {
+    const season = e.target.value;
+    setSeason(season);
+    const { data: episodes } = await axios.get(`data/v1.1/series/${tmsId}/episodes?tms_id=${tmsId}&season=${season}&titleLang=en&descriptionLang=en`);
+
+
+    const episodesData = episodes.map(({ tmsId, episodeNum, episodeTitle, onEpisodeSelect }) => {
+      return {
+        value: tmsId,
+        label: `${episodeNum} - ${episodeTitle}`
+      }
+    });
+    setEpisodesList(episodesData);
+    setEpisode(null);
   };
 
   const handleEpisodeChange = (e) => {
-    setEpisode(e.target.value)
+    setEpisode(e.target.value);
+    // onEpisodeSelect(e.target.value);
   };
 
   const handleSortChange = (e) => {

@@ -68,7 +68,7 @@ export const ChatContent = ({ comments, profile, show }) => {
         alignItems={isMobile ? "flex-start" : "stretch"}
       >
         <Grid xs={12} md={3} lg={2.5}>
-          <MenuSelects episodes={show.totalEpisodes} seasons={show.totalSeasons} />
+          <MenuSelects tmsId={show.tmsId} episodes={show.totalEpisodes} seasons={show.totalSeasons} onEpisodeSelect={onEpisodeSelect} />
         </Grid>
         <Grid xs={12} md={9} lg={7}>
           <NewPostCard isMobile={isMobile} profile={profile} show_id={tmsId} />

@@ -7,7 +7,6 @@ import { isAuthenticated } from '../../../services/isAuth'
 import { AuthContext } from '../../../util/AuthContext'
 import useSocket from '../../../hooks/useSocket';
 import useAxios from '../../../services/api';
-// import axios from 'axios';
 
 export async function getStaticProps({ params }) {
   const { tmsId } = params;
@@ -86,6 +85,18 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
     fetchProfile();
   }, [tmsId]);
 
+  console.log({ comments })
+  const handleEpisodeChange = async (event) => {
+    const { data: episodes } = await axios.get(`/shows/${tmsId}/comments`);
+
+    if (episode) {
+      setFilteredComments(comments).map((comment) => {
+        return comment.tms_id === episode.tmsId;
+      })
+    } else {
+      setFilteredComments(comments)
+    }
+  }
 
   const socket = useSocket(
     'comments',
@@ -106,7 +117,7 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
     <>
       <ChatHeader show={show} heroImage={heroImage} />
       <AuthContext.Provider value={isAuthenticated}>
-        <ChatContent show={show} comments={comments.results} profile={profile} />
+        <ChatContent show={show} comments={comments.results} profile={profile} onEpisodeSelect={handleEpisodeChange} />
       </AuthContext.Provider>
     </>
   );
