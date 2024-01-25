@@ -17,6 +17,7 @@ const SeasonEpisodeSelector = ({ tmsId, totalSeasons }) => {
   const [season, setSeason] = useState(null);
   const [episodes, setEpisodes] = useState([]);
   const [episode, setEpisode] = useState(null);
+  const [noSelectedSeason, setNoSelectedSeason] = useState(false);
 
   const handleSeasonChange = async (event) => {
     const season = event.target.value;
@@ -32,6 +33,7 @@ const SeasonEpisodeSelector = ({ tmsId, totalSeasons }) => {
     });
     setEpisodes(episodeList);
     setEpisode(episodeList[0]);
+    setNoSelectedSeason(true);
   }
 
   const handleEpisodeChange = (event) => {
@@ -48,13 +50,13 @@ const SeasonEpisodeSelector = ({ tmsId, totalSeasons }) => {
         selectId='selectSeason'
         handleChange={handleSeasonChange}
       />
-      <CustomSelect
+      {noSelectedSeason? <><CustomSelect
         selectList={episodes}
         label='Select Episode'
         labelId='selectEpisode'
         selectId='selectEpisode'
         handleChange={handleEpisodeChange}
-      />
+      /></>: <div style={{width: '100%'}}></div>}
     </>
   );
 }

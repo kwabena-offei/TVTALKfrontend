@@ -21,6 +21,7 @@ export const MenuSelects = ({ tmsId, episodes, seasons, onEpisodeSelect, onSortC
   const [sort, setSort] = useState('')
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [noSelectedSeason, setNoSelectedSeason] = useState(false);
 
   const totalEpisodes = parsed(episodes) || 0;
   const totalSeasons = parsed(seasons) || 0;
@@ -41,6 +42,7 @@ export const MenuSelects = ({ tmsId, episodes, seasons, onEpisodeSelect, onSortC
     });
     setEpisodesList(episodesData);
     setEpisode(null);
+    setNoSelectedSeason(true);
   };
 
   const handleEpisodeChange = (e) => {
@@ -63,13 +65,14 @@ export const MenuSelects = ({ tmsId, episodes, seasons, onEpisodeSelect, onSortC
           handleChange={handleSeasonChange}
           value={season}
         />
-        <OutlinedSelect
+        {noSelectedSeason ? <><OutlinedSelect
           selectList={episodesList}
           label="Select Episode"
           id="selectEpisode"
           handleChange={handleEpisodeChange}
           value={episode}
-        />
+        /></> : <></>}
+        
         {/* <OutlinedSelect
           selectList={sortByList}
           label="Sort By"
