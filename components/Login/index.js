@@ -86,7 +86,7 @@ const Login = (props) => {
       // -- set cookie with token --
       setCookie('token', apiResponse.data.token);
       // -- redirect user to profile page --
-      router.push('/profile/reactions');
+      router.push('/');
     } catch (event) {
       // -- show modal with error message in case of error from API --
       handleOpenErrorMessage('Google', event.response.data.error)
@@ -118,7 +118,7 @@ const Login = (props) => {
       // -- set cookie with token --
       setCookie('token', apiResponse.data.token);
       // -- redirect user to profile page --
-      router.push('/profile/reactions');
+      router.push('/');
 
     } catch (error) {
       // -- show modal with error message in case of error from API --
@@ -137,7 +137,7 @@ const Login = (props) => {
       // -- set cookie with token --
       setCookie('token', apiResponse.data.token);
       // -- redirect user to profile page --
-      router.push('/profile/reactions');
+      router.push('/');
 
     } catch (error) {
       // -- show modal with error message in case of error from API --
