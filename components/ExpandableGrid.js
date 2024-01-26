@@ -9,6 +9,8 @@ import HeartButton from '../components/HeartButton';
 import BlueButton from '../components/BlueButton';
 import Link from 'next/link';
 import { styled } from '@mui/system';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 
 function ExpandableGrid({ tvShows, title }) {
@@ -75,9 +77,7 @@ function ExpandableGrid({ tvShows, title }) {
           {title}
         </StyledTypography>
 
-        <Button style={{ color: '#FFF', marginTop: '-1em' }} variant='outlined' onClick={() => setExpanded(!expanded)}>
-          {expanded ? 'Close All' : 'Show All'}
-        </Button>
+        {expanded ? <Button endIcon={<ExpandLessIcon />} style={{ color: '#FFF'}} variant='outlined' onClick={() => { setExpanded(false)}}>Close All</Button> : <Button style={{ color: '#FFF'  }} endIcon={<ExpandMoreIcon />} variant='outlined'  onClick={() => { setExpanded(true)}}>View All</Button>}
       </div>
 
       <Container expanded={expanded}>

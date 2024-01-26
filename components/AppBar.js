@@ -29,14 +29,14 @@ import NotificationButton from '../components/NotificationButton';
 import Link from 'next/link';
 
 const pages = [
-  // {
-  //   title: 'Chat By Show',
-  //   route: '/chat',
-  // }, 
-  // {
-  //   title: 'News',
-  //   route: '/news'
-  // }
+  {
+    title: 'Chat By Show',
+    route: '/chat',
+  }, 
+  {
+    title: 'News',
+    route: '/news'
+  }
 ];
 
 const HeaderButtonGroup = styled(Box)({

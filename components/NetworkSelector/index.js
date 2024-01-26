@@ -1,4 +1,6 @@
 import { Button, Typography, Accordion, AccordionSummary, AccordionDetails, Box } from '@mui/material';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import streaming from "./streaming.json";
 import networks from "./networks.json";
 import NetworkIcon from "./NetworkIcon";
@@ -95,7 +97,7 @@ const NetworkSelector = ({ activeNetwork }) => {
       </Accordion>
 
       <div style={{ textAlign: 'center' }}>
-        <Button style={{ color: '#FFF' }} variant='outlined' onClick={() => { setIsExpanded(!isExpanded) }}>{isExpanded ? 'Close All' : 'Show All'}</Button>
+        {isExpanded ? <Button endIcon={<ExpandLessIcon />} style={{ color: '#FFF', background: '#3361FF'}} variant='outlined' onClick={() => { setIsExpanded(false)}}>Close All</Button> : <Button style={{ color: '#FFF', background: '#3361FF'  }} endIcon={<ExpandMoreIcon />} variant='outlined'  onClick={() => { setIsExpanded(true)}}>View All</Button>}
       </div>
     </div>
   )
