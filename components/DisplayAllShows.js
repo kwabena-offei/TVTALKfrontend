@@ -24,7 +24,6 @@ import ExpandableGrid from "./ExpandableGrid";
 import PopularChatter from "./PopularChatter"
 import Container from "@mui/material/Container";
 import { Avatar, CardActions } from "@mui/material";
-import PopularCommet from './PopularCommets'
 
 const DisplayAllShows = ({ categories, network }) => {
   const router = useRouter();
