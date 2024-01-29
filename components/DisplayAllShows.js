@@ -22,6 +22,8 @@ import Image from "next/image";
 import { styled } from "@mui/system";
 import ExpandableGrid from "./ExpandableGrid";
 import PopularChatter from "./PopularChatter"
+import UpcomingCard from './UpcomingCard'
+import Live from './Live'
 import Container from "@mui/material/Container";
 import { Avatar, CardActions } from "@mui/material";
 
@@ -117,6 +119,8 @@ const DisplayAllShows = ({ categories, network }) => {
                 </div>
               </div>
             ))}
+            <Live />
+            <UpcomingCard />
         </Container>
       </Box>
     </>

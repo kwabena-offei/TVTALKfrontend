@@ -241,13 +241,13 @@ function ResponsiveAppBar({ context }) {
             {token
               ? <Box sx={{ flexGrow: 0 }}>
                 <Link href='/' >
-                  <a style={{ marginRight: 8 }}><HouseButton fontSize = 'small' /></a>
+                  <a style={{ marginRight: 8 }}><HouseButton /></a>
                 </Link>
                 <Link href='/profile/favorites' >
-                  <a style={{ marginRight: 8 }}><HeartButton fontSize = 'small' /></a>
+                  <a style={{ marginRight: 8 }}><HeartButton /></a>
                 </Link>
                 <Link href='/notifications'>
-                  <a style={{ marginRight: 12 }}><NotificationButton fontSize = 'small' token={token} /></a>
+                  <a style={{ marginRight: 12 }}><NotificationButton token={token} /></a>
                 </Link>
 
                 <Tooltip title="Open settings">
