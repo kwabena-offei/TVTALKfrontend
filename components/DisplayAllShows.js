@@ -100,7 +100,7 @@ const DisplayAllShows = ({ categories, network }) => {
       <Box className="wrapper">
         <Container maxWidth="xl">
           <NetworkSelector activeNetwork={network} />
-            <PopularChatter></PopularChatter>
+            <PopularChatter />
           {categories
             .filter((category) => category.shows.length)
             .map((category, index) => (

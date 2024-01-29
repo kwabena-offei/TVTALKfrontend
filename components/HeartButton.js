@@ -15,6 +15,8 @@ const HeartButton = ({ itemId, itemType, identifier, onClick }) => {
         background: 'var(--background-color, #090F27)',
         borderRadius: '63px',
         boxShadow: 'none',
+        width: '35px',
+        height: '35px',
         border: '1.5px solid var(--card-color, #131B3F)'
       }}
       variant='contained'
@@ -22,9 +24,9 @@ const HeartButton = ({ itemId, itemType, identifier, onClick }) => {
     >
       {
         isFavorited ? (
-          <FavoriteIcon htmlColor='#919CC0' />
+          <FavoriteIcon fontSize="small" htmlColor='#919CC0' />
         ) : (
-          <FavoriteBorderIcon htmlColor='#919CC0' />
+          <FavoriteBorderIcon fontSize="small" htmlColor='#919CC0' />
         )
       }
     </IconButton >
