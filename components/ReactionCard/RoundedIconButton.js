@@ -10,7 +10,7 @@ const RoundedButton = styled(Button, {
   color: "#A5B0D6",
   minWidth: '40px',
   minHeight: '40px',
-  padding: '8px',
+  padding: '5px',
   fontSize: '1.25rem',
   boxShadow: 'none',
   ['@media (max-width:780px)'] : {

@@ -95,8 +95,7 @@ function ExpandableGrid({ tvShows, title }) {
               />
               <CardContent sx={{ background: '#131B3F' }}>
                 <Typography gutterBottom variant="h5" component="div" >
-                  <h1 style={{ color: '#EFF2FD', fontSize: 18, fontWeight: 500 }}>{tvShow.title}</h1>
-
+                  <h1 style={{ color: '#EFF2FD', fontSize: 25, fontWeight: 500 }}>{tvShow.title}</h1>
                 </Typography>
                 <Grid container spacing={1}>
                   <Grid item>
@@ -105,12 +104,10 @@ function ExpandableGrid({ tvShows, title }) {
                         title='Chat'
                       />
                     </Link>
-
                   </Grid>
                   <Grid item>
                     <Link href={`/programs/${tvShow.tmsId}/about`}>
                       <Button style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
-
                         <Typography sx={{ color: '#919CC0' }} variant='string'>About</Typography>
                       </Button>
                     </Link>
