@@ -23,7 +23,6 @@ const Header = props => {
       </Box>
 
       <TextField InputProps={{ disableUnderline: true }} sx={{ background: '#131B3F', borderRadius: '10000px', width: '300px', input: { color: '#FFF', fontSize: '1.6rem', fontWeight: 300, padding: '16px' } }} variant="filled" fullWidth placeholder='Search...' style={{ color: '#FFF', fontSize: '1.8rem', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }} />
-
       <NavigationButton
         size='large'
         link='/login'

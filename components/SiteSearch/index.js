@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import TuneIcon from '@mui/icons-material/Tune';
 import { debounce } from 'lodash';
 import useAxios from "../../services/api";
 import Avatar from '@mui/material/Avatar';
@@ -26,6 +27,18 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
 }));
+
+const SettingIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  right: '0',
+  pointerEvents: 'none',
+  transform: 'rotate(90deg)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}))
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
@@ -93,6 +106,9 @@ const SiteSearch = () => {
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
+      <SettingIconWrapper>
+        <TuneIcon />
+      </SettingIconWrapper>
       <StyledInputBase
         value={searchValue}
         onFocus={setListVisible.bind(this, true)}
