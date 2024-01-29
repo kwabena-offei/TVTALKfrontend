@@ -105,6 +105,7 @@ function ExpandableGrid() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          marginTop: '80px'
         }}
       >
         <StyledTypography>Popular Chatters</StyledTypography>

@@ -22,6 +22,7 @@ import Image from "next/image";
 import { styled } from "@mui/system";
 import ExpandableGrid from "./ExpandableGrid";
 import PopularChatter from "./PopularChatter"
+import PopularCommets from './PopularCommets'
 import UpcomingCard from './UpcomingCard'
 import Live from './Live'
 import Container from "@mui/material/Container";
@@ -46,6 +47,7 @@ const DisplayAllShows = ({ categories, network }) => {
     fontSize: "30px",
     fontStyle: "normal",
     fontWeight: 700,
+    margin: 0,
     lineHeight: "120%", // 36px
     "@media (max-width: 600px)": {
       width: "335px",
@@ -103,6 +105,7 @@ const DisplayAllShows = ({ categories, network }) => {
         <Container maxWidth="xl">
           <NetworkSelector activeNetwork={network} />
             <PopularChatter />
+            <PopularCommets />
           {categories
             .filter((category) => category.shows.length)
             .map((category, index) => (
