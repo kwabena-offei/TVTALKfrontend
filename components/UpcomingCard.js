@@ -106,7 +106,7 @@ function UpcomingCard() {
           <Item key={index} expanded={expanded}>
             <Card key={`${tvShow.tmsId}`} sx={{ background: 'transparent' }}>
               <Image
-                src='/assets/no-picture-available.jpg'
+                src='/assets/upcoming.jpg'
                 // src={`https://${tvShow.preferred_image_uri}`}
                 // alt={`${tvShow.title} Image`}
                 width={720}

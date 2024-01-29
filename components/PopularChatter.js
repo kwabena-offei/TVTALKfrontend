@@ -130,7 +130,7 @@ function ExpandableGrid() {
               key={`${tvShow.name}`}
               sx={{ background: "transparent" }}
             >
-              <Avatar sx={{ width: 120, height: 120 }} alt={`_avatar`}>
+              <Avatar sx={{ width: 120, height: 120 }}>
               </Avatar>
               <CardContent sx={{ background: "#131B3F", padding: '0' }}>
                 <Typography variant="h5" component="div">

@@ -102,7 +102,7 @@ const SiteSearch = () => {
 
 
   return (
-    <Search>
+    <Search style={{width: '390px'}}>
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
