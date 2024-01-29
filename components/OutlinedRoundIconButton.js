@@ -10,7 +10,7 @@ const RoundedButton = styled(Button, {
   borderRadius: '50%',
   minWidth: '50px',
   minHeight: '50px',
-  padding: '8px',
+  padding: '5px',
   boxShadow: 'none',
   '& .MuiSvgIcon-root': {
     fontSize: '1.5rem',
