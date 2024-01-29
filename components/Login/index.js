@@ -167,6 +167,7 @@ const Login = (props) => {
           <Stack direction="column" spacing={1.25}>
             <GoogleLogin
               clientId={publicRuntimeConfig.GOOGLE_CLIENT_ID}
+              callback={handleResponseGoogle}
               render={renderProps => (
                 <AuthIconButton
                   onClick={renderProps.onClick}
@@ -183,7 +184,7 @@ const Login = (props) => {
               appId={publicRuntimeConfig.FACEBOOK_APP_ID}
               // appId="206412420236756"
               autoLoad
-              callback={handleResponseFacebook}
+              // callback={handleResponseFacebook}
               render={renderProps => (
                 <AuthIconButton
                   onClick={renderProps.onClick}
