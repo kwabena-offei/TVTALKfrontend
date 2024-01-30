@@ -15,7 +15,7 @@ import { FacebookRounded, Apple } from "@mui/icons-material";
 import GoogleIcon from '../Icons/GoogleColorIcon'
 import useAxios from '../../services/api'
 import GoogleLogin from 'react-google-login';
-import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import AppleLogin from 'react-apple-signin-auth';
 import { setCookie } from "cookies-next";
 import getConfig from 'next/config';
@@ -182,7 +182,7 @@ const Login = (props) => {
             <FacebookLogin
               appId={publicRuntimeConfig.FACEBOOK_APP_ID}
               // appId="206412420236756"
-              autoLoad
+              autoLoad={false}
               callback={handleResponseFacebook}
               render={renderProps => (
                 <AuthIconButton
