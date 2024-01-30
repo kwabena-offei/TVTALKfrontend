@@ -33,9 +33,3 @@ const login = () => {
 };
 
 export default login;
-
-// export async function getServerSideProps(context) {
-//     return {
-//         props: {},
-//     }
-// }

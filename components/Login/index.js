@@ -167,7 +167,6 @@ const Login = (props) => {
           <Stack direction="column" spacing={1.25}>
             <GoogleLogin
               clientId={publicRuntimeConfig.GOOGLE_CLIENT_ID}
-              callback={handleResponseGoogle}
               render={renderProps => (
                 <AuthIconButton
                   onClick={renderProps.onClick}
@@ -180,11 +179,11 @@ const Login = (props) => {
               onFailure={handleResponseGoogle}
               cookiePolicy={'single_host_origin'}
             />
-            <FacebookLogin
+            {/* <FacebookLogin
               appId={publicRuntimeConfig.FACEBOOK_APP_ID}
               // appId="206412420236756"
               autoLoad
-              // callback={handleResponseFacebook}
+              callback={handleResponseFacebook}
               render={renderProps => (
                 <AuthIconButton
                   onClick={renderProps.onClick}
@@ -193,7 +192,7 @@ const Login = (props) => {
                   Continue with Facebook
                 </AuthIconButton>
               )}
-            />
+            /> */}
             <AppleLogin
               authOptions={{
                 clientId: publicRuntimeConfig.APPLE_APP_ID,
