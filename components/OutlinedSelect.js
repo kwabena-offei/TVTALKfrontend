@@ -32,7 +32,7 @@ const OutlinedSelect = (props) => {
   console.log({ props })
   const { selectList, label, id, value, handleChange } = props;
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth style={{marginBottom: '20px'}}>
       <StyledInputLabel
         id={`${id}-label`}
         color='neutral'>

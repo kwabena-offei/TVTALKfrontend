@@ -28,6 +28,7 @@ const CustomSelect = props => {
   return (
     <FormControl
       fullWidth
+      style={{marginBottom: '20px'}}
     >
       <StyledInputLabel
         id={labelId}

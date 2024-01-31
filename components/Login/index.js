@@ -167,6 +167,7 @@ const Login = (props) => {
           <Stack direction="column" spacing={1.25}>
             <GoogleLogin
               clientId={publicRuntimeConfig.GOOGLE_CLIENT_ID}
+              autoLoad
               render={renderProps => (
                 <AuthIconButton
                   onClick={renderProps.onClick}
