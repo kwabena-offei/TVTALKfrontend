@@ -117,8 +117,21 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
   }
 
   const handleEpisodeChange = async (selectedTmsId) => {
-    const resp = await axios.get(`/comments?tmsId=${selectedTmsId}`);
-    setFilteredComments(resp.data.results.sort(sorter));
+    if (selectedTmsId.tag === "total") {
+      const totalPromises = selectedTmsId.content.map(async (episodeId) => {
+        return axios.get(`/comments?tmsId=${episodeId}`);
+      });
+      Promise.allSettled(totalPromises).then((results) => {
+        const totalData = []
+        results.forEach((result) => {
+          result.value.data.results.forEach((individualResult) => totalData.push(individualResult))
+        })
+        setFilteredComments(totalData.sort(sorter));
+      });
+    } else {
+      const resp = await axios.get(`/comments?tmsId=${selectedTmsId}`);
+      setFilteredComments(resp.data.results.sort(sorter));
+    }
   }
 
   const onSortChange = (value) => {

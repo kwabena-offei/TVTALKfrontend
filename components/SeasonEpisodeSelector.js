@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import CustomSelect from './CustomSelect';
 import useAxios from "../services/api";
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 const SeasonEpisodeSelector = ({ tmsId, totalSeasons }) => {
   const { axios } = useAxios();
-  const router = useRouter();
   const seasonList = Array.from({ length: parseInt(totalSeasons) }, (_, i) => {
     return {
       value: i + 1,
@@ -20,8 +17,7 @@ const SeasonEpisodeSelector = ({ tmsId, totalSeasons }) => {
   const [noSelectedSeason, setNoSelectedSeason] = useState(false);
 
   const handleSeasonChange = async (event) => {
-    const season = event.target.value;
-    setSeason(season);
+    setSeason(event.target.value);
     const { data: episodes } = await axios.get(`data/v1.1/series/${tmsId}/episodes?tms_id=${tmsId}&season=${season}&titleLang=en&descriptionLang=en`);
 
 
@@ -37,8 +33,7 @@ const SeasonEpisodeSelector = ({ tmsId, totalSeasons }) => {
   }
 
   const handleEpisodeChange = (event) => {
-    const episode = event.target.value;
-    setEpisode(episode);
+    setEpisode(event.target.value);
   }
 
   return (

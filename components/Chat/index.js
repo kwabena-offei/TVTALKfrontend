@@ -14,7 +14,6 @@ import { MenuSelects } from './MenuSelects';
 import MainContent from './MainContent';
 import { useRouter } from "next/router";
 import NewPostCard from "./NewPostCard";
-import SeasonEpisodeSelector from '../SeasonEpisodeSelector';
 
 export const ChatHeader = ({ show, heroImage }) => {
   const theme = useTheme();
