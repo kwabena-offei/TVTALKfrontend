@@ -11,7 +11,7 @@ const Header = props => {
 
         <Link href='/'>
           <MuiLink style={{ color: 'white', textDecoration: 'none' }}>
-            <Typography variant='string' style={{ fontSize: '1.8rem', fontWeight: 200, marginLeft: '6rem' }}>Chat By Show</Typography>
+            <Typography variant='string' style={{ fontSize: '1.8rem', fontWeight: 200, marginLeft: '6rem'}}>Chat By Show</Typography>
           </MuiLink>
         </Link>
 

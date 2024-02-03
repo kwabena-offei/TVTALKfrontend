@@ -177,7 +177,7 @@ const PopularCommets = () => {
     <>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '80px' }}>
       <StyledTypography>
-        Popular Commets
+        Popular Comments
       </StyledTypography>
 
       {expanded ? <Button endIcon={<ExpandLessIcon />} style={{ color: '#FFF'}} variant='outlined' onClick={() => { setExpanded(false)}}>Close All</Button> : <Button style={{ color: '#FFF'  }} endIcon={<ExpandMoreIcon />} variant='outlined'  onClick={() => { setExpanded(true)}}>View All</Button>}

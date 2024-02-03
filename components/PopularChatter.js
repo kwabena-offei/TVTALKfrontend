@@ -144,7 +144,7 @@ function ExpandableGrid() {
                 </Typography>
                 <Grid container spacing={1}>
                   <Grid item>
-                      <BlueButton title="follow" />
+                      <BlueButton title="View" />
                   </Grid>
                 </Grid>
               </CardContent>

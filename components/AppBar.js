@@ -119,7 +119,7 @@ function ResponsiveAppBar({ context }) {
   };
 
   return (
-    <Container maxWidth="xl" style={{ paddingLeft: 0 }}>
+    <Container maxWidth="xl" style={{ paddingLeft: 0, paddingRight: 0 }}>
       <AppBar position="static" style={{ justifyContent: 'space-between' }}>
         <Container maxWidth="xl" sx={{
           backgroundColor: '#090F27',
@@ -144,7 +144,7 @@ function ResponsiveAppBar({ context }) {
                 fontSize: '40px',
                 fontStyle: 'normal',
                 fontWeight: 700,
-                lineHeight: '40px'
+                lineHeight: '40px',
               }}
             >
               TV Talk
@@ -206,7 +206,7 @@ function ResponsiveAppBar({ context }) {
                 fontWeight: 700,
                 letterSpacing: '.3rem',
                 color: 'inherit',
-                textDecoration: 'none',
+                textDecoration: 'none'
               }}
             >
               TV Talk
@@ -223,7 +223,7 @@ function ResponsiveAppBar({ context }) {
                     fontSize: 18,
                     fontStyle: 'normal',
                     fontWeight: 500,
-                    lineHeight: '24px'
+                    lineHeight: '24px',
                   }}
                 >
                   {page.title}
@@ -233,7 +233,7 @@ function ResponsiveAppBar({ context }) {
 
             {!isMobile && (
 
-              <Box sx={{ width: 490, flexGrow: 2, display: { xs: 'flex', md: 'flex' } }}>
+              <Box sx={{ flexGrow: 2, display: { xs: 'flex', md: 'flex' } }}>
                 <SiteSearch />
               </Box>
             )}
