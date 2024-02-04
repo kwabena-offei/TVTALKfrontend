@@ -79,7 +79,7 @@ export const MenuSelects = ({
       <Stack direction="column" gap={isMobile ? 1.25 : 2.5}>
         <OutlinedSelect
           selectList={seasonsList}
-          label="Select Season"
+          label="Season Selector"
           id="selectSeason"
           handleChange={handleSeasonChange}
           value={season}

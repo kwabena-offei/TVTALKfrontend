@@ -131,5 +131,3 @@ const DisplayAllShows = ({ categories, network }) => {
 };
 
 export default DisplayAllShows;
-
-

@@ -40,7 +40,7 @@ const SeasonEpisodeSelector = ({ tmsId, totalSeasons }) => {
     <>
       <CustomSelect
         selectList={seasonList}
-        label='Select Season'
+        label='Season Selector'
         labelId='selectSeason'
         selectId='selectSeason'
         handleChange={handleSeasonChange}
