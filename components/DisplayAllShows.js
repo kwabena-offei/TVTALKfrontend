@@ -132,4 +132,4 @@ const DisplayAllShows = ({ categories, network }) => {
 
 export default DisplayAllShows;
 
-// style={{ marginLeft: 50, paddingLeft: 20, marginBottom: 20 }}
+
