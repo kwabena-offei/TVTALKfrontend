@@ -102,12 +102,12 @@ const SiteSearch = () => {
   );
 
   return (
-        <Search style={{ width: "390px" }}>
+    <Search style={{ width: "390px" }}>
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
       <SettingIconWrapper>
-          <TuneIcon />
+        <TuneIcon />
       </SettingIconWrapper>
       <StyledInputBase
         value={searchValue}
