@@ -8,6 +8,7 @@ import useAxios from "../../services/api";
 import Avatar from "@mui/material/Avatar";
 import Resuls from "./Results";
 import { useRouter } from "next/router";
+import { getCookie } from "cookies-next";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -17,7 +18,6 @@ const Search = styled("div")(({ theme }) => ({
   marginLeft: 0,
   margin: "0 auto",
 }));
-
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
@@ -29,7 +29,6 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   justifyContent: "center",
 }));
 
-
 const SettingIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: "100%",
@@ -39,6 +38,8 @@ const SettingIconWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  cursor: "pointer",
+  zIndex: '999999'
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -57,6 +58,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const SiteSearch = () => {
   const router = useRouter();
   const [isListVisible, setListVisible] = useState(true);
+
+  const handleSettingIconClick = () => {
+    // Navigate to another page when the setting icon is clicked
+    const cookie = getCookie('token');
+    !cookie ? router.push("/login") : router.push("/profile");
+  };
 
   const { axios } = useAxios();
   const [searchValue, setSearchValue] = useState("");
@@ -108,8 +115,8 @@ const SiteSearch = () => {
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
-      <SettingIconWrapper>
-        <TuneIcon />
+      <SettingIconWrapper onClick={handleSettingIconClick}>
+          <TuneIcon />
       </SettingIconWrapper>
       <StyledInputBase
         value={searchValue}
