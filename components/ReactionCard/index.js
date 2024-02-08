@@ -121,7 +121,7 @@ const ReactionCard = (props) => {
       <CardHeader isMobile={isMobile} userData={{ id, username, image, timeAgo }} header={header} commentType={commentType} tmsId={tmsId} type={type} setShares={setShares} />
       <CardContent sx={isMobile ? { paddingX: 2, paddingY: 0.5 } : { paddingX: 3.75, paddingY: 1.25 }}>
         <ReactionCardHashtags>{hashtag}</ReactionCardHashtags>
-        <ReactionCardText isMobile={isMobile} onClick={backToFeed}>{text}</ReactionCardText>
+        <ReactionCardText isMobile={isMobile} onClick={backToFeed} style={{cursor: 'pointer'}}>{text}</ReactionCardText>
         { images?.length ? images.map((image, index) => (
           <Box key={`${id}-${image}-${index}`} sx={{ paddingY: 1.25}}>
             <ReactionCardMedia image={image} />

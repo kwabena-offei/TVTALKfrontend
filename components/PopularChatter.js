@@ -22,7 +22,7 @@ import Link from "next/link";
 import { styled } from "@mui/system";
 import { Avatar } from "@mui/material";
 
-function ExpandableGrid() {
+function PopularChatter() {
   const [expanded, setExpanded] = useState(false);
   const tvShows = [
     { name: "Safoa", image: 'images/popular.png'},
@@ -156,4 +156,4 @@ function ExpandableGrid() {
   );
 }
 
-export default ExpandableGrid;
+export default PopularChatter;
