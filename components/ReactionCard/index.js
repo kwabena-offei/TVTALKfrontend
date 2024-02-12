@@ -127,11 +127,11 @@ const ReactionCard = (props) => {
             <ReactionCardMedia image={image} />
           </Box>
         )) : null}
-        { videos?.length ? videos.map((video, index) => (
+        {/* { videos?.length ? videos.map((video, index) => (
             <Box key={`${id}-${video}-${index}`} sx={{ paddingY: 1.25}}>
               <ReactionCardVideo video={video} />
             </Box>
-          )) : null }
+          )) : null } */}
       </CardContent>
       {withoutActions
       ? null
