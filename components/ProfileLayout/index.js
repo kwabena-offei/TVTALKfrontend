@@ -1,37 +1,52 @@
-import React from "react";
-import {
-  Box,
-  Container,
-  Stack,
-  Tabs,
-  Tab
-} from "@mui/material";
-import { useTheme } from '@mui/material/styles';
+import React, { useContext } from "react";
+import { Box, Container, Stack, Tabs, Tab } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { ProfileTopBar, ProfileAvatar, ProfileUsername, TabLabel, FollowButton, EditProfileButton, ProfileTopBarMobile, ProfileAvatarMobile, ProfileUsernameMobile } from "./ProfileLayout.styled";
+import {
+  ProfileTopBar,
+  ProfileAvatar,
+  ProfileUsername,
+  TabLabel,
+  FollowButton,
+  EditProfileButton,
+  ProfileTopBarMobile,
+  ProfileAvatarMobile,
+  ProfileUsernameMobile,
+} from "./ProfileLayout.styled";
 import { useRouter } from "next/router";
-import useAxios from '../../services/api';
+import useAxios from "../../services/api";
+import { AuthContext } from "../../util/AuthContext";
 
 export async function fetchAccount(username) {
-  const { axios } = useAxios()
+  const { axios } = useAxios();
   const { data: profile } = await axios.get(`/users/${username}`);
   return profile;
 }
 
 export const ProfileLayout = ({ children, mode }) => {
-  const { props } = children
+  const { profile, fetchProfile } = useContext(AuthContext);
   const router = useRouter();
   const currentRoute = router.asPath;
-  const { username, image, reactions_count, favorites_count, followers_count, following_count } = props.profile;
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  fetchProfile();
 
-  const inheritURL = mode === 'profile' ? "/profile" : `/users/${username}`;
+  const {
+    username,
+    image,
+    reactions_count,
+    favorites_count,
+    followers_count,
+    following_count,
+  } = profile;
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const inheritURL = mode === "profile" ? "/profile" : `/users/${username}`;
 
   const tabs = [
     {
       title: "Reactions",
-      href:  `${inheritURL}/reactions`,
+      href: `${inheritURL}/reactions`,
       count: reactions_count | "0",
     },
     {
@@ -57,35 +72,55 @@ export const ProfileLayout = ({ children, mode }) => {
 
   return (
     <>
-      {isMobile ? <ProfileTopBarMobile /> :<ProfileTopBar />}
+      {isMobile ? <ProfileTopBarMobile /> : <ProfileTopBar />}
       <Container>
         <Box>
-          <Stack direction={isMobile ? 'column' : 'row'} alignItems="center">
-            { isMobile ? <ProfileAvatarMobile alt={username} src={image} /> : <ProfileAvatar alt={username} src={image} />}
-            { isMobile ? <ProfileUsernameMobile>{username}</ProfileUsernameMobile> : <ProfileUsername>{username}</ProfileUsername>}
-            { mode === 'profile' ? <EditProfileButton isMobile={isMobile} /> : <FollowButton isMobile={isMobile} />}
+          <Stack direction={isMobile ? "column" : "row"} alignItems="center">
+            {isMobile ? (
+              <ProfileAvatarMobile alt={username} src={image} />
+            ) : (
+              <ProfileAvatar alt={username} src={image} />
+            )}
+            {isMobile ? (
+              <ProfileUsernameMobile>{username}</ProfileUsernameMobile>
+            ) : (
+              <ProfileUsername>{username}</ProfileUsername>
+            )}
+            {mode === "profile" ? (
+              <EditProfileButton isMobile={isMobile} />
+            ) : (
+              <FollowButton isMobile={isMobile} />
+            )}
           </Stack>
         </Box>
-        <Box sx={{
-          marginTop: '4vh'
-        }}>
+        <Box
+          sx={{
+            marginTop: "4vh",
+          }}
+        >
           <Tabs
             value={currentRoute}
             onChange={handleChangeTab}
             variant="fullWidth"
-            textColor='secondary'
+            textColor="secondary"
           >
-            {tabs.map((value, key) => 
-              <Tab key={key} value={value.href} label={<TabLabel {...value} isMobile={isMobile} />}></Tab>
-            )}
+            {tabs.map((value, key) => (
+              <Tab
+                key={key}
+                value={value.href}
+                label={<TabLabel {...value} isMobile={isMobile} />}
+              ></Tab>
+            ))}
           </Tabs>
         </Box>
       </Container>
 
-      <Container sx={{
-        marginTop: isMobile ? '3vh' : '5vh',
-        marginBottom: isMobile ? '6vh' : '8vh',
-      }}>
+      <Container
+        sx={{
+          marginTop: isMobile ? "3vh" : "5vh",
+          marginBottom: isMobile ? "6vh" : "8vh",
+        }}
+      >
         {children}
       </Container>
     </>

@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useContext } from "react";
+import { AuthContext } from "../../util/AuthContext";
+import router from "next/router";
 import {
   Button,
   Card,
@@ -7,45 +9,51 @@ import {
   CardMedia,
   Stack,
   Box,
-  CardActions
+  CardActions,
 } from "@mui/material";
 import { styled } from "@mui/system";
-import DarkFavoriteButton from "./FavoriteDarkButton";
-import LightFavoriteButton from './FavoriteLightButton';
-import FavoriteIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import LightFavoriteButton from "./FavoriteLightButton";
+import FavoriteIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import DarkButton from "./DarkRoundedTextButton";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 const StyledCard = styled(Card, {
   name: "Favorite",
-  slot: "custom-card"
+  slot: "custom-card",
 })({
-  backgroundColor: '#131B3F',
-  borderRadius: '6px'
-})
+  backgroundColor: "#131B3F",
+  borderRadius: "6px",
+});
 
-const FavoriteCard = ({ tvShow, favorites, ...props }) => {
+const FavoriteCard = ({ tvShow, favorites, fetchFavorites }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { id, image, title, tmsId } = tvShow;
 
-  const [isFavorite, setIsFavorite] = useState(false)
-  const toggleIsFavorite = () => setIsFavorite(!isFavorite)
+  const { toggleFavorite } = useContext(AuthContext);
 
   const handleClick = async () => {
-    // ToDo: add callback to endpoint
-    await console.log('change this handle click - id:', id)
-    toggleIsFavorite()
-  }
+    toggleFavorite({ identifier: { tmsId: tvShow.tmsId }, liked: false });
+    fetchFavorites();
+  };
 
   const handleAbout = () => {
-    console.log("handleAbout", tmsId)
-  }
+    router.push(`/programs/${tmsId}/about`);
+  };
+
+  const handleChat = () => {
+    router.push(`/chat/${tmsId}`);
+  };
 
   return (
     <StyledCard key={`favorite-show-${id}`}>
-      <CardMedia component="img" image={`https://${image}`} height={240} width={360} />
+      <CardMedia
+        component="img"
+        image={`https://${image}`}
+        height={240}
+        width={360}
+      />
       <CardContent sx={{ paddingX: 2.5, paddingTop: 1.5, paddingBottom: 0.75 }}>
         <Typography
           // gutterBottom
@@ -62,6 +70,7 @@ const FavoriteCard = ({ tvShow, favorites, ...props }) => {
             variant="contained"
             color="primary"
             sx={{ boxShadow: "none", paddingX: "1.15vw" }}
+            onClick={handleChat}
           >
             <Typography variant={isMobile ? "body2" : "body1"}>Chat</Typography>
           </Button>
@@ -70,25 +79,18 @@ const FavoriteCard = ({ tvShow, favorites, ...props }) => {
               About
             </Typography>
           </DarkButton>
+
           <Box>
-            {isFavorite ? (
-              <LightFavoriteButton
-                onClick={handleClick}
-                size="small"
-                icon={<FavoriteIcon fontSize="small" />}
-              />
-            ) : (
-              <DarkFavoriteButton
-                onClick={handleClick}
-                size="small"
-                icon={<FavoriteIcon fontSize="small" />}
-              />
-            )}
+            <LightFavoriteButton
+              onClick={handleClick}
+              size="small"
+              icon={<FavoriteIcon fontSize="small" htmlColor="#919CC0" />}
+            />
           </Box>
         </Stack>
       </CardActions>
     </StyledCard>
   );
-}
+};
 
 export default FavoriteCard;
