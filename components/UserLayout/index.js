@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { Box, Container, Stack, Tabs, Tab } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -8,14 +8,12 @@ import {
   ProfileUsername,
   TabLabel,
   FollowButton,
-  EditProfileButton,
   ProfileTopBarMobile,
   ProfileAvatarMobile,
   ProfileUsernameMobile,
-} from "./ProfileLayout.styled";
+} from "./UserLayout.styled";
 import { useRouter } from "next/router";
 import useAxios from "../../services/api";
-import { AuthContext } from "../../util/AuthContext";
 
 export async function fetchAccount(username) {
   const { axios } = useAxios();
@@ -23,12 +21,12 @@ export async function fetchAccount(username) {
   return profile;
 }
 
-export const ProfileLayout = ({ children, mode }) => {
-  const { profile, mutateProfile } = useContext(AuthContext);
+export const UserLayout = ({ children, mode }) => {
+  const { props } = children;
+  const { profile } = props;
+
   const router = useRouter();
   const currentRoute = router.asPath;
-
-  console.log("hello");
 
   const {
     username,
@@ -87,11 +85,8 @@ export const ProfileLayout = ({ children, mode }) => {
             ) : (
               <ProfileUsername>{username}</ProfileUsername>
             )}
-            {mode === "profile" ? (
-              <EditProfileButton isMobile={isMobile} />
-            ) : (
-              <FollowButton isMobile={isMobile} />
-            )}
+
+            <FollowButton isMobile={isMobile} />
           </Stack>
         </Box>
         <Box
@@ -122,7 +117,7 @@ export const ProfileLayout = ({ children, mode }) => {
           marginBottom: isMobile ? "6vh" : "8vh",
         }}
       >
-        {React.cloneElement(children, { mutateProfile })}
+        {children}
       </Container>
     </>
   );

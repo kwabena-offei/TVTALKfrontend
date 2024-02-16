@@ -48,6 +48,7 @@ function App(props) {
     pageProps,
     ctx,
   } = props;
+
   const getLayout = Component.getLayout || ((page) => page);
 
   Router.events.on("routeChangeStart", () => NProgress.start());

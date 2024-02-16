@@ -1,30 +1,17 @@
-import Masonry from '@mui/lab/Masonry';
-import React from 'react';
-import { ProfileLayout, fetchAccount } from '../../../components/ProfileLayout';
-import ReactionCard from '../../../components/ReactionCard';
-import useAxios from '../../../services/api';
-import { useTheme } from '@mui/material/styles';
+import Masonry from "@mui/lab/Masonry";
+import React from "react";
+import { UserLayout, fetchAccount } from "../../../components/UserLayout";
+import ReactionCard from "../../../components/ReactionCard";
+import useAxios from "../../../services/api";
+import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
-export async function getServerSideProps(context) {
-  const { axios } = useAxios(context);
-  const { username } = context.query
-  const { data: reactions } = await axios.get(`/users/${username}/reactions`);
-  const profile = await fetchAccount(username);
-
-  return {
-    props: {
-      reactions,
-      profile,
-    }, // will be passed to the page component as props
-  };
-}
 
 export default function Page({ reactions, profile }) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isMd = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMd = useMediaQuery(theme.breakpoints.down("md"));
   const { results: reactionsList, pagination } = reactions;
+
   return (
     <Masonry
       columns={isMd ? 1 : 2}
@@ -40,6 +27,21 @@ export default function Page({ reactions, profile }) {
   );
 }
 
+export async function getServerSideProps(context) {
+  const { axios } = useAxios(context);
+  const { username } = context.query;
+
+  const { data: reactions } = await axios.get(`/users/${username}/reactions`);
+  const profile = await fetchAccount(username);
+
+  return {
+    props: {
+      reactions,
+      profile,
+    },
+  };
+}
+
 Page.getLayout = function getLayout(page) {
-  return <ProfileLayout mode='currentUser'>{page}</ProfileLayout>;
+  return <UserLayout mode="currentUser">{page}</UserLayout>;
 };
