@@ -4,8 +4,8 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Button,
   Grid,
@@ -25,24 +25,24 @@ import { Avatar } from "@mui/material";
 function PopularChatter() {
   const [expanded, setExpanded] = useState(false);
   const tvShows = [
-    { name: "Safoa", image: 'images/popular.png'},
-    { name: "Safoa", image: 'images/popular.png'},
-    { name: "Safoa", image: 'images/popular.png'},
-    { name: "Safoa", image: 'images/popular.png'},
-    { name: "Safoa", image: 'images/popular.png'},
-    { name: "Safoa", image: 'images/popular.png'},
-    { name: "Safoa", image: 'images/popular.png'},
-    { name: "Safoa", image: 'images/popular.png'},
+    { name: "Safoa", image: "images/popular.png" },
+    { name: "Safoa", image: "images/popular.png" },
+    { name: "Safoa", image: "images/popular.png" },
+    { name: "Safoa", image: "images/popular.png" },
+    { name: "Safoa", image: "images/popular.png" },
+    { name: "Safoa", image: "images/popular.png" },
+    { name: "Safoa", image: "images/popular.png" },
+    { name: "Safoa", image: "images/popular.png" },
   ];
   const tvShow = [
-    { name: "Safoa", image: 'images/popular.png'},
-    { name: "Safoa", image: 'images/popular.png'},
-    { name: "Safoa", image: 'images/popular.png'},
-    { name: "Safoa", image: 'images/popular.png'},
-    { name: "Safoa", image: 'images/popular.png'},
-    { name: "Safoa", image: 'images/popular.png'},
-    { name: "Safoa", image: 'images/popular.png'},
-    { name: "Safoa", image: 'images/popular.png'},
+    { name: "Safoa", image: "images/popular.png" },
+    { name: "Safoa", image: "images/popular.png" },
+    { name: "Safoa", image: "images/popular.png" },
+    { name: "Safoa", image: "images/popular.png" },
+    { name: "Safoa", image: "images/popular.png" },
+    { name: "Safoa", image: "images/popular.png" },
+    { name: "Safoa", image: "images/popular.png" },
+    { name: "Safoa", image: "images/popular.png" },
   ];
 
   const collapsedCount = 6;
@@ -55,6 +55,7 @@ function PopularChatter() {
     flexWrap: expanded ? "wrap" : "nowrap",
     display: "flex",
     WebkitOverflowScrolling: "touch",
+    marginTop: "24px",
     flexGrow: 1,
     scrollSnapType: "both mandatory",
     "&::-webkit-scrollbar": {
@@ -66,6 +67,7 @@ function PopularChatter() {
     },
     "@media (min-width: 935px)": {
       display: "grid",
+      marginTop: "0px",
       gridTemplateColumns: "repeat(6, 1fr)",
       overflowX: "initial",
       maxHeight: expanded ? "auto" : "auto",
@@ -105,13 +107,34 @@ function PopularChatter() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginTop: '80px'
+          marginTop: "80px",
         }}
       >
         <StyledTypography>Popular Chatters</StyledTypography>
 
-        {expanded ? <Button endIcon={<ExpandLessIcon />} style={{ color: '#FFF', width: "200px"}} variant='outlined' onClick={() => { setExpanded(false)}}>Close All</Button> : <Button style={{ color: '#FFF'  }} endIcon={<ExpandMoreIcon />} variant='outlined'  onClick={() => { setExpanded(true)}}>View All</Button>}
-
+        {expanded ? (
+          <Button
+            endIcon={<ExpandLessIcon />}
+            style={{ color: "#FFF", width: "200px" }}
+            variant="outlined"
+            onClick={() => {
+              setExpanded(false);
+            }}
+          >
+            Close All
+          </Button>
+        ) : (
+          <Button
+            style={{ color: "#FFF" }}
+            endIcon={<ExpandMoreIcon />}
+            variant="outlined"
+            onClick={() => {
+              setExpanded(true);
+            }}
+          >
+            View All
+          </Button>
+        )}
       </div>
 
       <Container expanded={expanded}>
@@ -126,25 +149,40 @@ function PopularChatter() {
                 alignItems: "center",
                 backgroundColor: "#131B3F",
                 paddingTop: "20px",
-                width: '100%'
+                width: "100%",
               }}
               key={`${tvShow.name}`}
               sx={{ background: "transparent" }}
             >
-              <Avatar sx={{ width: 120, height: 120 }}>
-              </Avatar>
-              <CardContent sx={{ background: "#131B3F", padding: '0' }}>
+              <Avatar sx={{ width: 120, height: 120 }}></Avatar>
+              <CardContent sx={{ background: "#131B3F", padding: "0" }}>
                 <Typography variant="h5" component="div">
                   <h1
-                    style={{ color: "#EFF2FD", fontSize: 18, fontWeight: 500,}}
+                    style={{ color: "#EFF2FD", fontSize: 18, fontWeight: 500 }}
                   >
-                    <p style={{textAlign: 'center', padding: '0', margin: '0 0 -5px 0'}}>{tvShow.name}</p>
-                    <p style={{fontSize: '10px', textAlign: 'center', padding: '0'}}>41 &nbsp;Reactions</p>
+                    <p
+                      style={{
+                        textAlign: "center",
+                        padding: "0",
+                        margin: "0 0 -5px 0",
+                      }}
+                    >
+                      {tvShow.name}
+                    </p>
+                    <p
+                      style={{
+                        fontSize: "10px",
+                        textAlign: "center",
+                        padding: "0",
+                      }}
+                    >
+                      41 &nbsp;Reactions
+                    </p>
                   </h1>
                 </Typography>
                 <Grid container spacing={1}>
                   <Grid item>
-                      <BlueButton title="View" />
+                    <BlueButton title="View" />
                   </Grid>
                 </Grid>
               </CardContent>
