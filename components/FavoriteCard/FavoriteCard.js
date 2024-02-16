@@ -26,7 +26,7 @@ const StyledCard = styled(Card, {
   borderRadius: "6px",
 });
 
-const FavoriteCard = ({ tvShow, favorites, fetchFavorites }) => {
+const FavoriteCard = ({ tvShow, fetchFavorites, mutateProfile }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { id, image, title, tmsId } = tvShow;
@@ -35,6 +35,7 @@ const FavoriteCard = ({ tvShow, favorites, fetchFavorites }) => {
 
   const handleClick = async () => {
     toggleFavorite({ identifier: { tmsId: tvShow.tmsId }, liked: false });
+    mutateProfile();
     fetchFavorites();
   };
 

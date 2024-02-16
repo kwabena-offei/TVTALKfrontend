@@ -3,6 +3,7 @@ import { hasCookie } from "cookies-next";
 import React, { useState, useEffect } from "react";
 import useAxios from "../services/api";
 import { useRouter } from "next/router";
+import useSWR from "swr";
 
 export const AuthContext = createContext({
   isAuthenticated: false,
@@ -10,7 +11,7 @@ export const AuthContext = createContext({
   toggleFavorite: () => {},
   login: () => {},
   logout: () => {},
-  fetchProfile: () => {},
+  mutateProfile: () => {},
 });
 
 export const hasCookieToken = (context) => {
@@ -40,13 +41,14 @@ export const AuthProvider = ({ children }) => {
     setFavorites({});
   };
 
-  const fetchProfile = async () => {
-    if (isAuthenticated) {
-      let resp = await axios.get("/profile");
+  const fetcher = (url) => axios.get(url).then((res) => res.data);
 
-      setProfile(resp.data);
+  const { data, error, mutate: mutateProfile } = useSWR("/profile", fetcher);
+  useEffect(() => {
+    if (data) {
+      setProfile(data);
     }
-  };
+  }, [data]);
 
   const fetchFavorites = async () => {
     if (isAuthenticated) {
@@ -81,8 +83,8 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         fetchFavorites,
-        fetchProfile,
         profile,
+        mutateProfile,
       }}
     >
       {children}

@@ -1,13 +1,17 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import { Grid } from "@mui/material";
 import { ProfileLayout } from "../../components/ProfileLayout";
 import FavoriteCard from "../../components/FavoriteCard/FavoriteCard";
 import useAxios from "../../services/api";
 import { AuthContext } from "../../util/AuthContext";
 
-export default function Page({ favorites }) {
+export default function Page({ favorites, mutateProfile }) {
   const { results: favoritesList } = favorites;
   const { fetchFavorites, favorites: allFavorites } = useContext(AuthContext);
+
+  useEffect(() => {
+    mutateProfile();
+  }, []);
 
   const filteredFavorites = favoritesList.filter((favorite) =>
     allFavorites.shows?.includes(favorite.tmsId)
@@ -28,6 +32,7 @@ export default function Page({ favorites }) {
             <FavoriteCard
               tvShow={{ ...favorite, image }}
               fetchFavorites={fetchFavorites}
+              mutateProfile={mutateProfile}
             />
           </Grid>
         );

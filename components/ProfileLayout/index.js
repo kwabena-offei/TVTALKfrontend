@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Box, Container, Stack, Tabs, Tab } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -24,10 +24,9 @@ export async function fetchAccount(username) {
 }
 
 export const ProfileLayout = ({ children, mode }) => {
-  const { profile, fetchProfile } = useContext(AuthContext);
+  const { profile, mutateProfile } = useContext(AuthContext);
   const router = useRouter();
   const currentRoute = router.asPath;
-  fetchProfile();
 
   const {
     username,
@@ -121,7 +120,7 @@ export const ProfileLayout = ({ children, mode }) => {
           marginBottom: isMobile ? "6vh" : "8vh",
         }}
       >
-        {children}
+        {React.cloneElement(children, { mutateProfile })}
       </Container>
     </>
   );

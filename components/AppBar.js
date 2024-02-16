@@ -143,8 +143,7 @@ function ResponsiveAppBar({ context }) {
             <Typography
               variant="h6"
               noWrap
-              component="a"
-              href="/"
+              onClick={() => router.push("/")}
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -157,6 +156,7 @@ function ResponsiveAppBar({ context }) {
                 fontStyle: "normal",
                 fontWeight: 700,
                 lineHeight: "40px",
+                cursor: "pointer",
               }}
             >
               TV Talk
@@ -212,8 +212,7 @@ function ResponsiveAppBar({ context }) {
             <Typography
               variant="h5"
               noWrap
-              component="a"
-              href="/"
+              onClick={() => router.push("/")}
               sx={{
                 mr: 2,
                 display: { xs: "flex", md: "none" },
@@ -222,6 +221,7 @@ function ResponsiveAppBar({ context }) {
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
+                cursor: "pointer",
               }}
             >
               TV Talk
