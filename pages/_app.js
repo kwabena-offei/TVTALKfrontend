@@ -1,14 +1,17 @@
-import Footer from "../components/Footer"
-import Header from "../components/Header"
-import { CacheProvider } from '@emotion/react';
-import { ThemeProvider, CssBaseline, Box } from '@mui/material';
-import '../styles/main.scss'
-import createEmotionCache from '../util/createEmotionCache';
-import theme from '../styles/theme/theme';
+import Footer from "../components/Footer";
+import Router from "next/router";
+import { CacheProvider } from "@emotion/react";
+import { ThemeProvider, CssBaseline, Box } from "@mui/material";
+import "../styles/main.scss";
+import createEmotionCache from "../util/createEmotionCache";
+import theme from "../styles/theme/theme";
 import { createGlobalStyle } from "styled-components";
-import AppBar from '../components/AppBar';
-import { AuthProvider } from '../util/AuthContext';
+import AppBar from "../components/AppBar";
+import { AuthProvider } from "../util/AuthContext";
 // import '../styles/main.scss'
+
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -36,12 +39,22 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-
 const clientSideEmotionCache = createEmotionCache();
 
 function App(props) {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps, ctx } = props;
+  const {
+    Component,
+    emotionCache = clientSideEmotionCache,
+    pageProps,
+    ctx,
+  } = props;
+
   const getLayout = Component.getLayout || ((page) => page);
+
+  Router.events.on("routeChangeStart", () => NProgress.start());
+  Router.events.on("routeChangeComplete", () => NProgress.done());
+  Router.events.on("routeChangeError", () => NProgress.done());
+  NProgress.configure({ showSpinner: false });
 
   return (
     <>
@@ -52,9 +65,9 @@ function App(props) {
             <CssBaseline />
             <Box
               sx={{
-                display: 'flex',
-                minHeight: '100vh',
-                flexDirection: 'column'
+                display: "flex",
+                minHeight: "100vh",
+                flexDirection: "column",
               }}
             >
               <AppBar context={ctx} />
