@@ -15,8 +15,8 @@ import {
 import { useRouter } from "next/router";
 import useAxios from "../../services/api";
 
+const { axios } = useAxios();
 export async function fetchAccount(username) {
-  const { axios } = useAxios();
   const { data: profile } = await axios.get(`/users/${username}`);
   return profile;
 }
@@ -69,6 +69,14 @@ export const UserLayout = ({ children, mode }) => {
     router.push(tabId);
   };
 
+  const handleFollow = async () => {
+    const res = await axios.post(`/relationships`, {
+      follower_id: 653,
+      followed_id: 485,
+    });
+    console.log("res", res);
+  };
+
   return (
     <>
       {isMobile ? <ProfileTopBarMobile /> : <ProfileTopBar />}
@@ -86,7 +94,7 @@ export const UserLayout = ({ children, mode }) => {
               <ProfileUsername>{username}</ProfileUsername>
             )}
 
-            <FollowButton isMobile={isMobile} />
+            <FollowButton isMobile={isMobile} onClick={handleFollow} />
           </Stack>
         </Box>
         <Box

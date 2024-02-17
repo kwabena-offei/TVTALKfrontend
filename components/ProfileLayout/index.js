@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Box, Container, Stack, Tabs, Tab } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -27,8 +27,6 @@ export const ProfileLayout = ({ children, mode }) => {
   const { profile, mutateProfile } = useContext(AuthContext);
   const router = useRouter();
   const currentRoute = router.asPath;
-
-  console.log("hello");
 
   const {
     username,

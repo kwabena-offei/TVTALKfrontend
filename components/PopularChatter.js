@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
+import router from "next/router";
 import Image from "next/image";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -6,6 +7,7 @@ import CardMedia from "@mui/material/CardMedia";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import {
   Button,
   Grid,
@@ -21,32 +23,28 @@ import BlueButton from "../components/BlueButton";
 import Link from "next/link";
 import { styled } from "@mui/system";
 import { Avatar } from "@mui/material";
+import useAxios from "../services/api";
 
 function PopularChatter() {
   const [expanded, setExpanded] = useState(false);
-  const tvShows = [
-    { name: "Safoa", image: "images/popular.png" },
-    { name: "Safoa", image: "images/popular.png" },
-    { name: "Safoa", image: "images/popular.png" },
-    { name: "Safoa", image: "images/popular.png" },
-    { name: "Safoa", image: "images/popular.png" },
-    { name: "Safoa", image: "images/popular.png" },
-    { name: "Safoa", image: "images/popular.png" },
-    { name: "Safoa", image: "images/popular.png" },
-  ];
-  const tvShow = [
-    { name: "Safoa", image: "images/popular.png" },
-    { name: "Safoa", image: "images/popular.png" },
-    { name: "Safoa", image: "images/popular.png" },
-    { name: "Safoa", image: "images/popular.png" },
-    { name: "Safoa", image: "images/popular.png" },
-    { name: "Safoa", image: "images/popular.png" },
-    { name: "Safoa", image: "images/popular.png" },
-    { name: "Safoa", image: "images/popular.png" },
-  ];
+  const [topChatters, setTopChatters] = useState([]);
+
+  const { axios } = useAxios();
+
+  useEffect(() => {
+    const fetchPopularChatters = async () => {
+      const { data: topChattersData } = await axios.get(`users/top?limit=8`);
+      setTopChatters(topChattersData.results);
+    };
+    fetchPopularChatters();
+  }, []);
+
+  console.log(topChatters);
 
   const collapsedCount = 6;
-  const displayedShows = expanded ? tvShow : tvShows.slice(0, collapsedCount);
+  const displayedPopularChatter = expanded
+    ? topChatters
+    : topChatters.slice(0, collapsedCount);
 
   const Container = styled("div")(({ expanded }) => ({
     gap: "30px",
@@ -138,8 +136,8 @@ function PopularChatter() {
       </div>
 
       <Container expanded={expanded}>
-        {displayedShows.map((tvShow, index) => (
-          <Item key={index} expanded={expanded}>
+        {displayedPopularChatter.map(({ user }) => (
+          <Item key={user.id} expanded={expanded}>
             <Card
               style={{
                 borderRadius: "6px",
@@ -151,7 +149,7 @@ function PopularChatter() {
                 paddingTop: "20px",
                 width: "100%",
               }}
-              key={`${tvShow.name}`}
+              key={`${user.id}`}
               sx={{ background: "transparent" }}
             >
               <Avatar sx={{ width: 120, height: 120 }}></Avatar>
@@ -167,7 +165,7 @@ function PopularChatter() {
                         margin: "0 0 -5px 0",
                       }}
                     >
-                      {tvShow.name}
+                      {user.username}
                     </p>
                     <p
                       style={{
@@ -176,13 +174,18 @@ function PopularChatter() {
                         padding: "0",
                       }}
                     >
-                      41 &nbsp;Reactions
+                      {user.comments_count} &nbsp;Reactions
                     </p>
                   </h1>
                 </Typography>
                 <Grid container spacing={1}>
                   <Grid item>
-                    <BlueButton title="View" />
+                    <BlueButton
+                      title="View"
+                      onClick={() =>
+                        router.push(`/users/${user.username}/reactions`)
+                      }
+                    />
                   </Grid>
                 </Grid>
               </CardContent>
