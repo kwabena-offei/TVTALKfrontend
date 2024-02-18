@@ -1,16 +1,31 @@
-import DisplayAllShows from '../components/DisplayAllShows'
-export default function Home({ categories }) {
+import DisplayAllShows from "../components/DisplayAllShows";
+import useAxios from "../services/api";
+export default function Home({ categories, popularChatters, popularComments }) {
   return (
     <>
-      <DisplayAllShows categories={categories} />
+      <DisplayAllShows
+        categories={categories}
+        popularChatters={popularChatters}
+        popularComments={popularComments}
+      />
     </>
-  )
+  );
 }
 
 export async function getStaticProps() {
-  const categoryResponse = await fetch('https://api.tvtalk.app/categories')
-  const json = await categoryResponse.json()
+  const { axios } = useAxios();
+  const categoryResponse = await fetch("https://api.tvtalk.app/categories");
+  const json = await categoryResponse.json();
 
-  return { props: { categories: json }, revalidate: 60 * 5 }
+  const { data: popularChatters } = await axios.get(`users/top`);
+  const { data: popularComments } = await axios.get(`comments/top`);
+
+  return {
+    props: {
+      categories: json,
+      popularChatters: popularChatters.results,
+      popularComments: popularComments.results,
+    },
+    revalidate: 60 * 5,
+  };
 }
-

@@ -2,14 +2,14 @@ import React from "react";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
-import ReactionCard from "../components/ReactionCard";
+import ReactionCard from "./ReactionCard";
 import { styled } from "@mui/system";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { Typography, Button, Item } from "@mui/material";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const PopularCommets = () => {
+const PopularComments = ({ popularComments }) => {
   const comments = [
     {
       user: { id: 474, username: "aaliyah", image: null },
@@ -120,7 +120,9 @@ const PopularCommets = () => {
 
   const [expanded, setExpanded] = useState(false);
   const collapsedCount = 2;
-  const displayedShows = expanded ? comments : comment.slice(0, collapsedCount);
+  const displayedShows = expanded
+    ? comments
+    : comments.slice(0, collapsedCount);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -229,4 +231,4 @@ const PopularCommets = () => {
   );
 };
 
-export default PopularCommets;
+export default PopularComments;

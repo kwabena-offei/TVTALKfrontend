@@ -23,28 +23,14 @@ import BlueButton from "../components/BlueButton";
 import Link from "next/link";
 import { styled } from "@mui/system";
 import { Avatar } from "@mui/material";
-import useAxios from "../services/api";
 
-function PopularChatter() {
+function PopularChatter({ popularChatters }) {
   const [expanded, setExpanded] = useState(false);
-  const [topChatters, setTopChatters] = useState([]);
-
-  const { axios } = useAxios();
-
-  useEffect(() => {
-    const fetchPopularChatters = async () => {
-      const { data: topChattersData } = await axios.get(`users/top?limit=8`);
-      setTopChatters(topChattersData.results);
-    };
-    fetchPopularChatters();
-  }, []);
-
-  console.log(topChatters);
 
   const collapsedCount = 6;
   const displayedPopularChatter = expanded
-    ? topChatters
-    : topChatters.slice(0, collapsedCount);
+    ? popularChatters
+    : popularChatters.slice(0, collapsedCount);
 
   const Container = styled("div")(({ expanded }) => ({
     gap: "30px",

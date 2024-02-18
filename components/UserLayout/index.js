@@ -69,12 +69,12 @@ export const UserLayout = ({ children, mode }) => {
     router.push(tabId);
   };
 
+  // This endpoint is not available yet, it returns 204 No Content
   const handleFollow = async () => {
     const res = await axios.post(`/relationships`, {
       follower_id: 653,
       followed_id: 485,
     });
-    console.log("res", res);
   };
 
   return (
