@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import CircularProgress from "@mui/material/CircularProgress";
 import TuneIcon from "@mui/icons-material/Tune";
 import { debounce } from "lodash";
 import useAxios from "../../services/api";
@@ -9,6 +10,7 @@ import Avatar from "@mui/material/Avatar";
 import Resuls from "./Results";
 import { useRouter } from "next/router";
 import { getCookie } from "cookies-next";
+import { set } from "nprogress";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -42,6 +44,16 @@ const SettingIconWrapper = styled("div")(({ theme }) => ({
   zIndex: "999999",
 }));
 
+const LoaderWrapper = styled("div")(({ theme }) => ({
+  height: "100%",
+  position: "absolute",
+  right: "0",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  zIndex: "999999",
+}));
+
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
@@ -58,6 +70,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const SiteSearch = () => {
   const router = useRouter();
   const [isListVisible, setListVisible] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSettingIconClick = () => {
     // Navigate to another page when the setting icon is clicked
@@ -70,6 +83,7 @@ const SiteSearch = () => {
   const [results, setResults] = useState([]);
 
   const handleInputChange = (e) => {
+    setIsLoading(true);
     setSearchValue(e.target.value);
     performSearch(e.target.value);
     setListVisible(true);
@@ -99,11 +113,14 @@ const SiteSearch = () => {
               const resp = await axios.get(`/search?query=${urlSafeValue}`);
               console.log("search", resp.data);
               setResults(resp.data);
+              setIsLoading(false);
             } catch (error) {
+              setIsLoading(false);
               console.error(error);
             }
           } else {
             setResults([]);
+            setIsLoading(false);
           }
         };
         asyncFetch();
@@ -117,7 +134,7 @@ const SiteSearch = () => {
         <SearchIcon />
       </SearchIconWrapper>
       <SettingIconWrapper onClick={handleSettingIconClick}>
-        <TuneIcon />
+        {isLoading ? <CircularProgress size={20} /> : <TuneIcon />}
       </SettingIconWrapper>
       <StyledInputBase
         value={searchValue}
@@ -126,6 +143,7 @@ const SiteSearch = () => {
         placeholder="Search…"
         inputProps={{ "aria-label": "search" }}
       />
+
       <Resuls
         results={results}
         visible={isListVisible}
