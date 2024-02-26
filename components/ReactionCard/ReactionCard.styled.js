@@ -1,7 +1,7 @@
 import { styled } from "@mui/system";
 import { Typography, Card, CardActions, CardMedia } from "@mui/material";
 import { OutlinedButton } from "../OutlinedButton";
-import RoundedIconButton from './RoundedIconButton';
+import RoundedIconButton from "./RoundedIconButton";
 
 export const CardWrapper = styled(Card, {
   name: "Reaction",
@@ -9,6 +9,7 @@ export const CardWrapper = styled(Card, {
 })({
   backgroundColor: "#131B3F",
   borderRadius: "8px",
+  maxWidth: "800px;",
 });
 
 export const ReactionCardHashtags = ({ children }) => {
@@ -20,11 +21,11 @@ export const ReactionCardText = ({ children, isMobile, ...props }) => {
     <Typography
       color="#EFF2FD"
       variant="body1"
-      as='pre'
+      as="pre"
       sx={{
         fontSize: isMobile ? "1rem" : "1.5rem",
         lineHeight: "180%",
-        whiteSpace: 'break-spaces',
+        whiteSpace: "break-spaces",
         paddingBottom: isMobile ? 0.5 : 1.25,
       }}
       {...props}
@@ -52,27 +53,37 @@ export const ReactionCardMedia = ({ image }) => {
 };
 
 export const ReactionCardVideo = ({ video }) => {
-  return <CardMedia
-    component='video'
-    height="auto"
-    src={video}
-    alt="Show video"
-    sx={{ borderRadius: 2 }}
-    autoPlay
-    controls
-  />
-}
+  return (
+    <CardMedia
+      component="video"
+      height="auto"
+      src={video}
+      alt="Show video"
+      sx={{ borderRadius: 2 }}
+      autoPlay
+      controls
+    />
+  );
+};
 
-export const ActionButton = ({ isMobile, withTitleMode, title, icon, onClick, checked, ...props }) => {
+export const ActionButton = ({
+  isMobile,
+  withTitleMode,
+  title,
+  icon,
+  onClick,
+  checked,
+  ...props
+}) => {
   if (!isMobile && withTitleMode) {
     return (
       <OutlinedButton
         sx={{
           height: "50px",
           padding: "1em 2em",
-          fontSize: '1rem',
-          backgroundColor: checked ? 'neutral.main' : 'neutral.contrastText',
-          color: checked ? 'neutral.contrastText' : 'neutral.main'
+          fontSize: "1rem",
+          backgroundColor: checked ? "neutral.main" : "neutral.contrastText",
+          color: checked ? "neutral.contrastText" : "neutral.main",
         }}
         onClick={onClick}
         startIcon={icon}
@@ -80,13 +91,20 @@ export const ActionButton = ({ isMobile, withTitleMode, title, icon, onClick, ch
       >
         {title}
       </OutlinedButton>
-    )
+    );
   }
-  return <RoundedIconButton onClick={onClick} icon={icon} {...props} sx={{
-    backgroundColor: checked ? 'neutral.main' : 'neutral.contrastText',
-    color: checked ? 'neutral.contrastText' : 'neutral.main'
-  }}/>;
-}
+  return (
+    <RoundedIconButton
+      onClick={onClick}
+      icon={icon}
+      {...props}
+      sx={{
+        backgroundColor: checked ? "neutral.main" : "neutral.contrastText",
+        color: checked ? "neutral.contrastText" : "neutral.main",
+      }}
+    />
+  );
+};
 
 export const cardActionsMobileProps = {
   paddingX: 2,

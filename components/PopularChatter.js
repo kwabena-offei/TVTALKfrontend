@@ -39,8 +39,6 @@ function PopularChatter() {
     fetchPopularChatters();
   }, []);
 
-  console.log(topChatters);
-
   const collapsedCount = 6;
   const displayedPopularChatter = expanded
     ? topChatters
