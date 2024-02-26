@@ -39,7 +39,7 @@ const SettingIconWrapper = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   cursor: "pointer",
-  zIndex: '999999'
+  zIndex: "999999",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -48,9 +48,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
-    width: "335px",
+    minWidth: "300px",
     [theme.breakpoints.up("lg")]: {
-      width: "490px",
+      minWidth: "400px",
     },
   },
 }));
@@ -61,7 +61,7 @@ const SiteSearch = () => {
 
   const handleSettingIconClick = () => {
     // Navigate to another page when the setting icon is clicked
-    const cookie = getCookie('token');
+    const cookie = getCookie("token");
     !cookie ? router.push("/login") : router.push("/profile");
   };
 
@@ -97,6 +97,7 @@ const SiteSearch = () => {
             const urlSafeValue = encodeURIComponent(query);
             try {
               const resp = await axios.get(`/search?query=${urlSafeValue}`);
+              console.log("search", resp.data);
               setResults(resp.data);
             } catch (error) {
               console.error(error);
@@ -111,12 +112,12 @@ const SiteSearch = () => {
   );
 
   return (
-    <Search style={{ width: "390px" }}>
+    <Search style={{ md: { width: "290px" } }}>
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
       <SettingIconWrapper onClick={handleSettingIconClick}>
-          <TuneIcon />
+        <TuneIcon />
       </SettingIconWrapper>
       <StyledInputBase
         value={searchValue}
