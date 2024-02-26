@@ -28,17 +28,18 @@ import SiteSearch from "../components/SiteSearch";
 import NotificationButton from "../components/NotificationButton";
 import Link from "next/link";
 
+// Temporary solution as we need to deactive the chat and news pages
 const pages = [
-  {
-    title: "Chat By Show",
-    route: "/chat",
-    key: "chat",
-  },
-  {
-    title: "News",
-    route: "/news",
-    key: "news",
-  },
+  // {
+  //   title: "Chat By Show",
+  //   route: "/chat",
+  //   key: "chat",
+  // },
+  // {
+  //   title: "News",
+  //   route: "/news",
+  //   key: "news",
+  // },
 ];
 
 const HeaderButtonGroup = styled(Box)({
@@ -163,7 +164,7 @@ function ResponsiveAppBar({ context }) {
             </Typography>
 
             <Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
-              <IconButton
+              {/* <IconButton
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -172,8 +173,8 @@ function ResponsiveAppBar({ context }) {
                 color="inherit"
               >
                 <MenuIcon />
-              </IconButton>
-              <Menu
+              </IconButton> */}
+              {/* <Menu
                 id="menu-appbar"
                 anchorEl={anchorElNav}
                 onClose={handleCloseMenu}
@@ -207,7 +208,7 @@ function ResponsiveAppBar({ context }) {
                     <Typography textAlign="center">{page.title}</Typography>
                   </MenuItem>
                 ))}
-              </Menu>
+              </Menu> */}
             </Box>
             <Typography
               variant="h5"
@@ -226,7 +227,7 @@ function ResponsiveAppBar({ context }) {
             >
               TV Talk
             </Typography>
-            <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
+            {/* <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
                 <Button
                   key={page.route}
@@ -244,7 +245,7 @@ function ResponsiveAppBar({ context }) {
                   {page.title}
                 </Button>
               ))}
-            </Box>
+            </Box> */}
 
             {!isMobile && (
               <Box sx={{ flexGrow: 2, display: { xs: "flex", md: "flex" } }}>

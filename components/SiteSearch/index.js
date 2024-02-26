@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import CircularProgress from "@mui/material/CircularProgress";
 import TuneIcon from "@mui/icons-material/Tune";
 import { debounce } from "lodash";
 import useAxios from "../../services/api";
@@ -9,6 +10,7 @@ import Avatar from "@mui/material/Avatar";
 import Resuls from "./Results";
 import { useRouter } from "next/router";
 import { getCookie } from "cookies-next";
+import { set } from "nprogress";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -39,7 +41,7 @@ const SettingIconWrapper = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   cursor: "pointer",
-  zIndex: '999999'
+  zIndex: "999999",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -48,9 +50,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
-    width: "335px",
+    minWidth: "300px",
     [theme.breakpoints.up("lg")]: {
-      width: "490px",
+      minWidth: "400px",
     },
   },
 }));
@@ -58,10 +60,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const SiteSearch = () => {
   const router = useRouter();
   const [isListVisible, setListVisible] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSettingIconClick = () => {
     // Navigate to another page when the setting icon is clicked
-    const cookie = getCookie('token');
+    const cookie = getCookie("token");
     !cookie ? router.push("/login") : router.push("/profile");
   };
 
@@ -70,6 +73,7 @@ const SiteSearch = () => {
   const [results, setResults] = useState([]);
 
   const handleInputChange = (e) => {
+    setIsLoading(true);
     setSearchValue(e.target.value);
     performSearch(e.target.value);
     setListVisible(true);
@@ -97,12 +101,16 @@ const SiteSearch = () => {
             const urlSafeValue = encodeURIComponent(query);
             try {
               const resp = await axios.get(`/search?query=${urlSafeValue}`);
+              console.log("search", resp.data);
               setResults(resp.data);
+              setIsLoading(false);
             } catch (error) {
+              setIsLoading(false);
               console.error(error);
             }
           } else {
             setResults([]);
+            setIsLoading(false);
           }
         };
         asyncFetch();
@@ -111,12 +119,12 @@ const SiteSearch = () => {
   );
 
   return (
-    <Search style={{ width: "390px" }}>
+    <Search style={{ md: { width: "290px" } }}>
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
       <SettingIconWrapper onClick={handleSettingIconClick}>
-          <TuneIcon />
+        {isLoading ? <CircularProgress size={20} /> : <TuneIcon />}
       </SettingIconWrapper>
       <StyledInputBase
         value={searchValue}
@@ -125,6 +133,7 @@ const SiteSearch = () => {
         placeholder="Search…"
         inputProps={{ "aria-label": "search" }}
       />
+
       <Resuls
         results={results}
         visible={isListVisible}

@@ -7,9 +7,10 @@ import { isAuthenticated } from "../../../services/isAuth";
 import { AuthContext } from "../../../util/AuthContext";
 import useSocket from "../../../hooks/useSocket";
 import useAxios from "../../../services/api";
+import uniqBy from "lodash/uniqBy";
 
 export async function getStaticProps({ params }) {
-  const { tmsId } = params;
+  const { tmsId, reactionId } = params;
   const { axios } = useAxios();
 
   if (!tmsId) {
@@ -71,11 +72,14 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
     return <></>;
   }
 
+  const router = useRouter();
+  // get query params
+  const { reactionId } = router.query;
+
   const { axios } = useAxios();
   const { tmsId } = show;
   const [comments, setComments] = useState(serverComments);
   const [filteredComments, setFilteredComments] = useState(comments.results);
-  const [sortedComments, setSortedComments] = useState(filteredComments);
   const [profile, setProfile] = useState({});
   const { isAuthenticated } = useContext(AuthContext);
   const [sortValue, setSortValue] = useState("");
@@ -90,6 +94,22 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
 
     fetchProfile();
   }, [tmsId]);
+
+  useEffect(() => {
+    if (reactionId) {
+      const fetchReaction = async () => {
+        try {
+          let reactionResponse = await axios.get(`/comments/${reactionId}`);
+          setComments({ results: [reactionResponse.data] });
+          setFilteredComments(
+            uniqBy([...filteredComments, reactionResponse.data], "id")
+          );
+        } catch (error) {}
+      };
+
+      fetchReaction();
+    }
+  }, [reactionId]);
 
   let sorter = () => {};
 
@@ -128,11 +148,16 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
             totalData.push(individualResult)
           );
         });
-        setFilteredComments(totalData.sort(sorter));
+        setFilteredComments(
+          uniqBy([...totalData.sort(sorter), filteredComments[0]], "id")
+        );
       });
     } else {
       const resp = await axios.get(`/comments?tmsId=${selectedTmsId}`);
-      setFilteredComments(resp.data.results.sort(sorter));
+
+      setFilteredComments(
+        uniqBy([...resp.data.results.sort(sorter), filteredComments[0]], "id")
+      );
     }
   };
 
