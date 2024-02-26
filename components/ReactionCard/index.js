@@ -97,6 +97,7 @@ const ReactionCard = (props) => {
       pathname: "/chat/[tmsId]",
       query: {
         tmsId: tmsId,
+        reactionId: id,
       },
     });
   };
@@ -139,7 +140,7 @@ const ReactionCard = (props) => {
         <ReactionCardHashtags>{hashtag}</ReactionCardHashtags>
         <ReactionCardText
           isMobile={isMobile}
-          onClick={backToFeed}
+          onClick={(id) => backToFeed(id)}
           style={{ cursor: "pointer" }}
         >
           {text}

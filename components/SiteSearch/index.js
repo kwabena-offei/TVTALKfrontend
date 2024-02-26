@@ -44,16 +44,6 @@ const SettingIconWrapper = styled("div")(({ theme }) => ({
   zIndex: "999999",
 }));
 
-const LoaderWrapper = styled("div")(({ theme }) => ({
-  height: "100%",
-  position: "absolute",
-  right: "0",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  zIndex: "999999",
-}));
-
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
