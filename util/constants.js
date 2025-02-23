@@ -1,5 +1,9 @@
-export const TV_TALK_API = 'https://api.tvtalk.app';
-export const TV_TALK_WEBSOCKET = 'wss://api.tvtalk.app/websocket'
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
+
+export const TV_TALK_API = publicRuntimeConfig.TV_TALK_API;
+export const TV_TALK_WEBSOCKET = `wss://${TV_TALK_API}/websocket`
 export const TV_TALK_WEBSOCKET_LOCAL = 'ws://9647-128-124-148-238.ngrok.io/websocket';
 export const TV_TALK_API_LOCAL = 'https://9647-128-124-148-238.ngrok.io';
 // export const TV_TALK_API_LOCAL = 'https://api.tvtalk.app';

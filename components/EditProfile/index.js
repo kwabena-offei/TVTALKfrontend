@@ -11,7 +11,7 @@ import { CalendarInput } from "../CalendarInput";
 import { Toast } from "../Toast";
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
-import useAxios from "../../services/api";
+import useAxios, { buildAPIUrl } from "../../services/api";
 
 export const EditProfileCard = ({ profile }) => {
   const [draftProfile, setDraftProfile] = useState(profile);
@@ -22,6 +22,7 @@ export const EditProfileCard = ({ profile }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { axios } = useAxios();
+
 
   const onSave = async () => {
     const results = await axios.put(`/users/${profile.username}`, { ...draftProfile, streaming_service: selectedStreamingService?.toLowerCase() });
@@ -40,7 +41,7 @@ export const EditProfileCard = ({ profile }) => {
 
 
   useEffect(() => {
-    const lineupsUrl = `https://api.tvtalk.app/data/v1.1/lineups?country=USA&postalCode=${profile.zipcode}`;
+    const lineupsUrl = buildAPIUrl(`/data/v1.1/lineups?country=USA&postalCode=${profile.zipcode}`);
     const getLineups = async () => {
       const results = await axios.get(lineupsUrl);
       setLineups(results.data);

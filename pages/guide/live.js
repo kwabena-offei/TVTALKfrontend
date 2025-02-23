@@ -1,5 +1,6 @@
 import DisplayAllShows from '../../components/DisplayAllShows'
 import { genreMap } from "../../util/genreMap";
+import { buildAPIUrl } from '../../services/api';
 
 export default function StreamingNetwork({ categories, network }) {
   return (
@@ -11,7 +12,7 @@ export default function StreamingNetwork({ categories, network }) {
 
 export async function getStaticProps({ params }) {
   const timezone = 'EST';
-  const res = await fetch(`https://api.tvtalk.app/guide/live?timezone=${timezone}`)
+  const res = await fetch(buildAPIUrl(`/guide/live?timezone=${timezone}`))
   const json = await res.json()
   const stations = json;
   const shows = [];

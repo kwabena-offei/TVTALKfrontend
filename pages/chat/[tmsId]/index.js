@@ -8,6 +8,7 @@ import { AuthContext } from "../../../util/AuthContext";
 import useSocket from "../../../hooks/useSocket";
 import useAxios from "../../../services/api";
 import uniqBy from "lodash/uniqBy";
+import { buildAPIUrl } from "../../../services/api";
 
 export async function getStaticProps({ params }) {
   const { tmsId, reactionId } = params;
@@ -20,15 +21,15 @@ export async function getStaticProps({ params }) {
   }
 
   const { data: show } = await axios.get(
-    `https://api.tvtalk.app/shows/${tmsId}`
+    buildAPIUrl(`/shows/${tmsId}`)
   );
   const { data: comments } = await axios.get(
-    `https://api.tvtalk.app/comments?tms_id=${tmsId}`
+    buildAPIUrl(`/comments?tms_id=${tmsId}`)
   );
 
   let heroImage = `https://${show.preferred_image_uri}`;
   try {
-    const heroImageUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageAspectTV=16x9&imageSize=Ms&imageText=false`;
+    const heroImageUrl = buildAPIUrl(`/data/v1.1/programs/${tmsId}/images?imageAspectTV=16x9&imageSize=Ms&imageText=false`);
     const heroImageResponse = await fetch(heroImageUrl);
     const heroImages = await heroImageResponse.json();
     heroImage =
@@ -48,7 +49,7 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const categoryResponse = await fetch("https://api.tvtalk.app/categories");
+  const categoryResponse = await fetch(buildAPIUrl("/categories"));
   const json = await categoryResponse.json();
   const paths = [];
   json.map((category) => {

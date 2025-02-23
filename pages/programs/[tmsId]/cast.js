@@ -10,11 +10,12 @@ import Masonry from '@mui/lab/Masonry';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Container from '@mui/material/Container';
+import { buildAPIUrl } from '../../../services/api';
 
 export async function getStaticProps({ params }) {
   const { tmsId } = params;
 
-  const detailsUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}`;
+  const detailsUrl = buildAPIUrl(`/data/v1.1/programs/${tmsId}`);
 
   const [detailsResponse, photosResponse] = await Promise.all([
     fetch(detailsUrl),
@@ -31,7 +32,7 @@ export async function getStaticProps({ params }) {
 
 
   if (!details) {
-    const otherDetailsUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}`;
+    const otherDetailsUrl = buildAPIUrl(`/data/v1.1/programs/${tmsId}`);
     const otherDetailsResponse = await fetch(otherDetailsUrl);
     details = await otherDetailsResponse.json();
   }
@@ -39,7 +40,7 @@ export async function getStaticProps({ params }) {
   if (details.cast) {
     try {
       details.cast = await Promise.all(details.cast.map(async (actor) => {
-        const actorImagesUrl = `https://api.tvtalk.app/data/v1.1/celebs/${actor.personId}/images?imageSize=Md`;
+        const actorImagesUrl = buildAPIUrl(`/data/v1.1/celebs/${actor.personId}/images?imageSize=Md`);
         const actorImagesResponse = await fetch(actorImagesUrl);
         const actorImages = await actorImagesResponse.json();
         const actorImage = actorImages.find((image) => image.seriesId === tmsId) || actorImages[0];

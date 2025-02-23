@@ -14,7 +14,7 @@ import Head from 'next/head';
 import useAxios from "../../../services/api";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-
+import { buildAPIUrl } from '../../../services/api';
 
 const StyledHeader = styled(Box)(({ backgroundImageDesktop, backgroundImageMobile }) => ({
   width: '100vw',
@@ -107,9 +107,8 @@ const StyledTitleBox = styled(Box)
 export async function getStaticProps({ params }) {
   const { tmsId } = params;
 
-  const detailsUrl = `https://api.tvtalk.app/shows/${tmsId}`;
-  // const detailsUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}`;
-  const photosUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageSize=Ms&imageText=false`;
+  const detailsUrl = buildAPIUrl(`/shows/${tmsId}`);
+  const photosUrl = buildAPIUrl(`/data/v1.1/programs/${tmsId}/images?imageSize=Ms&imageText=false`);
 
   const [detailsResponse, photosResponse] = await Promise.all([
     fetch(detailsUrl),
@@ -136,7 +135,7 @@ export async function getStaticProps({ params }) {
   }
 
   if (!details) {
-    const otherDetailsUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}`;
+    const otherDetailsUrl = buildAPIUrl(`/data/v1.1/programs/${tmsId}`);
     const otherDetailsResponse = await fetch(otherDetailsUrl);
     details = await otherDetailsResponse.json();
   }
@@ -157,7 +156,7 @@ export async function getStaticProps({ params }) {
   if (details.cast) {
     try {
       details.cast = await Promise.all(details.cast.map(async (actor) => {
-        const actorImagesUrl = `https://api.tvtalk.app/data/v1.1/celebs/${actor.personId}/images?imageSize=Md`;
+        const actorImagesUrl = buildAPIUrl(`/data/v1.1/celebs/${actor.personId}/images?imageSize=Md`);
         const actorImagesResponse = await fetch(actorImagesUrl);
         const actorImages = await actorImagesResponse.json();
         const actorImage = actorImages.find((image) => image.seriesId === tmsId) || actorImages[0];
@@ -185,7 +184,7 @@ export async function getStaticProps({ params }) {
 }
 
 export async function getStaticPaths() {
-  const categoryResponse = await fetch('https://api.tvtalk.app/categories')
+  const categoryResponse = await fetch(buildAPIUrl('/categories'))
   const json = await categoryResponse.json()
   const paths = []
   json.map((category) => {

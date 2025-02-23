@@ -1,5 +1,6 @@
 import DisplayAllShows from '../../../components/DisplayAllShows'
 import networks from '../../../components/NetworkSelector/networks.json';
+import { buildAPIUrl } from '../../../services/api';
 
 export default function StreamingNetwork({ categories, network }) {
   return (
@@ -12,7 +13,7 @@ export default function StreamingNetwork({ categories, network }) {
 export async function getStaticProps({ params }) {
   const { network } = params;
   const timezone = 'EST';
-  const genreShowsReq = await fetch(`https://api.tvtalk.app/shows/genres?station_id=${network}`)
+  const genreShowsReq = await fetch(buildAPIUrl(`/shows/genres?station_id=${network}`))
   const genreShows = await genreShowsReq.json()
 
   const categoryShows = Object.entries(genreShows).map((category, results) => {
@@ -89,7 +90,7 @@ function transformAiringsData(station) {
 }
 
 async function fetchShows(endpoint, network, timezone) {
-  const response = await fetch(`https://api.tvtalk.app/guide/${endpoint}?network_id=${network}&timezone=${timezone}`);
+  const response = await fetch(buildAPIUrl(`/guide/${endpoint}?network_id=${network}&timezone=${timezone}`));
   const stationData = await response.json();
   return transformAiringsData(stationData[0]);
 }

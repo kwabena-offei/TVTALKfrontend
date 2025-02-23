@@ -10,13 +10,13 @@ import Masonry from '@mui/lab/Masonry';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Container from '@mui/material/Container';
-
+import { buildAPIUrl } from '../../../services/api';
 
 export async function getStaticProps({ params }) {
   const { tmsId } = params;
 
-  const detailsUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}`;
-  const photosUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}/images?imageSize=Ms&imageText=false`;
+  const detailsUrl = buildAPIUrl(`/data/v1.1/programs/${tmsId}`);
+  const photosUrl = buildAPIUrl(`/data/v1.1/programs/${tmsId}/images?imageSize=Ms&imageText=false`);
 
   const [detailsResponse, photosResponse] = await Promise.all([
     fetch(detailsUrl),
@@ -39,7 +39,7 @@ export async function getStaticProps({ params }) {
   }
 
   if (!details) {
-    const otherDetailsUrl = `https://api.tvtalk.app/data/v1.1/programs/${tmsId}`;
+    const otherDetailsUrl = buildAPIUrl(`/data/v1.1/programs/${tmsId}`);
     const otherDetailsResponse = await fetch(otherDetailsUrl);
     details = await otherDetailsResponse.json();
   }
