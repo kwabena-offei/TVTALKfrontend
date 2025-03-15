@@ -24,6 +24,8 @@ export const hasCookieToken = (context) => {
   return hasCookie("token");
 };
 
+const fetcher = (url) => axios.get(url).then((res) => res.data);
+
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(hasCookieToken());
   const [favorites, setFavorites] = useState({});
@@ -41,7 +43,6 @@ export const AuthProvider = ({ children }) => {
     setFavorites({});
   };
 
-  const fetcher = (url) => axios.get(url).then((res) => res.data);
 
   const { data, error, mutate: mutateProfile } = useSWR("/profile", fetcher);
   useEffect(() => {
