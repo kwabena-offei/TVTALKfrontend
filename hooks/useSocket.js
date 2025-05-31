@@ -45,7 +45,9 @@ export default function useSocket(eventName, channel, params, cb) {
     }
 
     return () => {
-      // ws.close();
+      if (ws && ws.close) {
+        ws.close();
+      }
       console.log('unsubscribe')
     }
   }, [eventName, cb]);
