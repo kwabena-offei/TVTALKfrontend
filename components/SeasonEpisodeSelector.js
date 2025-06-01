@@ -31,7 +31,7 @@ const SeasonEpisodeSelector = ({ tmsId, totalSeasons }) => {
       }
     });
     setEpisodes(episodeList);
-    setEpisode(episodeList[0]);
+    setEpisode(episodeList[0] ? episodeList[0].value : null);
   }
 
   const handleEpisodeChange = (event) => {
