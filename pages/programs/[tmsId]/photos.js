@@ -1,14 +1,11 @@
 
-import React, { useEffect, useState } from 'react';
-import { styled } from '@mui/system';
+import React from 'react';
 import { Box, Typography } from '@mui/material';
 import BackButton from '../../../components/BackButton';
 import Head from 'next/head';
-import useAxios from "../../../services/api";
-import { useRouter } from 'next/router';
 import Masonry from '@mui/lab/Masonry';
 import { useTheme } from '@mui/material/styles';
-import useMediaQuery from "@mui/material/useMediaQuery";
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Container from '@mui/material/Container';
 import { buildAPIUrl } from '../../../services/api';
 
@@ -66,25 +63,13 @@ export async function getStaticPaths() {
 
 
 
-const About = ({ heroImageDesktop, heroImageMobile, details, photos }) => {
-  const { axios } = useAxios();
-  const router = useRouter();
-  const [ratingCache, setRatingCache] = useState(details.rating_percentage_cache || {});
-  const [userRating, setUserRating] = useState('');
+const PhotosPage = ({ details, photos }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
-  const {
-    preferred_image_uri,
-    title,
-    longDescription,
-    releaseYear,
-    genres,
-    tmsId,
-    totalSeasons
-  } = details;
+  const { title } = details;
 
-  const defaultPhoto = photos ? `https://${photos[0].src}` : null;
+  const defaultPhoto = photos && photos.length > 0 ? `https://${photos[0].uri}` : null;
 
   return (
     <>
@@ -135,4 +120,4 @@ const About = ({ heroImageDesktop, heroImageMobile, details, photos }) => {
   );
 };
 
-export default About;
+export default PhotosPage;
