@@ -21,7 +21,7 @@ const SeasonEpisodeSelector = ({ tmsId, totalSeasons }) => {
   const handleSeasonChange = async (event) => {
     const season = event.target.value;
     setSeason(season);
-    const { data: episodes } = await axios.get(`data/v1.1/series/${tmsId}/episodes?tms_id=${tmsId}&season=${season}&titleLang=en&descriptionLang=en`);
+    const { data: episodes } = await axios.get(`/data/v1.1/series/${tmsId}/episodes?tms_id=${tmsId}&season=${season}&titleLang=en&descriptionLang=en`);
 
 
     const episodeList = episodes.map(({ tmsId, episodeNum, episodeTitle }) => {

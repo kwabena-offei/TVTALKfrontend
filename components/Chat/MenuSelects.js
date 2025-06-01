@@ -30,7 +30,7 @@ export const MenuSelects = ({ tmsId, episodes, seasons, onEpisodeSelect, onSortC
   const handleSeasonChange = async (e) => {
     const season = e.target.value;
     setSeason(season);
-    const { data: episodes } = await axios.get(`data/v1.1/series/${tmsId}/episodes?tms_id=${tmsId}&season=${season}&titleLang=en&descriptionLang=en`);
+    const { data: episodes } = await axios.get(`/data/v1.1/series/${tmsId}/episodes?tms_id=${tmsId}&season=${season}&titleLang=en&descriptionLang=en`);
 
 
     const episodesData = episodes.map(({ tmsId, episodeNum, episodeTitle, onEpisodeSelect }) => {
