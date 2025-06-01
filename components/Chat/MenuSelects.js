@@ -7,7 +7,7 @@ import useAxios from "../../services/api";
 
 function parsed(string) {
   const parsedInt = Number.parseInt(string, 10)
-  if (parsedInt === NaN) {
+  if (Number.isNaN(parsedInt)) {
     return 0
   };
   return parsedInt;
