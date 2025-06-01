@@ -8,7 +8,7 @@ function MainContent({ comments, focusCommentId: commentId }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const sortedComments = comments.sort((a, b) => {
+  const sortedComments = comments.slice().sort((a, b) => {
     return new Date(b.created_at) - new Date(a.created_at);
   });
 
