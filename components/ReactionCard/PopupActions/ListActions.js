@@ -12,7 +12,7 @@ import getConfig from 'next/config';
 import { AuthContext } from "../../../util/AuthContext";
 import { ShareContext } from "../../../util/ShareContext";
 
-export const ListActions = ({ handleClose, commentType, id, tmsId, header }) => {
+export const ListActions = ({ handleClose, commentType, id, tmsId, header, onCopyLink }) => {
   const router = useRouter()
   const { publicRuntimeConfig } = getConfig();
   const isAuth = useContext(AuthContext);
@@ -29,6 +29,7 @@ export const ListActions = ({ handleClose, commentType, id, tmsId, header }) => 
   const handleCopyLink = async (event) => {
     await copyToClipboard(copyLink);
     handleClose(event)
+    if (onCopyLink) onCopyLink();
   }
   const handleUnfollow = async (event) => {
     // Todo: find api endpoint to change the status of following
