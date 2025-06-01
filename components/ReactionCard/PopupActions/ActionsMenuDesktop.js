@@ -5,7 +5,7 @@ import { StyledMenu } from "./PopupActions.styled";
 import { ListActions } from "./ListActions";
 
 
-export const ActionsMenuDesktop = ({ id, commentType, tmsId, header }) => {
+export const ActionsMenuDesktop = ({ id, commentType, tmsId, header, onCopyLink }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -33,7 +33,7 @@ export const ActionsMenuDesktop = ({ id, commentType, tmsId, header }) => {
         open={open}
         onClose={handleClose}
       >
-        <ListActions handleClose={handleClose} id={id} commentType={commentType} tmsId={tmsId} header={header} />
+        <ListActions handleClose={handleClose} id={id} commentType={commentType} tmsId={tmsId} header={header} onCopyLink={onCopyLink} />
       </StyledMenu>
     </>
   );

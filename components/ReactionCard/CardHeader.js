@@ -8,6 +8,7 @@ import { TV_TALK_HOST_LOCAL, TV_TALK_HOST } from "../../util/constants";
 import { useRouter } from "next/router";
 import { ShareContext } from "../../util/ShareContext";
 import Share from "../Chat/Share";
+import { Toast } from "../Toast";
 
 const ReactionsCardHeader = ({ userData, setShares, isMobile, commentType, tmsId, header, type, ...props }) => {
   const { id, username, image, timeAgo } = userData;
@@ -17,6 +18,8 @@ const ReactionsCardHeader = ({ userData, setShares, isMobile, commentType, tmsId
   const copyLink = header ? `${baseUrl}${router.asPath}` : `${baseUrl}${router.asPath}#${id}`
   const [openShare, setOpenShare] = useState(false);
   const toggleShare = () => setOpenShare(!openShare);
+  const [showCopyToast, setShowCopyToast] = useState(false);
+  const handleCopyToast = () => setShowCopyToast(true);
 
   return (
     <ShareContext.Provider value={{ openShare, setOpenShare }}>
@@ -36,8 +39,8 @@ const ReactionsCardHeader = ({ userData, setShares, isMobile, commentType, tmsId
         }
         action={
           isMobile
-            ? <ActionsMenuMobile id={id} commentType={commentType} tmsId={tmsId} header={header} />
-            : <ActionsMenuDesktop id={id} commentType={commentType} tmsId={tmsId} header={header} />
+            ? <ActionsMenuMobile id={id} commentType={commentType} tmsId={tmsId} header={header} onCopyLink={handleCopyToast} />
+            : <ActionsMenuDesktop id={id} commentType={commentType} tmsId={tmsId} header={header} onCopyLink={handleCopyToast} />
         }
         title={username}
         subheader={timeAgo}
@@ -52,6 +55,11 @@ const ReactionsCardHeader = ({ userData, setShares, isMobile, commentType, tmsId
         id={id}
         type={type}
         setShares={setShares}
+      />
+      <Toast
+        open={showCopyToast}
+        handleClose={() => setShowCopyToast(false)}
+        text="Link copied!"
       />
     </ShareContext.Provider>
 

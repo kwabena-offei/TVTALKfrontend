@@ -5,7 +5,7 @@ import { StyledDrawer } from "./PopupActions.styled";
 import { ListActions } from "./ListActions";
 
 
-export const ActionsMenuMobile = ({ id, commentType, tmsId, header }) => {
+export const ActionsMenuMobile = ({ id, commentType, tmsId, header, onCopyLink }) => {
 
   const [state, setState] = useState(false);
 
@@ -35,7 +35,7 @@ export const ActionsMenuMobile = ({ id, commentType, tmsId, header }) => {
           keepMounted: false,
         }}
       >
-        <ListActions handleClose={toggleDrawer} id={id} commentType={commentType} tmsId={tmsId} header={header} isMobile/>
+        <ListActions handleClose={toggleDrawer} id={id} commentType={commentType} tmsId={tmsId} header={header} isMobile onCopyLink={onCopyLink}/>
       </StyledDrawer>
     </>
   );
