@@ -2,7 +2,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-1. Create `.env.local` file based on `.env.sample` and fill with real values
+1. Copy `.env.sample` to `.env.local` and fill in your values.
+   For local development, ensure `MONGO_URI`, `DB_NAME` and `GRACENOTE_API_KEY` are set for the Episode Matcher utility.
 
 2. Run the development server:
 
@@ -38,8 +39,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## Episode Matcher Utility
 
 The `scripts/runMatcher.js` script fetches episode data from GraceNote and stores
-it in MongoDB. Ensure you have `MONGO_URI`, `DB_NAME` and `GRACENOTE_API_KEY`
-set in your environment before running:
+it in MongoDB. Ensure you have `MONGO_URI`, `DB_NAME` and `GRACENOTE_API_KEY` set in your environment.
+These values should be defined in `.env.local` for local development before running:
 
 ```bash
 node scripts/runMatcher <showId> <gracenoteSeriesId>
