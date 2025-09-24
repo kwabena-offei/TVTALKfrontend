@@ -1,10 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { Button, Grid, Typography, IconButton, Accordion, AccordionSummary, AccordionDetails, Box } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import HeartButton from '../components/HeartButton';
 import BlueButton from '../components/BlueButton';
 import Link from 'next/link';
@@ -12,30 +10,8 @@ import { styled } from '@mui/system';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-
-function Live() {
+function Live({ tvShows = [] }) {
   const [expanded, setExpanded] = useState(false);
-
-  const tvShows = [
-    { title: "Friends", tmsId: '1'},
-    { title: "Friends", tmsId: '2'},
-    { title: "Friends", tmsId: '3'},
-    { title: "Friends", tmsId: '4'},
-    { title: "Friends", tmsId: '5'},
-    { title: "Friends", tmsId: '6'},
-    { title: "Friends", tmsId: '7'},
-    { title: "Friends", tmsId: '8'},
-  ];
-  const tvShow = [
-    { title: "Friends", tmsId: '1'},
-    { title: "Friends", tmsId: '2'},
-    { title: "Friends", tmsId: '3'},
-    { title: "Friends", tmsId: '4'},
-    { title: "Friends", tmsId: '5'},
-    { title: "Friends", tmsId: '6'},
-    { title: "Friends", tmsId: '7'},
-    { title: "Friends", tmsId: '8'},
-  ];
 
   const collapsedCount = 4;
   const displayedShows = expanded ? tvShows : tvShows.slice(0, collapsedCount);
@@ -91,14 +67,27 @@ function Live() {
   });
 
 
+  if (tvShows.length === 0) {
+    return (
+      <div style={{ marginBottom: '80px' }}>
+        <StyledTypography>
+          Live
+        </StyledTypography>
+        <div style={{ color: '#EFF2FD', textAlign: 'center', padding: '20px' }}>
+          No live shows available at the moment.
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div style={{marginBottom: '80px'}}>
+    <div style={{ marginBottom: '80px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <StyledTypography>
           Live
         </StyledTypography>
 
-        {expanded ? <Button endIcon={<ExpandLessIcon />} style={{ color: '#FFF'}} variant='outlined' onClick={() => { setExpanded(false)}}>Close All</Button> : <Button style={{ color: '#FFF'  }} endIcon={<ExpandMoreIcon />} variant='outlined'  onClick={() => { setExpanded(true)}}>View All</Button>}
+        {expanded ? <Button endIcon={<ExpandLessIcon />} style={{ color: '#FFF' }} variant='outlined' onClick={() => { setExpanded(false) }}>Close All</Button> : <Button style={{ color: '#FFF' }} endIcon={<ExpandMoreIcon />} variant='outlined' onClick={() => { setExpanded(true) }}>View All</Button>}
       </div>
 
       <Container expanded={expanded}>
@@ -106,9 +95,15 @@ function Live() {
           <Item key={index} expanded={expanded}>
             <Card key={`${tvShow.tmsId}`} sx={{ background: 'transparent' }}>
               <Image
-                src='/assets/live.jpg'
-                // src={`https://${tvShow.preferred_image_uri}`}
-                // alt={`${tvShow.title} Image`}
+                src={tvShow.preferred_image_uri?.startsWith('http') 
+                  ? tvShow.preferred_image_uri 
+                  : tvShow.preferred_image_uri?.startsWith('/')
+                    ? tvShow.preferred_image_uri
+                    : tvShow.preferred_image_uri
+                      ? `https://${tvShow.preferred_image_uri}`
+                      : '/assets/live.jpg'
+                }
+                alt={`${tvShow.title || 'TV Show'} Image`}
                 width={720}
                 height={540}
                 layout="responsive"
@@ -117,21 +112,23 @@ function Live() {
               />
               <CardContent sx={{ background: '#131B3F' }}>
                 <Typography gutterBottom variant="h5" component="div" >
-                  <h1 style={{ color: '#EFF2FD', fontSize: 25, fontWeight: 500, margin: '0' }}>CBS News at Noon</h1>
-                  <span style={{fontSize: '14px', paddingRight: '16px'}}>Network: CBS</span>
-                  <span style={{fontSize: '14px', paddingRight: '16px'}}>Channel: 390</span>
-                  <p style={{fontSize: '14px', margin: '0'}}> Airtime: June 14, 7:30 pm </p>
+                  <h1 style={{ color: '#EFF2FD', fontSize: 25, fontWeight: 500, margin: '0' }}>{tvShow.title || 'Loading...'}</h1>
+                  <span style={{ fontSize: '14px', paddingRight: '16px' }}>Network: {tvShow.networks && tvShow.networks.length > 0 ? tvShow.networks[0].name : 'N/A'}</span>
+                  <span style={{ fontSize: '14px', paddingRight: '16px' }}>Channel: {tvShow.channel || 'N/A'}</span>
+                  <p style={{ fontSize: '14px', margin: '0' }}> Airtime: {tvShow.airtime || 'N/A'} </p>
                 </Typography>
                 <Grid container spacing={1}>
                   <Grid item>
+                    <Link href={`/chat/${tvShow.tmsId}`} passHref>
                       <BlueButton
                         title='Chat'
                       />
+                    </Link>
                   </Grid>
                   <Grid item>
-                      <Button style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
-                        <Typography sx={{ color: '#919CC0' }} variant='string'>About</Typography>
-                      </Button>
+                    <Button style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
+                      <Typography sx={{ color: '#919CC0' }} variant='string'>About</Typography>
+                    </Button>
                   </Grid>
                   <Grid item>
                     <HeartButton identifier={{ tmsId: tvShow.tmsId }} itemId={tvShow.tmsId} itemType={'shows'} />

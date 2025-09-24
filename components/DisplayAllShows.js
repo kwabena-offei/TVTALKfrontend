@@ -28,7 +28,7 @@ import Live from './Live'
 import Container from "@mui/material/Container";
 import { Avatar, CardActions } from "@mui/material";
 
-const DisplayAllShows = ({ categories, network }) => {
+const DisplayAllShows = ({ categories, network, liveShows = [], upcomingShows = [] }) => {
   const router = useRouter();
 
   // Pushes tmsID to the about page
@@ -122,8 +122,8 @@ const DisplayAllShows = ({ categories, network }) => {
                 </div>
               </div>
             ))}
-            <Live />
-            <UpcomingCard />
+            <Live tvShows={Array.isArray(liveShows) ? liveShows : []} />
+            <UpcomingCard tvShows={Array.isArray(upcomingShows) ? upcomingShows : []} />
         </Container>
       </Box>
     </>

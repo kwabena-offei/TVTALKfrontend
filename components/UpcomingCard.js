@@ -1,10 +1,8 @@
-import { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { Button, Grid, Typography, IconButton, Accordion, AccordionSummary, AccordionDetails, Box } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import HeartButton from '../components/HeartButton';
 import BlueButton from '../components/BlueButton';
 import Link from 'next/link';
@@ -12,33 +10,51 @@ import { styled } from '@mui/system';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+// ---------- helpers ----------
+const formatAirTime = (isoString) => {
+  if (!isoString) return 'N/A';
+  try {
+    const date = new Date(isoString);
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const isToday = date.toDateString() === now.toDateString();
+    const isTomorrow = date.toDateString() === tomorrow.toDateString();
+    const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    if (isToday) return `Today, ${timeStr}`;
+    if (isTomorrow) return `Tomorrow, ${timeStr}`;
+    return date.toLocaleDateString([], { month: 'short', day: 'numeric' }) + `, ${timeStr}`;
+  } catch (e) {
+    console.error('Error formatting date:', e);
+    return isoString;
+  }
+};
 
-function UpcomingCard() {
+// --------------------------------
+
+function UpcomingCard({
+  tvShows = [],
+  // Set how far ahead to show (in hours). Front-end filter only.
+  windowHours = 6,
+  collapsedCount = 4,
+}) {
   const [expanded, setExpanded] = useState(false);
 
-  const tvShows = [
-    { title: "Friends", tmsId: '1'},
-    { title: "Friends", tmsId: '2'},
-    { title: "Friends", tmsId: '3'},
-    { title: "Friends", tmsId: '4'},
-    { title: "Friends", tmsId: '5'},
-    { title: "Friends", tmsId: '6'},
-    { title: "Friends", tmsId: '7'},
-    { title: "Friends", tmsId: '8'},
-  ];
-  const tvShow = [
-    { title: "Friends", tmsId: '1'},
-    { title: "Friends", tmsId: '2'},
-    { title: "Friends", tmsId: '3'},
-    { title: "Friends", tmsId: '4'},
-    { title: "Friends", tmsId: '5'},
-    { title: "Friends", tmsId: '6'},
-    { title: "Friends", tmsId: '7'},
-    { title: "Friends", tmsId: '8'},
-  ];
+  // Apply front-end time window filter if needed
+  const filteredShows = React.useMemo(() => {
+    if (!tvShows.length) return [];
+    
+    const now = new Date();
+    const until = new Date(now.getTime() + windowHours * 60 * 60 * 1000);
+    const filtered = tvShows.filter(s => {
+      const t = new Date(s.rawAirtime);
+      return t >= now && t <= until;
+    });
 
-  const collapsedCount = 4;
-  const displayedShows = expanded ? tvShows : tvShows.slice(0, collapsedCount);
+    return filtered.length ? filtered : tvShows; // fallback to all if filter empties it
+  }, [tvShows, windowHours]);
+
+  const displayedShows = expanded ? filteredShows : filteredShows.slice(0, collapsedCount);
 
   const Container = styled('div')(({ expanded }) => ({
     gap: '30px',
@@ -49,13 +65,9 @@ function UpcomingCard() {
     WebkitOverflowScrolling: 'touch',
     flexGrow: 1,
     scrollSnapType: 'both mandatory',
-    '&::-webkit-scrollbar': {
-      display: 'none',
-    },
+    '&::-webkit-scrollbar': { display: 'none' },
     msOverflowStyle: 'none',
-    '& > div': {
-      scrollSnapAlign: 'start',
-    },
+    '& > div': { scrollSnapAlign: 'start' },
     '@media (min-width: 900px)': {
       display: 'grid',
       gridTemplateColumns: 'repeat(4, 1fr)',
@@ -67,12 +79,8 @@ function UpcomingCard() {
 
   const Item = styled('div')(({ expanded }) => ({
     flex: '0 0 calc(80% - 30px)',
-    ...(expanded && {
-      flex: '0 0 100%',
-    }),
-    '@media (min-width: 900px)': {
-      flex: 'initial',
-    },
+    ...(expanded && { flex: '0 0 100%' }),
+    '@media (min-width: 900px)': { flex: 'initial' },
   }));
 
   const StyledTypography = styled(Typography)({
@@ -90,25 +98,46 @@ function UpcomingCard() {
     },
   });
 
+  if (filteredShows.length === 0) {
+    return (
+      <div style={{ marginBottom: '80px' }}>
+        <StyledTypography>Upcoming</StyledTypography>
+        <div style={{ color: '#EFF2FD', textAlign: 'center', padding: '20px' }}>
+          No upcoming shows available.
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={{marginBottom: '80px'}}>
+    <div style={{ marginBottom: '80px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <StyledTypography>
-          Upcoming
-        </StyledTypography>
-
-        {expanded ? <Button endIcon={<ExpandLessIcon />} style={{ color: '#FFF'}} variant='outlined' onClick={() => { setExpanded(false)}}>Close All</Button> : <Button style={{ color: '#FFF'  }} endIcon={<ExpandMoreIcon />} variant='outlined'  onClick={() => { setExpanded(true)}}>View All</Button>}
+        <StyledTypography>Upcoming</StyledTypography>
+        {expanded ? (
+          <Button endIcon={<ExpandLessIcon />} style={{ color: '#FFF' }} variant='outlined' onClick={() => setExpanded(false)}>
+            Close All
+          </Button>
+        ) : (
+          <Button endIcon={<ExpandMoreIcon />} style={{ color: '#FFF' }} variant='outlined' onClick={() => setExpanded(true)}>
+            View All
+          </Button>
+        )}
       </div>
 
       <Container expanded={expanded}>
         {displayedShows.map((tvShow, index) => (
-          <Item key={index} expanded={expanded}>
-            <Card key={`${tvShow.tmsId}`} sx={{ background: 'transparent' }}>
+          <Item key={`${tvShow.tmsId}-${index}`} expanded={expanded}>
+            <Card sx={{ background: 'transparent' }}>
               <Image
-                src='/assets/upcoming.jpg'
-                // src={`https://${tvShow.preferred_image_uri}`}
-                // alt={`${tvShow.title} Image`}
+                src={tvShow.preferred_image_uri?.startsWith('http') 
+                  ? tvShow.preferred_image_uri 
+                  : tvShow.preferred_image_uri?.startsWith('/')
+                    ? tvShow.preferred_image_uri
+                    : tvShow.preferred_image_uri
+                      ? `https://${tvShow.preferred_image_uri}`
+                      : '/assets/live.jpg'
+                }
+                alt={`${tvShow.title || 'TV Show'} Image`}
                 width={720}
                 height={540}
                 layout="responsive"
@@ -116,24 +145,31 @@ function UpcomingCard() {
                 loading='eager'
               />
               <CardContent sx={{ background: '#131B3F' }}>
-                <Typography gutterBottom variant="h5" component="div" >
-                  <h1 style={{ color: '#EFF2FD', fontSize: 25, fontWeight: 500, margin: '0' }}>Friends</h1>
-                  <span style={{fontSize: '14px', paddingRight: '16px'}}>Network: TBSHD</span>
-                  <span style={{fontSize: '14px'}}> Airtime: June 14, 7:30 pm </span>
+                <Typography gutterBottom variant="h5" component="div">
+                  <h1 style={{ color: '#EFF2FD', fontSize: 25, fontWeight: 500, margin: 0 }}>
+                    {tvShow.title || 'Loading...'}
+                  </h1>
+                  <span style={{ fontSize: '14px', paddingRight: '16px' }}>
+                    Network: {tvShow.networks?.[0]?.name || 'N/A'}
+                  </span>
+                  <span style={{ fontSize: '14px', paddingRight: '16px' }}>
+                    Channel: {tvShow.channel || 'N/A'}
+                  </span>
+                  <p style={{ fontSize: '14px', margin: 0 }}>Airtime: {tvShow.airtime || 'N/A'}</p>
                 </Typography>
                 <Grid container spacing={1}>
                   <Grid item>
-                      <BlueButton
-                        title='Chat'
-                      />
+                    <Link href={`/chat/${tvShow.tmsId}`} passHref>
+                      <BlueButton title='Chat' />
+                    </Link>
                   </Grid>
                   <Grid item>
-                      <Button style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
-                        <Typography sx={{ color: '#919CC0' }} variant='string'>About</Typography>
-                      </Button>
+                    <Button style={{ background: '#090F27', borderRadius: 10000, boxShadow: 'none' }} variant='contained'>
+                      <Typography sx={{ color: '#919CC0' }} variant='string'>About</Typography>
+                    </Button>
                   </Grid>
                   <Grid item>
-                    <HeartButton  />
+                    <HeartButton identifier={{ tmsId: tvShow.tmsId }} itemId={tvShow.tmsId} itemType={'shows'} />
                   </Grid>
                 </Grid>
               </CardContent>
