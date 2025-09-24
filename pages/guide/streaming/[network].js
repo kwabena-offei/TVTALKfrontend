@@ -1,36 +1,60 @@
 import DisplayAllShows from '../../../components/DisplayAllShows'
-import streaming from '../../../components/NetworkSelector/streaming.json';
-import { buildAPIUrl } from '../../../services/api';
+import useAxios, { buildAPIUrl } from '../../../services/api';
+import { genreMap } from '../../../util/genreMap';
+
 export default function StreamingNetwork({ categories, network }) {
   return (
     <>
-      <DisplayAllShows categories={categories} network={network} />
+      <DisplayAllShows 
+        categories={categories}
+        network={network}
+        showLiveRow={false}
+        showUpcomingRow={false} />
     </>
   )
 }
+ 
+const groupShowsByGenres = (shows) => {
+  const placedShows = new Set;
+  const genreShows = {};
 
-export async function getStaticProps({ params }) {
-  const { network } = params;
+  shows.forEach((show) => {
+    if (placedShows.has(show.seriesId)) { return };
 
-  const res = await fetch(buildAPIUrl(`/shows/genres?station_id=${network}`))
-  const json = await res.json()
+    const subgenres = Array.isArray(show.genres) ? show.genres : [];
+    const firstMappedSubgenre = subgenres.find((sub) => genreMap[sub]);
+    const genreTitle = firstMappedSubgenre ? genreMap[firstMappedSubgenre] : 'Other Stuff';
 
-  const categoryShows = Object.entries(json).map((category, results) => {
+    if (genreShows[genreTitle]) {
+      genreShows[genreTitle].push(show);
+    } else {
+      genreShows[genreTitle] = [show];
+    }
+
+    placedShows.add(show.seriesId);
+  })
+
+  return Object.entries(genreShows).map((category) => {
     return {
       title: category[0],
-      shows: category[1]?.results
+      shows: category[1],
     }
   })
-
-  return { props: { network, categories: categoryShows }, revalidate: 60 * 60 }
 }
 
-export async function getStaticPaths() {
-  const paths = streaming.map((network) => {
-    return `/guide/streaming/${network.slug}`
-  })
-  return {
-    paths,
-    fallback: 'blocking'
-  };
+export async function getServerSideProps(context) {
+  const { network } = context.params;
+  try {
+    // Streaming: use Originals endpoint and build editorial categories client-side
+    const res = await fetch(buildAPIUrl(`/shows/originals/${network}`));
+    const json = await res.json();
+    const originals = Array.isArray(json?.results) ? json.results : (Array.isArray(json) ? json : []);
+
+    const categories = groupShowsByGenres(originals);
+
+    return { props: { network, categories } }
+  } catch (error) {
+    console.error('Error building streaming page:', error);
+    return { props: { network, categories: [] } }
+  }
 }
