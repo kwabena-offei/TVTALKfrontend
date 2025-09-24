@@ -121,7 +121,14 @@ function ExpandableGrid({ tvShows, title }) {
           <Item key={index} expanded={expanded}>
             <Card key={`${tvShow.tmsId}`} sx={{ height: "100%" }}>
               <Image
-                src={`https://${tvShow.preferred_image_uri}`}
+                src={tvShow.preferred_image_uri?.startsWith('http')
+                  ? tvShow.preferred_image_uri
+                  : tvShow.preferred_image_uri?.startsWith('/')
+                    ? tvShow.preferred_image_uri
+                    : tvShow.preferred_image_uri
+                      ? `https://${tvShow.preferred_image_uri}`
+                      : '/assets/live.jpg'
+                }
                 alt={`${tvShow.title} Image`}
                 width={720}
                 height={540}
@@ -137,10 +144,25 @@ function ExpandableGrid({ tvShows, title }) {
                   sx={{ minHeight: "120px" }}
                 >
                   <h3
-                    style={{ color: "#EFF2FD", fontSize: 25, fontWeight: 500 }}
+                    style={{ color: "#EFF2FD", fontSize: 25, fontWeight: 500, margin: '0' }}
                   >
                     {tvShow.title}
                   </h3>
+                  {tvShow.networks && (
+                    <span style={{ fontSize: '14px', paddingRight: '16px' }}>
+                      Network: {tvShow.networks.length > 0 ? tvShow.networks[0].name : 'N/A'}
+                    </span>
+                  )}
+                  {tvShow.channel && (
+                    <span style={{ fontSize: '14px', paddingRight: '16px' }}>
+                      Channel: {tvShow.channel || 'N/A'}
+                    </span>
+                  )}
+                  {tvShow.airtime && (
+                    <p style={{ fontSize: '14px', margin: '0' }}>
+                      Airtime: {tvShow.airtime || 'N/A'}
+                    </p>
+                  )}
                 </Typography>
                 <Grid container spacing={1}>
                   <Grid item>
