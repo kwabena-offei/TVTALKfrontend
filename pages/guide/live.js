@@ -95,8 +95,18 @@ export async function getServerSideProps(context) {
     // The backend will automatically use user's cable_provider/zipcode if authenticated
     // or fall back to timezone parameter for non-authenticated users
     const timezone = context.query.timezone || 'EST';
-    const res = await axios.get(`/guide/live?timezone=${timezone}`);
-    const json = typeof res.data === 'string' ? JSON.parse(res.data) : res.data;
+    let liveResponse = await axios.get('/guide/live');
+    let liveData = typeof liveResponse.data === 'string' ? (() => { try { return JSON.parse(liveResponse.data) } catch { return [] } })() : liveResponse.data;
+    if (!Array.isArray(liveData) || liveData.length === 0) {
+      try {
+        const fallback = await axios.get(`/guide/live?timezone=${timezone || 'EST'}`);
+        liveData = typeof fallback.data === 'string' ? (() => { try { return JSON.parse(fallback.data) } catch { return [] } })() : fallback.data;
+      } catch (e) {
+        // keep liveData as is
+      }
+    }
+
+    const json = Array.isArray(liveData) ? liveData : [];
     
     // Transform the data using the same function as homepage
     const shows = transformStationsToShows(json);
@@ -109,6 +119,12 @@ export async function getServerSideProps(context) {
         title: 'Live now',
         shows: liveShows
       })
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      try {
+        console.log('[SSR-pages/guide/live] type:', typeof liveData, 'isArray:', Array.isArray(liveData), 'stations len:', Array.isArray(liveData) ? liveData.length : '—', 'shows len:', shows.length, 'categories len:', categoryShows.length)
+      } catch {}
     }
 
     return { props: { network: 'live', categories: categoryShows } };
