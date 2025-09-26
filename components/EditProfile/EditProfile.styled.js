@@ -26,7 +26,7 @@ export const EditProfileHeader = ({ profile, isMobile, ...props }) => {
       }
       action={isMobile ? '' : <Actions {...props} />}
       title={username}
-      subheader={<SubheaderLink href={"#"} />}
+      subheader={<SubheaderLink href={"#"} onClick={props.onImageClick} />}
       classes={{ action: "align-self-center" }}
       titleTypographyProps={{
         fontSize: "1.5rem",

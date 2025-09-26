@@ -12,6 +12,8 @@ import { Toast } from "../Toast";
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useAxios, { buildAPIUrl } from "../../services/api";
+import { PickerOverlay } from 'filestack-react';
+import getConfig from 'next/config';
 
 export const EditProfileCard = ({ profile }) => {
   const [draftProfile, setDraftProfile] = useState(profile);
@@ -19,10 +21,23 @@ export const EditProfileCard = ({ profile }) => {
   const [showToast, setShowToast] = useState(false);
   const [lineupOptions, setLineupOptions] = useState([]);
   const [selectedStreamingService, setSelectedStreamingService] = useState(draftProfile.streaming_service);
+  const [showPicker, setShowPicker] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { axios } = useAxios();
+  const { publicRuntimeConfig } = getConfig();
+  const apiKey = publicRuntimeConfig.FILESTACK_API_KEY;
 
+  const togglePicker = () => {
+    setShowPicker(!showPicker);
+  }
+
+  const onImageUpload = (result) => {
+    const url = result.filesUploaded[0].url;
+    setDraftProfile({ ...draftProfile, image: url });
+    axios.put(`/users/${profile.username}`, { image: url });
+    togglePicker();
+  }
 
   const onSave = async () => {
     const results = await axios.put(`/users/${profile.username}`, { ...draftProfile, streaming_service: selectedStreamingService?.toLowerCase() });
@@ -70,8 +85,18 @@ export const EditProfileCard = ({ profile }) => {
   };
 
   return (
-    [<Card sx={{ paddingX: isMobile ? 0 : 4, paddingY: isMobile ? 0 : 4, backgroundColor: "#131B3F" }}>
-      <EditProfileHeader profile={profile} isMobile={isMobile} onSave={onSave} />
+    [
+      showPicker && <PickerOverlay
+        apikey={apiKey}
+        pickerOptions={{
+          accept: 'image/*',
+          maxFiles: 1,
+          onClose: togglePicker,
+        }}
+        onUploadDone={onImageUpload}
+      />,
+      <Card sx={{ paddingX: isMobile ? 0 : 4, paddingY: isMobile ? 0 : 4, backgroundColor: "#131B3F" }}>
+      <EditProfileHeader profile={draftProfile} isMobile={isMobile} onSave={onSave} onImageClick={togglePicker} />
       <CardContent xs={isMobile ? { paddingX: '20px' } : {}}>
         <Grid container columnSpacing={5} rowSpacing={isMobile ? 2.5 : 0}>
           <Grid item xs={12} md={6}>
