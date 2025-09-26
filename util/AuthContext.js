@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import useAxios from "../services/api";
 import { useRouter } from "next/router";
 import useSWR from "swr";
+import axios from "axios";
 
 export const AuthContext = createContext({
   isAuthenticated: false,
@@ -24,14 +25,17 @@ export const hasCookieToken = (context) => {
   return hasCookie("token");
 };
 
-const fetcher = (url) => axios.get(url).then((res) => res.data);
+// Use the configured axios client so Authorization is consistently attached
+// and baseURL is correct across SSR and CSR.
+const fetcherWith = (axiosClient) => (url) =>
+  axiosClient.get(url).then((res) => res.data);
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(hasCookieToken());
   const [favorites, setFavorites] = useState({});
   const [profile, setProfile] = useState({});
   const router = useRouter();
-  const { axios } = useAxios();
+  const { axios: axiosClient } = useAxios();
 
   const login = () => {
     setIsAuthenticated(true);
@@ -44,16 +48,32 @@ export const AuthProvider = ({ children }) => {
   };
 
 
-  const { data, error, mutate: mutateProfile } = useSWR("/profile", fetcher);
+  const { data, error, mutate: mutateProfile } = useSWR(
+    "/profile",
+    fetcherWith(axiosClient)
+  );
   useEffect(() => {
     if (data) {
       setProfile(data);
+      setIsAuthenticated(true);
     }
   }, [data]);
 
+  // After hydration on the client, re-evaluate cookie presence
+  // so UI reflects correct auth state following a hard refresh.
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const cookieAuth = hasCookieToken();
+      // Only update if there's a meaningful change to avoid unnecessary re-renders
+      if (cookieAuth !== isAuthenticated) {
+        setIsAuthenticated(cookieAuth);
+      }
+    }
+  }, []);
+
   const fetchFavorites = async () => {
     if (isAuthenticated) {
-      let resp = await axios.get("/likes");
+      let resp = await axiosClient.get("/likes");
       setFavorites(resp.data);
     }
   };
@@ -61,7 +81,7 @@ export const AuthProvider = ({ children }) => {
   // {liked: true, tmsId: 123, comment_id: 123, sub_comment_id: 123, story_id: 123 }
   const toggleFavorite = async ({ identifier, liked }) => {
     if (isAuthenticated) {
-      const updatedFavorites = await axios.post("/likes", {
+      const updatedFavorites = await axiosClient.post("/likes", {
         ...identifier,
         liked,
       });
@@ -85,7 +105,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         fetchFavorites,
         profile,
-        mutateProfile,
+        mutateProfile
       }}
     >
       {children}
