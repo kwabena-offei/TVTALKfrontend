@@ -92,6 +92,7 @@ export const EditProfileCard = ({ profile }) => {
           accept: 'image/*',
           maxFiles: 1,
           onClose: togglePicker,
+          fromSources: ['local_file_system', 'url']
         }}
         onUploadDone={onImageUpload}
       />,
