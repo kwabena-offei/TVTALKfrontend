@@ -150,7 +150,10 @@ function PopularChatter() {
               key={`${user.id}`}
               sx={{ background: "transparent" }}
             >
-              <Avatar sx={{ width: 120, height: 120 }}></Avatar>
+              <Avatar
+                sx={{ width: 120, height: 120 }}
+                src={user.image}
+              ></Avatar>
               <CardContent sx={{ background: "#131B3F", padding: "0" }}>
                 <Typography variant="h5" component="div">
                   <h1
