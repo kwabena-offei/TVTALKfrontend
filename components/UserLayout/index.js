@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Box, Container, Stack, Tabs, Tab } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -14,6 +14,7 @@ import {
 } from "./UserLayout.styled";
 import { useRouter } from "next/router";
 import useAxios from "../../services/api";
+import { AuthContext } from "../../util/AuthContext";
 
 const { axios } = useAxios();
 export async function fetchAccount(username) {
@@ -24,18 +25,34 @@ export async function fetchAccount(username) {
 export const UserLayout = ({ children, mode }) => {
   const { props } = children;
   const { profile } = props;
+  const { profile: currentUser } = useContext(AuthContext);
 
   const router = useRouter();
   const currentRoute = router.asPath;
 
+  console.log("--- DEBUGGING FOLLOW BUTTON ---");
+  console.log("Profile being viewed:", profile);
+  console.log("Currently logged-in user:", currentUser);
+
   const {
+    id,
     username,
     image,
     reactions_count,
     favorites_count,
     followers_count,
     following_count,
+    is_following,
   } = profile;
+
+  const [isFollowing, setIsFollowing] = useState(is_following);
+  const [followersCount, setFollowersCount] = useState(followers_count);
+
+  useEffect(() => {
+    setFollowersCount(followers_count);
+    setIsFollowing(is_following);
+  }, [followers_count, is_following]);
+
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -46,22 +63,22 @@ export const UserLayout = ({ children, mode }) => {
     {
       title: "Reactions",
       href: `${inheritURL}/reactions`,
-      count: reactions_count | "0",
+      count: reactions_count || "0",
     },
     {
       title: "Favorites",
       href: `${inheritURL}/favorites`,
-      count: favorites_count | "0",
+      count: favorites_count || "0",
     },
     {
       title: "Followers",
       href: `${inheritURL}/followers`,
-      count: followers_count | "0",
+      count: followersCount || "0",
     },
     {
       title: "Following",
       href: `${inheritURL}/following`,
-      count: following_count | "0",
+      count: following_count || "0",
     },
   ];
 
@@ -70,11 +87,21 @@ export const UserLayout = ({ children, mode }) => {
   };
 
   const handleFollow = async () => {
-    const res = await axios.post(`/relationships`, {
-      follower_id: 653,
-      followed_id: 485,
-    });
-    console.log("res", res);
+    try {
+      if (isFollowing) {
+        await axios.delete(`/relationships/${id}`);
+        setIsFollowing(false);
+        setFollowersCount((prev) => prev - 1);
+      } else {
+        await axios.post(`/relationships`, {
+          followed_id: id,
+        });
+        setIsFollowing(true);
+        setFollowersCount((prev) => prev + 1);
+      }
+    } catch (error) {
+      console.error("Failed to update relationship", error);
+    }
   };
 
   return (
@@ -94,7 +121,15 @@ export const UserLayout = ({ children, mode }) => {
               <ProfileUsername>{username}</ProfileUsername>
             )}
 
-            <FollowButton isMobile={isMobile} onClick={handleFollow} />
+            {currentUser && currentUser.id && currentUser.id !== id && (
+              <FollowButton
+                isMobile={isMobile}
+                onClick={handleFollow}
+                isFollowing={isFollowing}
+              >
+                {isFollowing ? "Unfollow" : "Follow"}
+              </FollowButton>
+            )}
           </Stack>
         </Box>
         <Box
