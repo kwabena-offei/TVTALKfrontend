@@ -74,7 +74,7 @@ export const TabLabel = ({ count, title, isMobile }) => {
     </Stack>
   );
 };
-export const FollowButton = ({ isMobile, ...props }) => {
+export const FollowButton = ({ isMobile, children, ...props }) => {
   return (
     <Button
       {...props}
@@ -89,7 +89,7 @@ export const FollowButton = ({ isMobile, ...props }) => {
         height: isMobile ? "40px" : "50px",
       }}
     >
-      Follow
+      {children}
     </Button>
   );
 };
