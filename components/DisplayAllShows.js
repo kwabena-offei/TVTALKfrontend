@@ -21,10 +21,10 @@ import NetworkSelector from "./NetworkSelector";
 import Image from "next/image";
 import { styled } from "@mui/system";
 import ExpandableGrid from "./ExpandableGrid";
-import PopularChatter from "./PopularChatter"
-import PopularCommets from './PopularCommets'
-import UpcomingCard from './UpcomingCard'
-import Live from './Live'
+import PopularChatter from "./PopularChatter";
+import PopularComments from "./PopularCommets";
+import UpcomingCard from "./UpcomingCard";
+import Live from "./Live";
 import Container from "@mui/material/Container";
 import { Avatar, CardActions } from "@mui/material";
 
@@ -112,7 +112,7 @@ const DisplayAllShows = ({
         <Container maxWidth="xl">
           <NetworkSelector activeNetwork={network} />
             <PopularChatter />
-            <PopularCommets />
+            <PopularComments />
           {categories
             .filter((category) => category.shows.length)
             .map((category, index) => (

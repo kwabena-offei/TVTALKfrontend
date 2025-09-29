@@ -9,13 +9,13 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useAxios from "../services/api";
 
-const PopularCommets = () => {
+const PopularComments = () => {
   const { axios } = useAxios();
   const [topComments, setTopComments] = useState([]);
 
   const [expanded, setExpanded] = useState(false);
   const collapsedCount = 8;
-  const displayedShows = topComments
+  const displayedShows = expanded
     ? topComments
     : topComments.slice(0, collapsedCount);
   const theme = useTheme();
@@ -23,8 +23,19 @@ const PopularCommets = () => {
 
   useEffect(() => {
     const fetchPopularComments = async () => {
-      const { data: topCommentsData } = await axios.get(`comments/top?limit=8`);
-      setTopComments(topCommentsData.results);
+      try {
+        const { data: topCommentsData } = await axios.get(
+          `comments/top?limit=8`
+        );
+        if (Array.isArray(topCommentsData)) {
+          setTopComments(topCommentsData);
+        } else {
+          setTopComments(topCommentsData.results || []);
+        }
+      } catch (e) {
+        console.error(e);
+        setTopComments([]);
+      }
     };
     fetchPopularComments();
   }, []);
@@ -144,7 +155,7 @@ const PopularCommets = () => {
   );
 };
 
-export default PopularCommets;
+export default PopularComments;
 
 const comments = [
   {
