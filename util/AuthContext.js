@@ -37,14 +37,20 @@ export const AuthProvider = ({ children }) => {
   const router = useRouter();
   const { axios: axiosClient } = useAxios();
 
-  const login = () => {
+  const login = (user) => {
     setIsAuthenticated(true);
+    // Pre-populate the SWR cache with the user data from login
+    // The 'false' flag prevents an unnecessary re-fetch
+    mutateProfile(user, false);
+    setProfile(user); // also update the local state
     fetchFavorites();
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     setFavorites({});
+    setProfile({}); // Clear the profile from the react state
+    mutateProfile(null, false); // Clear the SWR cache for the /profile key
   };
 
 

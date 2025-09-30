@@ -24,15 +24,23 @@ export async function fetchAccount(username) {
 
 export const UserLayout = ({ children, mode }) => {
   const { props } = children;
-  const { profile } = props;
+  let { profile } = props;
   const { profile: currentUser } = useContext(AuthContext);
+
+  // If we are on the main profile page, always use the currentUser from context
+  // This ensures that after login, we see the correct user's data
+  if (mode === "profile") {
+    profile = currentUser;
+  }
+
+  // If the profile data is not yet loaded (e.g., right after login),
+  // we should not attempt to render the component contents.
+  if (!profile?.id) {
+    return null; 
+  }
 
   const router = useRouter();
   const currentRoute = router.asPath;
-
-  console.log("--- DEBUGGING FOLLOW BUTTON ---");
-  console.log("Profile being viewed:", profile);
-  console.log("Currently logged-in user:", currentUser);
 
   const {
     id,
