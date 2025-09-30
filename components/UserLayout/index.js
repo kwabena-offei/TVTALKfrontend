@@ -17,8 +17,8 @@ import useAxios from "../../services/api";
 import { AuthContext } from "../../util/AuthContext";
 
 const { axios } = useAxios();
-export async function fetchAccount(username) {
-  const { data: profile } = await axios.get(`/users/${username}`);
+export async function fetchAccount(username, axiosInstance = axios) {
+  const { data: profile } = await axiosInstance.get(`/users/${username}`);
   return profile;
 }
 

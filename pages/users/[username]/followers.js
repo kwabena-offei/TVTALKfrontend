@@ -39,7 +39,7 @@ export async function getServerSideProps(context) {
   const { axios } = useAxios(context);
   const { username } = context.query;
   const { data: followers } = await axios.get(`/users/${username}/followers`);
-  const profile = await fetchAccount(username);
+  const profile = await fetchAccount(username, axios);
   return {
     props: {
       followers,

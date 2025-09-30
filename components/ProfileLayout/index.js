@@ -17,9 +17,8 @@ import { useRouter } from "next/router";
 import useAxios from "../../services/api";
 import { AuthContext } from "../../util/AuthContext";
 
-export async function fetchAccount(username) {
-  const { axios } = useAxios();
-  const { data: profile } = await axios.get(`/users/${username}`);
+export async function fetchAccount(username, axiosInstance) {
+  const { data: profile } = await axiosInstance.get(`/users/${username}`);
   return profile;
 }
 

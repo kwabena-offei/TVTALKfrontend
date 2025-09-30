@@ -32,7 +32,7 @@ export async function getServerSideProps(context) {
 
   const { data: favorites } = await axios.get(`/users/${username}/favorites`);
 
-  const profile = await fetchAccount(username);
+  const profile = await fetchAccount(username, axios);
   return {
     props: {
       favorites,
