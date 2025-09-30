@@ -13,6 +13,9 @@ export const AuthContext = createContext({
   login: () => {},
   logout: () => {},
   mutateProfile: () => {},
+  unreadCount: 0,
+  fetchUnreadNotifications: () => {},
+  markAllNotificationsAsRead: () => {},
 });
 
 export const hasCookieToken = (context) => {
@@ -34,6 +37,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(hasCookieToken());
   const [favorites, setFavorites] = useState({});
   const [profile, setProfile] = useState({});
+  const [unreadCount, setUnreadCount] = useState(0);
   const router = useRouter();
   const { axios: axiosClient } = useAxios();
 
@@ -44,12 +48,14 @@ export const AuthProvider = ({ children }) => {
     mutateProfile(user, false);
     setProfile(user); // also update the local state
     fetchFavorites();
+    fetchUnreadNotifications();
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     setFavorites({});
     setProfile({}); // Clear the profile from the react state
+    setUnreadCount(0); // Clear notifications count
     mutateProfile(null, false); // Clear the SWR cache for the /profile key
   };
 
@@ -84,6 +90,31 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const fetchUnreadNotifications = async () => {
+    if (isAuthenticated) {
+      try {
+        const resp = await axiosClient.get("/notifications/unread");
+        setUnreadCount(resp.data.results?.length || 0);
+      } catch (error) {
+        console.error("Error fetching unread notifications:", error);
+      }
+    }
+  };
+
+  const markAllNotificationsAsRead = async () => {
+    if (isAuthenticated) {
+      try {
+        await axiosClient.patch("/notifications/unread/all", {
+          notification: { read: true },
+        });
+        // Immediately update the local state
+        setUnreadCount(0);
+      } catch (error) {
+        console.error("Error marking notifications as read:", error);
+      }
+    }
+  };
+
   // {liked: true, tmsId: 123, comment_id: 123, sub_comment_id: 123, story_id: 123 }
   const toggleFavorite = async ({ identifier, liked }) => {
     if (isAuthenticated) {
@@ -99,6 +130,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     fetchFavorites();
+    fetchUnreadNotifications();
   }, [isAuthenticated]);
 
   return (
@@ -111,7 +143,10 @@ export const AuthProvider = ({ children }) => {
         logout,
         fetchFavorites,
         profile,
-        mutateProfile
+        mutateProfile,
+        unreadCount,
+        fetchUnreadNotifications,
+        markAllNotificationsAsRead,
       }}
     >
       {children}
