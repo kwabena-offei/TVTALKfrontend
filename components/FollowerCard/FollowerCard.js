@@ -23,6 +23,7 @@ const FollowerCard = ({
   image, 
   is_following = false, 
   context = "followers", // "followers" or "following"
+  isOwnProfile = false, // Are we viewing our own profile?
   onUnfollow,
   onFollowChange, // Callback to refresh data after follow/unfollow
   ...props 
@@ -30,18 +31,17 @@ const FollowerCard = ({
   const { axios: axiosClient } = useAxios();
   const { profile: currentUser } = useContext(AuthContext);
   
-  // For "following" context, we are always following them by definition
-  // For "followers" context, use the is_following prop
-  const initialFollowingState = context === "following" ? true : is_following;
+  // LOGIC:
+  // - If viewing OWN "following" list → we're following them by definition → true
+  // - Otherwise → use is_following from backend
+  const initialFollowingState = (context === "following" && isOwnProfile) ? true : is_following;
   const [isFollowing, setIsFollowing] = useState(initialFollowingState);
   const [isLoading, setIsLoading] = useState(false);
 
   // Update state if is_following prop changes
   useEffect(() => {
-    if (context === "followers") {
-      setIsFollowing(is_following);
-    }
-  }, [is_following, context]);
+    setIsFollowing((context === "following" && isOwnProfile) ? true : is_following);
+  }, [is_following, context, isOwnProfile]);
 
   const reactions = props.reactions || props.comments_count 
     ? `${props.reactions || props.comments_count} reactions` 
@@ -60,8 +60,8 @@ const FollowerCard = ({
         await axiosClient.delete(`/relationships/${id}`);
         setIsFollowing(false);
         
-        // If we're in the "following" context, notify parent to remove this user
-        if (context === "following" && onUnfollow) {
+        // If we're on our own "following" list, notify parent to remove this user
+        if (context === "following" && isOwnProfile && onUnfollow) {
           onUnfollow(id);
         }
       } else {

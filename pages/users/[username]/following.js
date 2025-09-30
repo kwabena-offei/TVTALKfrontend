@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { UserLayout, fetchAccount } from "../../../components/UserLayout";
 import FollowerCard from "../../../components/FollowerCard/FollowerCard";
 import FollowerCardMobile from "../../../components/FollowerCard/FollowerCardMobile";
@@ -7,16 +7,21 @@ import useAxios from "../../../services/api";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
+import { AuthContext } from "../../../util/AuthContext";
 
-export default function Page({ following }) {
+export default function Page({ following, profile }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const router = useRouter();
+  const { profile: currentUser } = useContext(AuthContext);
 
   const { results: followingList, pagination } = following;
   
   // Track which users have been unfollowed to remove them from the list
   const [unfollowedUsers, setUnfollowedUsers] = useState([]);
+
+  // Check if we're viewing our own profile
+  const isOwnProfile = currentUser?.id === profile?.id;
 
   const handleUnfollow = (userId) => {
     // Add the user to the unfollowed list to filter them out
@@ -49,6 +54,7 @@ export default function Page({ following }) {
               <FollowerCardMobile 
                 {...follower} 
                 context="following"
+                isOwnProfile={isOwnProfile}
                 onUnfollow={handleUnfollow}
                 onFollowChange={handleFollowChange}
               />
@@ -56,6 +62,7 @@ export default function Page({ following }) {
               <FollowerCard 
                 {...follower} 
                 context="following"
+                isOwnProfile={isOwnProfile}
                 onUnfollow={handleUnfollow}
                 onFollowChange={handleFollowChange}
               />

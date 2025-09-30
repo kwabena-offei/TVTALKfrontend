@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { UserLayout, fetchAccount } from "../../../components/UserLayout";
 import FollowerCard from "../../../components/FollowerCard/FollowerCard";
 import FollowerCardMobile from "../../../components/FollowerCard/FollowerCardMobile";
@@ -7,13 +7,18 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useAxios from "../../../services/api";
 import { useRouter } from "next/router";
+import { AuthContext } from "../../../util/AuthContext";
 
-export default function Page({ followers }) {
+export default function Page({ followers, profile }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const router = useRouter();
+  const { profile: currentUser } = useContext(AuthContext);
 
   const { results: followersList, pagination } = followers;
+  
+  // Check if we're viewing our own profile
+  const isOwnProfile = currentUser?.id === profile?.id;
   
   // Callback to refresh server-side props after follow/unfollow
   const handleFollowChange = () => {
@@ -36,12 +41,14 @@ export default function Page({ followers }) {
               <FollowerCardMobile 
                 {...follower} 
                 context="followers"
+                isOwnProfile={isOwnProfile}
                 onFollowChange={handleFollowChange}
               />
             ) : (
               <FollowerCard 
                 {...follower} 
                 context="followers"
+                isOwnProfile={isOwnProfile}
                 onFollowChange={handleFollowChange}
               />
             )}
