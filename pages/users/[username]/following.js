@@ -1,21 +1,42 @@
 import { Grid } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { UserLayout, fetchAccount } from "../../../components/UserLayout";
 import FollowerCard from "../../../components/FollowerCard/FollowerCard";
 import FollowerCardMobile from "../../../components/FollowerCard/FollowerCardMobile";
 import useAxios from "../../../services/api";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useRouter } from "next/router";
 
 export default function Page({ following }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const router = useRouter();
 
   const { results: followingList, pagination } = following;
+  
+  // Track which users have been unfollowed to remove them from the list
+  const [unfollowedUsers, setUnfollowedUsers] = useState([]);
+
+  const handleUnfollow = (userId) => {
+    // Add the user to the unfollowed list to filter them out
+    setUnfollowedUsers(prev => [...prev, userId]);
+  };
+
+  // Callback to refresh server-side props after follow/unfollow
+  const handleFollowChange = () => {
+    // Force Next.js to refetch getServerSideProps
+    router.replace(router.asPath);
+  };
+
+  // Filter out unfollowed users
+  const displayedFollowing = followingList?.filter(
+    user => !unfollowedUsers.includes(user.id)
+  );
 
   return (
     <Grid container spacing={isMobile ? 2 : 3.75}>
-      {followingList?.map((follower) => {
+      {displayedFollowing?.map((follower) => {
         return (
           <Grid
             key={`card-following-${follower.id}`}
@@ -25,9 +46,19 @@ export default function Page({ following }) {
             lg={2}
           >
             {isMobile ? (
-              <FollowerCardMobile {...follower} />
+              <FollowerCardMobile 
+                {...follower} 
+                context="following"
+                onUnfollow={handleUnfollow}
+                onFollowChange={handleFollowChange}
+              />
             ) : (
-              <FollowerCard {...follower} />
+              <FollowerCard 
+                {...follower} 
+                context="following"
+                onUnfollow={handleUnfollow}
+                onFollowChange={handleFollowChange}
+              />
             )}
           </Grid>
         );

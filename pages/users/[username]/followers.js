@@ -6,12 +6,21 @@ import FollowerCardMobile from "../../../components/FollowerCard/FollowerCardMob
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import useAxios from "../../../services/api";
+import { useRouter } from "next/router";
 
 export default function Page({ followers }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const router = useRouter();
 
   const { results: followersList, pagination } = followers;
+  
+  // Callback to refresh server-side props after follow/unfollow
+  const handleFollowChange = () => {
+    // Force Next.js to refetch getServerSideProps
+    router.replace(router.asPath);
+  };
+
   return (
     <Grid container spacing={isMobile ? 2 : 3.75}>
       {followersList?.map((follower) => {
@@ -24,9 +33,17 @@ export default function Page({ followers }) {
             lg={2}
           >
             {isMobile ? (
-              <FollowerCardMobile {...follower} />
+              <FollowerCardMobile 
+                {...follower} 
+                context="followers"
+                onFollowChange={handleFollowChange}
+              />
             ) : (
-              <FollowerCard {...follower} />
+              <FollowerCard 
+                {...follower} 
+                context="followers"
+                onFollowChange={handleFollowChange}
+              />
             )}
           </Grid>
         );
