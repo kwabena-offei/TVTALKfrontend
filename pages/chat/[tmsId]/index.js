@@ -13,14 +13,15 @@ export async function getServerSideProps(context) {
   const { axios } = useAxios(context);
 
   if (!tmsId) {
-    return {
-      notFound: true,
-    };
+    return { notFound: true };
   }
 
   try {
     const { data: show } = await axios.get(`/shows/${tmsId}`);
     const { data: comments } = await axios.get(`/comments?tms_id=${tmsId}`);
+
+    // REMOVED: The slow second API call that was causing 10-30 second delays
+    // We'll handle series metadata lazily in the component instead
 
     let heroImage = `https://${show.preferred_image_uri}`;
     try {
@@ -43,9 +44,7 @@ export async function getServerSideProps(context) {
     };
   } catch (error) {
     console.error('Error fetching chat data:', error);
-    return {
-      notFound: true,
-    };
+    return { notFound: true };
   }
 }
 

@@ -83,6 +83,7 @@ export const ChatContent = ({
         <Grid xs={12} md={3} lg={2.5}>
           <MenuSelects
             tmsId={show.tmsId}
+            seriesId={show.seriesId}
             episodes={show.totalEpisodes}
             seasons={show.totalSeasons}
             onEpisodeSelect={onEpisodeSelect}
