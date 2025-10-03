@@ -64,6 +64,7 @@ export const ChatContent = ({
   comments,
   profile,
   show,
+  selectedEpisodeTmsId,
   onEpisodeSelect,
   onSortChange,
 }) => {
@@ -72,6 +73,9 @@ export const ChatContent = ({
   const isNotLarge = useMediaQuery(theme.breakpoints.down("lg"));
   const router = useRouter();
   const { tmsId, reactionId } = router.query;
+
+  // Use selected episode if set, else fall back to route tmsId (SH or EP)
+  const postTargetTmsId = selectedEpisodeTmsId || tmsId;
 
   return (
     <Container maxWidth="xl">
@@ -91,7 +95,7 @@ export const ChatContent = ({
           />
         </Grid>
         <Grid xs={12} md={9} lg={7}>
-          <NewPostCard isMobile={isMobile} profile={profile} show_id={tmsId} />
+          <NewPostCard isMobile={isMobile} profile={profile} show_id={postTargetTmsId} />
         </Grid>
         <Grid lg={2.5} sx={isNotLarge ? { display: "none" } : {}} />
       </Grid>

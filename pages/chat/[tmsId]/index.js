@@ -66,6 +66,10 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
   const { isAuthenticated } = useContext(AuthContext);
   const [sortValue, setSortValue] = useState("");
 
+  // NEW: track which episode to post to
+  const isRouteEpisode = tmsId?.startsWith('EP');
+  const [selectedEpisodeTmsId, setSelectedEpisodeTmsId] = useState(isRouteEpisode ? tmsId : null);
+
   useEffect(() => {
     setFilteredComments(comments.results);
   }, [comments]);
@@ -125,25 +129,27 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
   const handleEpisodeChange = async (selectedTmsId) => {
     if (selectedTmsId.tag === "total") {
       const totalPromises = selectedTmsId.content.map(async (episodeId) => {
-        return axios.get(`/comments?tmsId=${episodeId}`);
+        return axios.get(`/comments?tms_id=${episodeId}`);
       });
       Promise.allSettled(totalPromises).then((results) => {
-        const totalData = [];
-        results.forEach((result) => {
-          result.value.data.results.forEach((individualResult) =>
-            totalData.push(individualResult)
-          );
-        });
-        setFilteredComments(
-          uniqBy([...totalData.sort(sorter), filteredComments[0]], "id")
-        );
+        const totalData = results.flatMap(r => (r.value?.data?.results ?? []));
+        const base = totalData.sort(sorter);
+        const seed = filteredComments && filteredComments[0] ? [filteredComments[0]] : [];
+        setFilteredComments(uniqBy([...base, ...seed], 'id'));
       });
+      // Do NOT change post target for "Select All"
     } else {
-      const resp = await axios.get(`/comments?tmsId=${selectedTmsId}`);
+      const resp = await axios.get(`/comments?tms_id=${selectedTmsId}`);
 
-      setFilteredComments(
-        uniqBy([...resp.data.results.sort(sorter), filteredComments[0]], "id")
-      );
+      const list = Array.isArray(resp.data?.results) ? resp.data.results : [];
+      const base = list.sort(sorter);
+      const seed = filteredComments && filteredComments[0] ? [filteredComments[0]] : [];
+      setFilteredComments(uniqBy([...base, ...seed], 'id'));
+
+      // Update post target to selected episode
+      if (typeof selectedTmsId === 'string' && selectedTmsId.startsWith('EP')) {
+        setSelectedEpisodeTmsId(selectedTmsId);
+      }
     }
   };
 
@@ -174,6 +180,7 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
         show={show}
         comments={filteredComments}
         profile={profile}
+        selectedEpisodeTmsId={selectedEpisodeTmsId}
         onEpisodeSelect={handleEpisodeChange}
         onSortChange={onSortChange}
       />

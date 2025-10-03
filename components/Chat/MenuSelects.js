@@ -222,8 +222,9 @@ export const MenuSelects = ({
   };
 
   const handleEpisodeChange = (e) => {
-    setEpisode(e.target.value);
-    onEpisodeSelect(e.target.value);
+    const selectedValue = e.target.value;
+    setEpisode(selectedValue);
+    onEpisodeSelect(selectedValue);
   };
 
   const handleSortChange = (e) => {

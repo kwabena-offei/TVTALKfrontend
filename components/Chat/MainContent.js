@@ -8,6 +8,10 @@ function MainContent({ comments, focusCommentId: commentId }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
+  if (!comments) {
+    return null; // or a loading spinner
+  }
+
   const sortedComments = comments.sort((a, b) => {
     return new Date(b.created_at) - new Date(a.created_at);
   });
