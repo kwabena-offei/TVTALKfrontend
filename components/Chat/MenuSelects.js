@@ -33,14 +33,16 @@ export const MenuSelects = ({
   // State for dynamically loaded series metadata
   const [totalSeasons, setTotalSeasons] = useState(parsed(seasons) || 0);
   const [totalEpisodes, setTotalEpisodes] = useState(parsed(episodes) || 0);
-  const [effectiveSeriesId, setEffectiveSeriesId] = useState(seriesId || tmsId);
+  const [effectiveSeriesId, setEffectiveSeriesId] = useState(seriesId);
+  const [parentTmsId, setParentTmsId] = useState(null);
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
+  const [currentEpisodeSeason, setCurrentEpisodeSeason] = useState(null);
   
-  // Use ref to prevent infinite loop
+  // Use ref to prevent re-running effects
   const hasLoadedMetadata = useRef(false);
-  const currentEpisodeTmsId = useRef(tmsId);
+  const hasAutoSelected = useRef(false);
 
-  // Season list derived from state
+  // Season list derived from totalSeasons
   const seasonsList = new Array(totalSeasons)
     .fill("0")
     .map((_, index) => ({ label: `Season ${index + 1}`, value: index + 1 }));
@@ -50,172 +52,180 @@ export const MenuSelects = ({
     { label: "Popularity", value: "popularity" },
   ];
 
-  // UPDATED: Fetch series metadata using episodes endpoint
+  // Fetch show/episode metadata from backend
   useEffect(() => {
-    const fetchSeriesMetadata = async () => {
-      if (hasLoadedMetadata.current) {
+    const fetchMetadata = async () => {
+      if (hasLoadedMetadata.current || !tmsId) {
         return;
       }
 
       const isEpisode = tmsId?.startsWith('EP');
-      const hasSeriesId = seriesId && seriesId !== tmsId;
-      const needsMetadata = parsed(seasons) === 0 && hasSeriesId && isEpisode;
+      const isShow = tmsId?.startsWith('SH');
+      const hasSeasons = parsed(seasons) > 0;
 
+      // If it's a show with seasons already known, use those values
+      if (isShow && hasSeasons) {
+        console.log(`Using existing metadata: ${seasons} seasons`);
+        setParentTmsId(tmsId); // For shows, use tmsId
+        setEffectiveSeriesId(seriesId);
+        hasLoadedMetadata.current = true;
+        return;
+      }
+
+      // For episodes without seasons or shows without metadata, fetch from backend
+      const needsMetadata = (isEpisode && !hasSeasons) || (isShow && !hasSeasons);
       if (!needsMetadata) {
         hasLoadedMetadata.current = true;
         return;
       }
 
-      console.log(`Loading metadata for series ${seriesId} (current episode: ${tmsId})`);
+      console.log(`Fetching metadata for ${tmsId}...`);
       setIsLoadingMetadata(true);
       hasLoadedMetadata.current = true;
 
       try {
-        // Try backend episodes endpoint first 
-        const { data: episodesResponse } = await axios.get(`/shows/${tmsId}/episodes`);
+        // Call backend - this will import episode + parent show and trigger background import
+        const { data: showData } = await axios.get(`/shows/${tmsId}`);
         
-        const rawData = episodesResponse.episodes || episodesResponse;
+        console.log('Show data from backend:', showData);
+
+        // Set effectiveSeriesId
+        if (showData.effectiveSeriesId || showData.seriesId) {
+          setEffectiveSeriesId(showData.effectiveSeriesId || showData.seriesId);
+        }
         
-        console.log('Episodes from backend:', rawData);
-
-        let allEpisodes = [];
-        let seasonsCount = 0;
-
-        if (Array.isArray(rawData)) {
-          allEpisodes = rawData;
-          
-          const uniqueSeasons = [...new Set(
-            allEpisodes
-              .map(ep => ep.season_number || ep.seasonNum || ep.season_num)
-              .filter(sn => sn != null && sn > 0)
-          )].sort((a, b) => a - b);
-          
-          seasonsCount = uniqueSeasons.length;
-          console.log('Unique seasons found:', uniqueSeasons);
+        // Set parentTmsId if available (might be null if parent not imported yet)
+        if (showData.parentTmsId) {
+          setParentTmsId(showData.parentTmsId);
         }
-
-        const episodesCount = allEpisodes.length;
-        console.log(`Loaded from episodes endpoint: ${seasonsCount} seasons, ${episodesCount} episodes`);
-
-        if (seasonsCount > 0) {
-          setTotalSeasons(seasonsCount);
-          setTotalEpisodes(episodesCount);
-          // Use the numeric seriesId for Gracenote API calls
-          setEffectiveSeriesId(seriesId);
-        } else {
-          console.warn('No seasons found, episodes may not be imported yet. Triggering import...');
-          
-          // Trigger import by calling the episode endpoint with import flag
-          try {
-            await axios.get(`/shows/${tmsId}?import_episodes=true`);
-            console.log('Triggered episode import, please refresh page in a moment');
-          } catch (error) {
-            console.error('Could not trigger import:', error);
-          }
+        
+        // Set seasons/episodes if available
+        const seasonsCount = showData.totalSeasons || 0;
+        const episodesCount = showData.totalEpisodes || 0;
+        
+        setTotalSeasons(seasonsCount);
+        setTotalEpisodes(episodesCount);
+        
+        // For episodes, capture season number for auto-selection
+        if (isEpisode && showData.seasonNum) {
+          setCurrentEpisodeSeason(showData.seasonNum);
         }
+        
+        console.log(`Loaded: parentTmsId=${showData.parentTmsId}, effectiveSeriesId=${showData.effectiveSeriesId || showData.seriesId}, totalSeasons=${seasonsCount}`);
+        
       } catch (error) {
-        console.error('Error fetching episodes:', error);
+        console.error('Error fetching metadata:', error);
       } finally {
         setIsLoadingMetadata(false);
       }
     };
 
-    fetchSeriesMetadata();
-  }, [tmsId, seriesId, seasons, axios]);
+    fetchMetadata();
+  }, [tmsId, seasons, seriesId, axios]);
 
-  // Auto-fetch current episode's season and auto-select it
+  // Auto-select current episode's season after metadata loads
   useEffect(() => {
-    const autoSelectCurrentEpisode = async () => {
-      const isEpisode = tmsId?.startsWith('EP');
+    const autoSelectSeason = async () => {
+      // Need either parentTmsId or effectiveSeriesId to fetch episodes
+      const episodesFetchId = parentTmsId || effectiveSeriesId;
       
-      if (!isEpisode || totalSeasons === 0 || !effectiveSeriesId) {
+      if (hasAutoSelected.current || !currentEpisodeSeason || !episodesFetchId) {
         return;
       }
 
+      console.log(`Auto-selecting season ${currentEpisodeSeason} for episode ${tmsId}, using ID: ${episodesFetchId}`);
+      hasAutoSelected.current = true;
+
       try {
-        const { data: currentEpisodeData } = await axios.get(`/shows/${tmsId}`);
-        
-        if (currentEpisodeData && currentEpisodeData.seasonNum) {
-          const currentSeason = currentEpisodeData.seasonNum;
-          console.log(`Current episode is in season ${currentSeason}`);
-          
-          setSeason(currentSeason);
-          
-          //  effectiveSeriesId is the numeric seriesId which works with Gracenote API
-          const { data: seasonEpisodes } = await axios.get(
-            `data/v1.1/series/${effectiveSeriesId}/episodes?tms_id=${effectiveSeriesId}&season=${currentSeason}&titleLang=en&descriptionLang=en`
-          );
+        // Fetch episodes using parentTmsId (if available) or effectiveSeriesId (fallback)
+        const { data: seasonEpisodes } = await axios.get(
+          `/shows/${episodesFetchId}/episodes?season=${currentEpisodeSeason}`
+        );
 
-          if (!Array.isArray(seasonEpisodes)) {
-            console.error('Expected array of episodes, got:', typeof seasonEpisodes);
-            return;
-          }
-
-          const totalTmsData = [];
-          const episodesData = seasonEpisodes.map(
-            ({ tmsId, episodeNum, episodeTitle }) => {
-              totalTmsData.push(tmsId);
-              return {
-                value: tmsId,
-                label: `${episodeNum} - ${episodeTitle}`,
-              };
-            }
-          );
-          
-          setEpisodesList([
-            { value: { tag: 'total', content: totalTmsData }, label: "Select All" },
-            ...episodesData,
-          ]);
-          
-          setEpisode(tmsId);
-          setNoSelectedSeason(true);
-          
-          console.log(`Auto-selected episode ${tmsId} in season ${currentSeason} with ${episodesData.length} episodes`);
+        if (!Array.isArray(seasonEpisodes)) {
+          console.error('Expected array of episodes, got:', typeof seasonEpisodes);
+          return;
         }
+
+        // If backend imported episodes successfully, update totalSeasons
+        if (seasonEpisodes.length > 0 && totalSeasons === 0) {
+          setTotalSeasons(currentEpisodeSeason);
+          console.log(`Updated totalSeasons to ${currentEpisodeSeason} based on episode data`);
+        }
+
+        // Format episodes for dropdown
+        const totalTmsData = [];
+        const episodesData = seasonEpisodes.map((ep) => {
+          totalTmsData.push(ep.tmsId);
+          return {
+            value: ep.tmsId,
+            label: `${ep.episodeNum} - ${ep.episodeTitle}`,
+          };
+        });
+        
+        setEpisodesList([
+          { value: { tag: 'total', content: totalTmsData }, label: "Select All" },
+          ...episodesData,
+        ]);
+        
+        setSeason(currentEpisodeSeason);
+        setEpisode(tmsId);
+        setNoSelectedSeason(true);
+        
+        console.log(`Auto-selected: Season ${currentEpisodeSeason}, Episode ${tmsId}, ${episodesData.length} episodes available`);
       } catch (error) {
-        console.error('Error auto-selecting current episode:', error);
+        console.error('Error auto-selecting season:', error);
       }
     };
 
-    // Only run when we have the metadata loaded
-    if (totalSeasons > 0 && !isLoadingMetadata && currentEpisodeTmsId.current === tmsId) {
-      autoSelectCurrentEpisode();
-      currentEpisodeTmsId.current = null; // Only auto-select once
-    }
-  }, [totalSeasons, isLoadingMetadata, tmsId, effectiveSeriesId, axios]);
+    autoSelectSeason();
+  }, [currentEpisodeSeason, parentTmsId, effectiveSeriesId, tmsId, totalSeasons, axios]);
 
   const handleSeasonChange = async (e) => {
     const seasonValue = e.target.value;
     setSeason(seasonValue);
+    setEpisode(null);
+    
+    // Use parentTmsId if available, otherwise fall back to effectiveSeriesId
+    const episodesFetchId = parentTmsId || effectiveSeriesId;
+    
+    if (!episodesFetchId) {
+      console.error('No ID available to fetch episodes. ParentTmsId:', parentTmsId, 'EffectiveSeriesId:', effectiveSeriesId);
+      return;
+    }
+    
+    console.log(`Fetching episodes for season ${seasonValue} using ID: ${episodesFetchId} (parentTmsId: ${parentTmsId}, effectiveSeriesId: ${effectiveSeriesId})`);
     
     try {
-      // Use the numeric seriesId which works with Gracenote
-      const { data: episodes } = await axios.get(
-        `data/v1.1/series/${effectiveSeriesId}/episodes?tms_id=${effectiveSeriesId}&season=${seasonValue}&titleLang=en&descriptionLang=en`
+      // Backend can handle both tmsId and seriesId
+      const { data: seasonEpisodes } = await axios.get(
+        `/shows/${episodesFetchId}/episodes?season=${seasonValue}`
       );
 
-      if (!Array.isArray(episodes)) {
-        console.error('Expected array, got:', typeof episodes);
+      console.log('Season episodes response:', seasonEpisodes);
+
+      if (!Array.isArray(seasonEpisodes)) {
+        console.error('Expected array of episodes, got:', typeof seasonEpisodes);
         return;
       }
 
+      // Format episodes for dropdown
       const totalTmsData = [];
-      const episodesData = episodes.map(
-        ({ tmsId, episodeNum, episodeTitle }) => {
-          totalTmsData.push(tmsId);
-          return {
-            value: tmsId,
-            label: `${episodeNum} - ${episodeTitle}`,
-          };
-        }
-      );
+      const episodesData = seasonEpisodes.map((ep) => {
+        totalTmsData.push(ep.tmsId);
+        return {
+          value: ep.tmsId,
+          label: `${ep.episodeNum} - ${ep.episodeTitle}`,
+        };
+      });
       
       setEpisodesList([
         { value: { tag: 'total', content: totalTmsData }, label: "Select All" },
         ...episodesData,
       ]);
-      setEpisode(null);
+      
       setNoSelectedSeason(true);
+      console.log(`Loaded ${episodesData.length} episodes for season ${seasonValue}`);
     } catch (error) {
       console.error('Error fetching episodes for season:', error);
     }
@@ -252,14 +262,6 @@ export const MenuSelects = ({
             value={episode}
           />
         )}
-
-        {/* <OutlinedSelect
-          selectList={sortByList}
-          label="Sort By"
-          id="sortBy"
-          handleChange={handleSortChange}
-          value={sort}
-        /> */}
       </Stack>
     </>
   );
