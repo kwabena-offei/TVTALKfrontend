@@ -181,55 +181,72 @@ export const MenuSelects = ({
     autoSelectSeason();
   }, [currentEpisodeSeason, parentTmsId, effectiveSeriesId, tmsId, totalSeasons, axios]);
 
-  const handleSeasonChange = async (e) => {
-    const seasonValue = e.target.value;
-    setSeason(seasonValue);
-    setEpisode(null);
-    
-    // Use parentTmsId if available, otherwise fall back to effectiveSeriesId
-    const episodesFetchId = parentTmsId || effectiveSeriesId;
-    
-    if (!episodesFetchId) {
-      console.error('No ID available to fetch episodes. ParentTmsId:', parentTmsId, 'EffectiveSeriesId:', effectiveSeriesId);
+// In menuSelect.js, update the episode mapping to handle missing data gracefully
+const handleSeasonChange = async (e) => {
+  const seasonValue = e.target.value;
+  setSeason(seasonValue);
+  setEpisode(null);
+  
+  const episodesFetchId = parentTmsId || effectiveSeriesId;
+  
+  if (!episodesFetchId) {
+    console.error('No ID available to fetch episodes. ParentTmsId:', parentTmsId, 'EffectiveSeriesId:', effectiveSeriesId);
+    return;
+  }
+  
+  console.log(`Fetching episodes for season ${seasonValue} using ID: ${episodesFetchId}`);
+  
+  try {
+    const { data: seasonEpisodes } = await axios.get(
+      `/shows/${episodesFetchId}/episodes?season=${seasonValue}`
+    );
+
+    console.log('Season episodes response:', seasonEpisodes);
+
+    if (!Array.isArray(seasonEpisodes)) {
+      console.error('Expected array of episodes, got:', typeof seasonEpisodes);
       return;
     }
-    
-    console.log(`Fetching episodes for season ${seasonValue} using ID: ${episodesFetchId} (parentTmsId: ${parentTmsId}, effectiveSeriesId: ${effectiveSeriesId})`);
-    
-    try {
-      // Backend can handle both tmsId and seriesId
-      const { data: seasonEpisodes } = await axios.get(
-        `/shows/${episodesFetchId}/episodes?season=${seasonValue}`
-      );
 
-      console.log('Season episodes response:', seasonEpisodes);
-
-      if (!Array.isArray(seasonEpisodes)) {
-        console.error('Expected array of episodes, got:', typeof seasonEpisodes);
-        return;
-      }
-
-      // Format episodes for dropdown
-      const totalTmsData = [];
-      const episodesData = seasonEpisodes.map((ep) => {
-        totalTmsData.push(ep.tmsId);
-        return {
-          value: ep.tmsId,
-          label: `${ep.episodeNum} - ${ep.episodeTitle}`,
-        };
-      });
-      
-      setEpisodesList([
-        { value: { tag: 'total', content: totalTmsData }, label: "Select All" },
-        ...episodesData,
-      ]);
-      
-      setNoSelectedSeason(true);
-      console.log(`Loaded ${episodesData.length} episodes for season ${seasonValue}`);
-    } catch (error) {
-      console.error('Error fetching episodes for season:', error);
+    if (seasonEpisodes.length === 0) {
+      console.warn(`No episodes found for season ${seasonValue}.`);
+      setEpisodesList([]);
+      setNoSelectedSeason(false);
+      return;
     }
-  };
+
+    // Format episodes - show "Episode X" if no title, "X - Title" if has title
+    const totalTmsData = [];
+    const episodesData = seasonEpisodes.map((ep) => {
+      totalTmsData.push(ep.tmsId);
+      
+      // Build label based on what data is available
+      let episodeLabel;
+      if (ep.episodeTitle && ep.episodeTitle.trim()) {
+        // Has title: "5 - Breaking Brandon"
+        episodeLabel = `${ep.episodeNum} - ${ep.episodeTitle}`;
+      } else {
+        // No title: "Episode 5" (for soap operas, daily shows)
+        episodeLabel = `Episode ${ep.episodeNum}`;
+      }
+      
+      return {
+        value: ep.tmsId,
+        label: episodeLabel,
+      };
+    });
+    
+    setEpisodesList([
+      { value: { tag: 'total', content: totalTmsData }, label: "Select All" },
+      ...episodesData,
+    ]);
+    
+    setNoSelectedSeason(true);
+    console.log(`Loaded ${episodesData.length} episodes for season ${seasonValue}`);
+  } catch (error) {
+    console.error('Error fetching episodes for season:', error);
+  }
+};
 
   const handleEpisodeChange = (e) => {
     const selectedValue = e.target.value;
