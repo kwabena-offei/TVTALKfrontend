@@ -70,9 +70,10 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
   const isRouteEpisode = tmsId?.startsWith('EP');
   const [selectedEpisodeTmsId, setSelectedEpisodeTmsId] = useState(isRouteEpisode ? tmsId : null);
 
+  // Initialize filteredComments only on mount, not whenever comments changes
   useEffect(() => {
-    setFilteredComments(comments.results);
-  }, [comments]);
+    setFilteredComments(serverComments.results);
+  }, [serverComments]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -134,8 +135,7 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
       Promise.allSettled(totalPromises).then((results) => {
         const totalData = results.flatMap(r => (r.value?.data?.results ?? []));
         const base = totalData.sort(sorter);
-        const seed = filteredComments && filteredComments[0] ? [filteredComments[0]] : [];
-        setFilteredComments(uniqBy([...base, ...seed], 'id'));
+        setFilteredComments(uniqBy(base, 'id'));
       });
       // Do NOT change post target for "Select All"
     } else {
@@ -143,8 +143,7 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
 
       const list = Array.isArray(resp.data?.results) ? resp.data.results : [];
       const base = list.sort(sorter);
-      const seed = filteredComments && filteredComments[0] ? [filteredComments[0]] : [];
-      setFilteredComments(uniqBy([...base, ...seed], 'id'));
+      setFilteredComments(uniqBy(base, 'id'));
 
       // Update post target to selected episode
       if (typeof selectedTmsId === 'string' && selectedTmsId.startsWith('EP')) {
@@ -153,21 +152,29 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
     }
   };
 
+
   const onSortChange = (value) => {
     setSortValue(value);
   };
 
+  // Use the selected episode for websocket subscription, fallback to route tmsId
+  const activeChannelTmsId = selectedEpisodeTmsId || tmsId;
+
   const socket = useSocket(
     "comments",
     "CommentsChannel",
-    { tms_id: tmsId },
+    { tms_id: activeChannelTmsId },
     (response) => {
       if (response.message?.type === "comment") {
-        setComments((prevState) => {
-          return {
-            ...prevState,
-            results: [...prevState.results, response.message],
-          };
+        // Add the new comment directly to filteredComments (not to comments state)
+        // This ensures it only shows up when viewing the episode it was posted to
+        setFilteredComments((prevFiltered) => {
+          // Check if comment already exists to avoid duplicates
+          const exists = prevFiltered.some(c => c.id === response.message.id);
+          if (exists) {
+            return prevFiltered;
+          }
+          return [...prevFiltered, response.message];
         });
       }
     }
