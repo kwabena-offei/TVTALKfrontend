@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useTheme } from "@mui/material/styles";
-import { useMediaQuery } from "@mui/material";
+import { useMediaQuery, CircularProgress, Box } from "@mui/material";
 import OutlinedSelect from "../OutlinedSelect";
 import { Stack } from "@mui/system";
 import useAxios from "../../services/api";
@@ -36,6 +36,7 @@ export const MenuSelects = ({
   const [effectiveSeriesId, setEffectiveSeriesId] = useState(seriesId);
   const [parentTmsId, setParentTmsId] = useState(null);
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
+  const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
   const [currentEpisodeSeason, setCurrentEpisodeSeason] = useState(null);
   
   // Use ref to prevent re-running effects
@@ -186,11 +187,13 @@ const handleSeasonChange = async (e) => {
   const seasonValue = e.target.value;
   setSeason(seasonValue);
   setEpisode(null);
+  setIsLoadingEpisodes(true);
   
   const episodesFetchId = parentTmsId || effectiveSeriesId;
   
   if (!episodesFetchId) {
     console.error('No ID available to fetch episodes. ParentTmsId:', parentTmsId, 'EffectiveSeriesId:', effectiveSeriesId);
+    setIsLoadingEpisodes(false);
     return;
   }
   
@@ -245,6 +248,8 @@ const handleSeasonChange = async (e) => {
     console.log(`Loaded ${episodesData.length} episodes for season ${seasonValue}`);
   } catch (error) {
     console.error('Error fetching episodes for season:', error);
+  } finally {
+    setIsLoadingEpisodes(false);
   }
 };
 
@@ -268,9 +273,27 @@ const handleSeasonChange = async (e) => {
           id="selectSeason"
           handleChange={handleSeasonChange}
           value={season}
-          disabled={isLoadingMetadata || totalSeasons === 0}
+          disabled={isLoadingMetadata || totalSeasons === 0 || isLoadingEpisodes}
         />
-        {noSelectedSeason && (
+        {isLoadingEpisodes && (
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={1.5}
+            sx={{
+              color: '#A5B0D6',
+              fontSize: '0.95rem',
+              padding: '12px 16px',
+              backgroundColor: 'rgba(16, 24, 56, 0.6)',
+              borderRadius: '8px',
+              border: '1px solid rgba(165, 176, 214, 0.2)',
+            }}
+          >
+            <CircularProgress size={20} sx={{ color: '#A5B0D6' }} />
+            <span>Loading episodes...</span>
+          </Box>
+        )}
+        {noSelectedSeason && !isLoadingEpisodes && (
           <OutlinedSelect
             selectList={episodesList}
             label="Select Episode"
