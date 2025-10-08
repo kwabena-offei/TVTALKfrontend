@@ -5,7 +5,11 @@ import { buildAPIUrl } from '../../../services/api';
 export default function StreamingNetwork({ categories, network }) {
   return (
     <>
-      <DisplayAllShows categories={categories} network={network} />
+      <DisplayAllShows 
+        categories={categories} 
+        network={network}
+        showLiveRow={false}
+        showUpcomingRow={false} />
     </>
   )
 }
