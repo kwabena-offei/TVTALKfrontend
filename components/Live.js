@@ -126,9 +126,11 @@ function Live({ tvShows = [] }) {
                     </Link>
                   </Grid>
                   <Grid item>
-                    <Button style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
-                      <Typography sx={{ color: '#919CC0' }} variant='string'>About</Typography>
-                    </Button>
+                    <Link href={`/programs/${tvShow.tmsId}/about`} passHref>
+                      <Button style={{ background: '#090F27', borderRadius: '10000px', boxShadow: 'none' }} variant='contained'>
+                        <Typography sx={{ color: '#919CC0' }} variant='string'>About</Typography>
+                      </Button>
+                    </Link>
                   </Grid>
                   <Grid item>
                     <HeartButton identifier={{ tmsId: tvShow.tmsId }} itemId={tvShow.tmsId} itemType={'shows'} />
