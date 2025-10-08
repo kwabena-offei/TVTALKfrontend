@@ -36,7 +36,16 @@ const transformStationsToShows = (stations) => {
       });
     }).filter(Boolean);
 
-    return shows.sort((a, b) => {
+    // Remove duplicates
+    const uniqueShows = shows.reduce((acc, show) => {
+      const key = `${show.tmsId}-${show.rawAirtime}`;
+      if (!acc.some(s => `${s.tmsId}-${s.rawAirtime}` === key)) {
+        acc.push(show);
+      }
+      return acc;
+    }, []);
+
+    return uniqueShows.sort((a, b) => {
       const timeA = new Date(a.rawAirtime).getTime();
       const timeB = new Date(b.rawAirtime).getTime();
       return timeA - timeB;
