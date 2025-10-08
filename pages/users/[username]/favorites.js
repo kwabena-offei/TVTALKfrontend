@@ -36,7 +36,10 @@ export async function getServerSideProps(context) {
   return {
     props: {
       favorites,
-      profile,
+      profile: {
+        ...profile,
+        favorites_count: favorites.pagination.total_count,
+      },
     },
   };
 }
