@@ -23,14 +23,14 @@ export const MenuSelects = ({
 }) => {
   const { axios } = useAxios();
   const [season, setSeason] = useState("");
-  const [episode, setEpisode] = useState("");
+  const [episode, setEpisode] = useState(tmsId.startsWith('EP') ? tmsId : "");
   const [episodesList, setEpisodesList] = useState([]);
   const [sort, setSort] = useState("");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [noSelectedSeason, setNoSelectedSeason] = useState(false);
+  const pollingRef = useRef(null);
   
-  // State for dynamically loaded series metadata
   const [totalSeasons, setTotalSeasons] = useState(parsed(seasons) || 0);
   const [totalEpisodes, setTotalEpisodes] = useState(parsed(episodes) || 0);
   const [effectiveSeriesId, setEffectiveSeriesId] = useState(seriesId);
@@ -39,11 +39,18 @@ export const MenuSelects = ({
   const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
   const [currentEpisodeSeason, setCurrentEpisodeSeason] = useState(null);
   
-  // Use ref to prevent re-running effects
   const hasLoadedMetadata = useRef(false);
   const hasAutoSelected = useRef(false);
 
-  // Season list derived from totalSeasons
+  // Add a cleanup effect to stop polling if the component is unmounted
+  useEffect(() => {
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+      }
+    };
+  }, []);
+
   const seasonsList = new Array(totalSeasons)
     .fill("0")
     .map((_, index) => ({ label: `Season ${index + 1}`, value: index + 1 }));
@@ -53,7 +60,6 @@ export const MenuSelects = ({
     { label: "Popularity", value: "popularity" },
   ];
 
-  // Fetch show/episode metadata from backend
   useEffect(() => {
     const fetchMetadata = async () => {
       if (hasLoadedMetadata.current || !tmsId) {
@@ -63,18 +69,8 @@ export const MenuSelects = ({
       const isEpisode = tmsId?.startsWith('EP');
       const isShow = tmsId?.startsWith('SH');
       const hasSeasons = parsed(seasons) > 0;
-
-      // If it's a show with seasons already known, use those values
-      if (isShow && hasSeasons) {
-        console.log(`Using existing metadata: ${seasons} seasons`);
-        setParentTmsId(tmsId); // For shows, use tmsId
-        setEffectiveSeriesId(seriesId);
-        hasLoadedMetadata.current = true;
-        return;
-      }
-
-      // For episodes without seasons or shows without metadata, fetch from backend
-      const needsMetadata = (isEpisode && !hasSeasons) || (isShow && !hasSeasons);
+      
+      const needsMetadata = isEpisode || (isShow && !hasSeasons);
       if (!needsMetadata) {
         hasLoadedMetadata.current = true;
         return;
@@ -85,35 +81,25 @@ export const MenuSelects = ({
       hasLoadedMetadata.current = true;
 
       try {
-        // Call backend - this will import episode + parent show and trigger background import
         const { data: showData } = await axios.get(`/shows/${tmsId}`);
         
-        console.log('Show data from backend:', showData);
-
-        // Set effectiveSeriesId
         if (showData.effectiveSeriesId || showData.seriesId) {
           setEffectiveSeriesId(showData.effectiveSeriesId || showData.seriesId);
         }
         
-        // Set parentTmsId if available (might be null if parent not imported yet)
         if (showData.parentTmsId) {
           setParentTmsId(showData.parentTmsId);
         }
         
-        // Set seasons/episodes if available
         const seasonsCount = showData.totalSeasons || 0;
         const episodesCount = showData.totalEpisodes || 0;
         
         setTotalSeasons(seasonsCount);
         setTotalEpisodes(episodesCount);
         
-        // For episodes, capture season number for auto-selection
         if (isEpisode && showData.seasonNum) {
           setCurrentEpisodeSeason(showData.seasonNum);
         }
-        
-        console.log(`Loaded: parentTmsId=${showData.parentTmsId}, effectiveSeriesId=${showData.effectiveSeriesId || showData.seriesId}, totalSeasons=${seasonsCount}`);
-        
       } catch (error) {
         console.error('Error fetching metadata:', error);
       } finally {
@@ -124,134 +110,105 @@ export const MenuSelects = ({
     fetchMetadata();
   }, [tmsId, seasons, seriesId, axios]);
 
-  // Auto-select current episode's season after metadata loads
-  useEffect(() => {
-    const autoSelectSeason = async () => {
-      // Need either parentTmsId or effectiveSeriesId to fetch episodes
-      const episodesFetchId = parentTmsId || effectiveSeriesId;
-      
-      if (hasAutoSelected.current || !currentEpisodeSeason || !episodesFetchId) {
-        return;
-      }
+  const processEpisodesResponse = (data, seasonValue) => {
+    const seasonEpisodes = (data && data.episodes) || [];
+    const isImporting = (data && data.importing) || false;
 
-      console.log(`Auto-selecting season ${currentEpisodeSeason} for episode ${tmsId}, using ID: ${episodesFetchId}`);
-      hasAutoSelected.current = true;
-
-      try {
-        // Fetch episodes using parentTmsId (if available) or effectiveSeriesId (fallback)
-        const { data: seasonEpisodes } = await axios.get(
-          `/shows/${episodesFetchId}/episodes?season=${currentEpisodeSeason}`
-        );
-
-        if (!Array.isArray(seasonEpisodes)) {
-          console.error('Expected array of episodes, got:', typeof seasonEpisodes);
-          return;
-        }
-
-        // If backend imported episodes successfully, update totalSeasons
-        if (seasonEpisodes.length > 0 && totalSeasons === 0) {
-          setTotalSeasons(currentEpisodeSeason);
-          console.log(`Updated totalSeasons to ${currentEpisodeSeason} based on episode data`);
-        }
-
-        // Format episodes for dropdown
-        const totalTmsData = [];
-        const episodesData = seasonEpisodes.map((ep) => {
-          totalTmsData.push(ep.tmsId);
-          return {
-            value: ep.tmsId,
-            label: `${ep.episodeNum} - ${ep.episodeTitle}`,
-          };
-        });
-        
-        setEpisodesList([
-          { value: { tag: 'total', content: totalTmsData }, label: "Select All" },
-          ...episodesData,
-        ]);
-        
-        setSeason(currentEpisodeSeason);
-        setEpisode(tmsId);
-        setNoSelectedSeason(true);
-        
-        console.log(`Auto-selected: Season ${currentEpisodeSeason}, Episode ${tmsId}, ${episodesData.length} episodes available`);
-      } catch (error) {
-        console.error('Error auto-selecting season:', error);
-      }
-    };
-
-    autoSelectSeason();
-  }, [currentEpisodeSeason, parentTmsId, effectiveSeriesId, tmsId, totalSeasons, axios]);
-
-// In menuSelect.js, update the episode mapping to handle missing data gracefully
-const handleSeasonChange = async (e) => {
-  const seasonValue = e.target.value;
-  setSeason(seasonValue);
-  setEpisode(null);
-  setIsLoadingEpisodes(true);
-  
-  const episodesFetchId = parentTmsId || effectiveSeriesId;
-  
-  if (!episodesFetchId) {
-    console.error('No ID available to fetch episodes. ParentTmsId:', parentTmsId, 'EffectiveSeriesId:', effectiveSeriesId);
-    setIsLoadingEpisodes(false);
-    return;
-  }
-  
-  console.log(`Fetching episodes for season ${seasonValue} using ID: ${episodesFetchId}`);
-  
-  try {
-    const { data: seasonEpisodes } = await axios.get(
-      `/shows/${episodesFetchId}/episodes?season=${seasonValue}`
-    );
-
-    console.log('Season episodes response:', seasonEpisodes);
-
-    if (!Array.isArray(seasonEpisodes)) {
-      console.error('Expected array of episodes, got:', typeof seasonEpisodes);
-      return;
-    }
-
-    if (seasonEpisodes.length === 0) {
-      console.warn(`No episodes found for season ${seasonValue}.`);
-      setEpisodesList([]);
-      setNoSelectedSeason(false);
-      return;
-    }
-
-    // Format episodes - show "Episode X" if no title, "X - Title" if has title
+    // Format episodes for the dropdown
     const totalTmsData = [];
     const episodesData = seasonEpisodes.map((ep) => {
       totalTmsData.push(ep.tmsId);
-      
-      // Build label based on what data is available
-      let episodeLabel;
-      if (ep.episodeTitle && ep.episodeTitle.trim()) {
-        // Has title: "5 - Breaking Brandon"
-        episodeLabel = `${ep.episodeNum} - ${ep.episodeTitle}`;
-      } else {
-        // No title: "Episode 5" (for soap operas, daily shows)
-        episodeLabel = `Episode ${ep.episodeNum}`;
-      }
-      
-      return {
-        value: ep.tmsId,
-        label: episodeLabel,
-      };
+      let episodeLabel = ep.episodeTitle ? `${ep.episodeNum} - ${ep.episodeTitle}` : `Episode ${ep.episodeNum}`;
+      return { value: ep.tmsId, label: episodeLabel };
     });
-    
+
     setEpisodesList([
       { value: { tag: 'total', content: totalTmsData }, label: "Select All" },
       ...episodesData,
     ]);
+
+    if (seasonEpisodes.length > 0) {
+      setNoSelectedSeason(true);
+    }
+
+    // Handle polling logic
+    if (isImporting) {
+      setIsLoadingEpisodes(true);
+    } else {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+      setIsLoadingEpisodes(false);
+      console.log(`Finished loading ${episodesData.length} episodes for season ${seasonValue}`);
+    }
     
-    setNoSelectedSeason(true);
-    console.log(`Loaded ${episodesData.length} episodes for season ${seasonValue}`);
-  } catch (error) {
-    console.error('Error fetching episodes for season:', error);
-  } finally {
-    setIsLoadingEpisodes(false);
-  }
-};
+    return isImporting;
+  };
+
+  const fetchEpisodes = async (episodesFetchId, seasonValue) => {
+    try {
+      const { data } = await axios.get(
+        `/shows/${episodesFetchId}/episodes?season=${seasonValue}`
+      );
+      return processEpisodesResponse(data, seasonValue);
+    } catch (error) {
+      console.error('Error fetching episodes:', error);
+      if (pollingRef.current) clearInterval(pollingRef.current);
+      setIsLoadingEpisodes(false);
+      return false; // Stop polling on error
+    }
+  };
+
+  useEffect(() => {
+    const autoSelectSeason = async () => {
+      const episodesFetchId = parentTmsId || effectiveSeriesId;
+      if (hasAutoSelected.current || !currentEpisodeSeason || !episodesFetchId) {
+        return;
+      }
+      hasAutoSelected.current = true;
+      console.log(`Auto-selecting season ${currentEpisodeSeason} for episode ${tmsId}`);
+
+      setSeason(currentEpisodeSeason);
+      setEpisode(tmsId);
+      setIsLoadingEpisodes(true);
+      if (pollingRef.current) clearInterval(pollingRef.current);
+
+      const isStillImporting = await fetchEpisodes(episodesFetchId, currentEpisodeSeason);
+
+      if (isStillImporting) {
+        pollingRef.current = setInterval(() => {
+          fetchEpisodes(episodesFetchId, currentEpisodeSeason);
+        }, 3000); // Poll every 3 seconds
+      }
+    };
+
+    autoSelectSeason();
+  }, [currentEpisodeSeason, parentTmsId, effectiveSeriesId, tmsId, axios]);
+
+  const handleSeasonChange = async (e) => {
+    const seasonValue = e.target.value;
+    setSeason(seasonValue);
+    setEpisode(null);
+    setIsLoadingEpisodes(true);
+    if (pollingRef.current) clearInterval(pollingRef.current);
+    
+    const episodesFetchId = parentTmsId || effectiveSeriesId;
+    if (!episodesFetchId) {
+      console.error('No ID available to fetch episodes.');
+      setIsLoadingEpisodes(false);
+      return;
+    }
+    
+    console.log(`Fetching episodes for season ${seasonValue}`);
+    const isStillImporting = await fetchEpisodes(episodesFetchId, seasonValue);
+
+    if (isStillImporting) {
+      pollingRef.current = setInterval(() => {
+        fetchEpisodes(episodesFetchId, seasonValue);
+      }, 3000);
+    }
+  };
 
   const handleEpisodeChange = (e) => {
     const selectedValue = e.target.value;
@@ -275,32 +232,38 @@ const handleSeasonChange = async (e) => {
           value={season}
           disabled={isLoadingMetadata || totalSeasons === 0 || isLoadingEpisodes}
         />
-        {isLoadingEpisodes && (
-          <Box
-            display="flex"
-            alignItems="center"
-            gap={1.5}
-            sx={{
-              color: '#A5B0D6',
-              fontSize: '0.95rem',
-              padding: '12px 16px',
-              backgroundColor: 'rgba(16, 24, 56, 0.6)',
-              borderRadius: '8px',
-              border: '1px solid rgba(165, 176, 214, 0.2)',
-            }}
-          >
-            <CircularProgress size={20} sx={{ color: '#A5B0D6' }} />
-            <span>Loading episodes...</span>
-          </Box>
-        )}
-        {noSelectedSeason && !isLoadingEpisodes && (
-          <OutlinedSelect
-            selectList={episodesList}
-            label="Select Episode"
-            id="selectEpisode"
-            handleChange={handleEpisodeChange}
-            value={episode}
-          />
+        {(isLoadingEpisodes || noSelectedSeason) && (
+            <Box>
+                {isLoadingEpisodes && (
+                    <Box
+                        display="flex"
+                        alignItems="center"
+                        gap={1.5}
+                        sx={{
+                        color: '#A5B0D6',
+                        fontSize: '0.95rem',
+                        padding: '12px 16px',
+                        backgroundColor: 'rgba(16, 24, 56, 0.6)',
+                        borderRadius: '8px',
+                        border: '1px solid rgba(165, 176, 214, 0.2)',
+                        marginBottom: '10px'
+                        }}
+                    >
+                        <CircularProgress size={20} sx={{ color: '#A5B0D6' }} />
+                        <span>Loading episodes...</span>
+                    </Box>
+                )}
+                {noSelectedSeason && (
+                    <OutlinedSelect
+                        selectList={episodesList}
+                        label="Select Episode"
+                        id="selectEpisode"
+                        handleChange={handleEpisodeChange}
+                        value={episode}
+                        disabled={isLoadingEpisodes}
+                    />
+                )}
+            </Box>
         )}
       </Stack>
     </>
