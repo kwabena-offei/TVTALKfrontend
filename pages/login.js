@@ -28,7 +28,7 @@ const login = () => {
       >
         <Grid item xs={0} md={6} lg={6} />
         <Grid item xs={12} md={5} lg={4}>
-          <Login isMobile={isMobile} />!!!
+          <Login isMobile={isMobile} />
         </Grid>
         <Grid item xs={0} md={1} lg={2} />
       </Grid>

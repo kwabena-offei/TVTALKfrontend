@@ -60,6 +60,7 @@ export default function Page({ following, profile }) {
               />
             ) : (
               <FollowerCard 
+                follower={follower}
                 {...follower} 
                 context="following"
                 isOwnProfile={isOwnProfile}

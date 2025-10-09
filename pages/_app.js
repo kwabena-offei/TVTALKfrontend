@@ -1,7 +1,9 @@
-import Footer from "../components/Footer";
-import Router from "next/router";
 import { CacheProvider } from "@emotion/react";
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
+import Router from "next/router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import Footer from "../components/Footer";
 import "../styles/main.scss";
 import createEmotionCache from "../util/createEmotionCache";
 import theme from "../styles/theme/theme";
@@ -39,6 +41,8 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+// todo: use axios instance here
+const queryClient = new QueryClient();
 const clientSideEmotionCache = createEmotionCache();
 
 function App(props) {
@@ -57,7 +61,7 @@ function App(props) {
   NProgress.configure({ showSpinner: false });
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <CacheProvider value={emotionCache}>
         <AuthProvider>
           <GlobalStyle />
@@ -77,7 +81,7 @@ function App(props) {
           </ThemeProvider>
         </AuthProvider>
       </CacheProvider>
-    </>
+    </QueryClientProvider>
   );
 }
 
