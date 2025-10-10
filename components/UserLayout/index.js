@@ -76,7 +76,7 @@ export const UserLayout = ({ children, mode }) => {
     {
       title: "Favorites",
       href: `${inheritURL}/favorites`,
-      count: favorites_count || "0",
+      count: favorites_count ?? 0,
     },
     {
       title: "Followers",
