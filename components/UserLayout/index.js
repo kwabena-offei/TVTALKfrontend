@@ -129,7 +129,7 @@ export const UserLayout = ({ children, mode }) => {
               <ProfileUsername>{username}</ProfileUsername>
             )}
 
-            {currentUser && currentUser.id && currentUser.id !== id && (
+            {currentUser?.id !== id && (
               <FollowButton
                 isMobile={isMobile}
                 onClick={handleFollow}
