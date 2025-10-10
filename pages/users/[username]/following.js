@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { UserLayout, fetchAccount } from "../../../components/UserLayout";
 import FollowerCard from "../../../components/FollowerCard/FollowerCard";
 import FollowerCardMobile from "../../../components/FollowerCard/FollowerCardMobile";
@@ -8,40 +8,27 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/router";
 import { AuthContext } from "../../../util/AuthContext";
+import { useQueryUserFollowing } from "../../../entities/user/hooks";
 
-export default function Page({ following, profile }) {
+export default function Page({ following: initialData, profile }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const router = useRouter();
   const { profile: currentUser } = useContext(AuthContext);
 
-  const { results: followingList, pagination } = following;
-  
-  // Track which users have been unfollowed to remove them from the list
-  const [unfollowedUsers, setUnfollowedUsers] = useState([]);
+ 
+  const { data: { data: following } = {} } = useQueryUserFollowing(router.query.username, {
+    initialData: { data: initialData }
+  });
 
-  // Check if we're viewing our own profile
+  const { results: followingList } = following || {};
+
+
   const isOwnProfile = currentUser?.id === profile?.id;
-
-  const handleUnfollow = (userId) => {
-    // Add the user to the unfollowed list to filter them out
-    setUnfollowedUsers(prev => [...prev, userId]);
-  };
-
-  // Callback to refresh server-side props after follow/unfollow
-  const handleFollowChange = () => {
-    // Force Next.js to refetch getServerSideProps
-    router.replace(router.asPath);
-  };
-
-  // Filter out unfollowed users
-  const displayedFollowing = followingList?.filter(
-    user => !unfollowedUsers.includes(user.id)
-  );
 
   return (
     <Grid container spacing={isMobile ? 2 : 3.75}>
-      {displayedFollowing?.map((follower) => {
+      {followingList?.map((follower) => {
         return (
           <Grid
             key={`card-following-${follower.id}`}
@@ -52,11 +39,9 @@ export default function Page({ following, profile }) {
           >
             {isMobile ? (
               <FollowerCardMobile 
-                {...follower} 
+                follower={follower}
                 context="following"
                 isOwnProfile={isOwnProfile}
-                onUnfollow={handleUnfollow}
-                onFollowChange={handleFollowChange}
               />
             ) : (
               <FollowerCard 
@@ -64,8 +49,6 @@ export default function Page({ following, profile }) {
                 {...follower} 
                 context="following"
                 isOwnProfile={isOwnProfile}
-                onUnfollow={handleUnfollow}
-                onFollowChange={handleFollowChange}
               />
             )}
           </Grid>

@@ -8,23 +8,23 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import useAxios from "../../../services/api";
 import { useRouter } from "next/router";
 import { AuthContext } from "../../../util/AuthContext";
+import { useQueryUserFollowers } from "../../../entities/user/hooks";
 
-export default function Page({ followers, profile }) {
+export default function Page({ followers: initialData, profile }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const router = useRouter();
   const { profile: currentUser } = useContext(AuthContext);
 
-  const { results: followersList, pagination } = followers;
+ 
+  const { data: { data: followers } = {} } = useQueryUserFollowers(router.query.username, {
+    initialData: { data: initialData }
+  });
+
+  const { results: followersList } = followers || {};
   
-  // Check if we're viewing our own profile
+ 
   const isOwnProfile = currentUser?.id === profile?.id;
-  
-  // Callback to refresh server-side props after follow/unfollow
-  const handleFollowChange = () => {
-    // Force Next.js to refetch getServerSideProps
-    router.replace(router.asPath);
-  };
 
   return (
     <Grid container spacing={isMobile ? 2 : 3.75}>
@@ -39,10 +39,9 @@ export default function Page({ followers, profile }) {
           >
             {isMobile ? (
               <FollowerCardMobile 
-                {...follower} 
+                follower={follower}
                 context="followers"
                 isOwnProfile={isOwnProfile}
-                onFollowChange={handleFollowChange}
               />
             ) : (
               <FollowerCard 
@@ -50,7 +49,6 @@ export default function Page({ followers, profile }) {
                 {...follower} 
                 context="followers"
                 isOwnProfile={isOwnProfile}
-                onFollowChange={handleFollowChange}
               />
             )}
           </Grid>

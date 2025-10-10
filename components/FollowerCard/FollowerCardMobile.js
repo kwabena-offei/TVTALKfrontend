@@ -1,9 +1,13 @@
 import { Avatar, Card, CardContent, Box, Typography, CardActions, Button, CardHeader } from "@mui/material";
 import { styled } from "@mui/system";
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import { FollowButton, UnfollowButton } from './FollowerCard.styled';
-import useAxios from "../../services/api";
 import { AuthContext } from "../../util/AuthContext";
+
+import {
+  useMutationUnfollow,
+  useMutationFollow
+} from "../../entities/user/hooks";
 
 const StyledCard = styled(Card, {
   name: "Follower",
@@ -14,34 +18,28 @@ const StyledCard = styled(Card, {
   padding: 15
 })
 
-const FollowerCardMobile = ({ 
-  id, 
-  username, 
-  image, 
-  is_following = false, 
+const FollowerCardMobile = ({
+  follower: {
+    id,
+    username,
+    image,
+    is_following = false,
+    reactions,
+    comments_count
+  },
   context = "followers", // "followers" or "following"
   isOwnProfile = false, // Are we viewing our own profile?
-  onUnfollow,
-  onFollowChange, // Callback to refresh data after follow/unfollow
-  ...props 
 }) => {
-  const { axios: axiosClient } = useAxios();
   const { profile: currentUser } = useContext(AuthContext);
-  
-  // LOGIC:
-  // - If viewing OWN "following" list → we're following them by definition → true
-  // - Otherwise → use is_following from backend
-  const initialFollowingState = (context === "following" && isOwnProfile) ? true : is_following;
-  const [isFollowing, setIsFollowing] = useState(initialFollowingState);
-  const [isLoading, setIsLoading] = useState(false);
 
-  // Update state if is_following prop changes
-  useEffect(() => {
-    setIsFollowing((context === "following" && isOwnProfile) ? true : is_following);
-  }, [is_following, context, isOwnProfile]);
+  const unfollowMutation = useMutationUnfollow();
+  const followMutation = useMutationFollow();
 
-  const reactions = props.reactions || props.comments_count 
-    ? `${props.reactions || props.comments_count} reactions` 
+  const isFollowing = (context === "following" && isOwnProfile) ? true : is_following;
+  const isLoading = unfollowMutation.isPending || followMutation.isPending;
+
+  const reactionsText = reactions || comments_count 
+    ? `${reactions || comments_count} reactions` 
     : '0 reactions';
 
   // Don't show button if viewing own profile
@@ -49,36 +47,15 @@ const FollowerCardMobile = ({
 
   const handleFollow = async () => {
     if (isLoading) return;
-    
-    setIsLoading(true);
+
     try {
       if (isFollowing) {
-        // Unfollow
-        await axiosClient.delete(`/relationships/${id}`);
-        setIsFollowing(false);
-        
-        // If we're on our own "following" list, notify parent to remove this user
-        if (context === "following" && isOwnProfile && onUnfollow) {
-          onUnfollow(id);
-        }
+        await unfollowMutation.mutate(id);
       } else {
-        // Follow
-        await axiosClient.post(`/relationships`, {
-          followed_id: id,
-        });
-        setIsFollowing(true);
-      }
-
-      // Notify parent to refresh data
-      if (onFollowChange) {
-        onFollowChange();
+       await followMutation.mutate(id);
       }
     } catch (error) {
       console.error("Failed to update relationship", error);
-      // Revert state on error
-      setIsFollowing(!isFollowing);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -98,7 +75,7 @@ const FollowerCardMobile = ({
           </Avatar>
         }
         title={username}
-        subheader={reactions}
+        subheader={reactionsText}
         action={
           shouldShowButton && (
             isFollowing ? (

@@ -7,6 +7,8 @@ import useAxios from '../../services/api';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 
+import { useQueryFollowers } from "../../entities/user/hooks";
+
 export async function getServerSideProps({ req, res }) {
   const { axios } = useAxios({ req, res });
   const { data: profile } = await axios.get('/profile');
@@ -19,17 +21,21 @@ export async function getServerSideProps({ req, res }) {
   };
 }
 
-export default function Page({ followers }) {
+export default function Page({ followers: initialData }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { results: followersList, pagination } = followers;
+  const { data: { data: followers = [] } } = useQueryFollowers({
+    initialData
+  });
+
+  const { results: followersList } = followers;
   return (
     <Grid container spacing={isMobile ? 2 : 3.75}>
       {followersList?.map((follower) => {
         return (
           <Grid key={`card-followers-${follower.id}`} item xs={12} md={3} lg={2}>
-            {isMobile ? <FollowerCardMobile {...follower} /> : <FollowerCard follower={follower} {...follower} />}
+            {isMobile ? <FollowerCardMobile follower={follower} /> : <FollowerCard follower={follower} {...follower} />}
           </Grid>
         );
       })}

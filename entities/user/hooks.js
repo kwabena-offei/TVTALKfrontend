@@ -10,6 +10,35 @@ export const useQueryFollowing = (options = {}) => {
   });
 };
 
+export const useQueryFollowers = (options = {}) => {
+  const { axios: axiosClient } = useAxios();
+  return useQuery({
+    queryKey: ['followers'],
+    queryFn: () => axiosClient.get('/profile/followers'),
+    ...options,
+  });
+};
+
+export const useQueryUserFollowing = (username, options = {}) => {
+  const { axios: axiosClient } = useAxios();
+  return useQuery({
+    queryKey: ['userFollowing', username],
+    queryFn: () => axiosClient.get(`/users/${username}/following`),
+    enabled: !!username,
+    ...options,
+  });
+};
+
+export const useQueryUserFollowers = (username, options = {}) => {
+  const { axios: axiosClient } = useAxios();
+  return useQuery({
+    queryKey: ['userFollowers', username],
+    queryFn: () => axiosClient.get(`/users/${username}/followers`),
+    enabled: !!username,
+    ...options,
+  });
+};
+
 export const useMutationFollow = (options = {}) => {
   const { axios: axiosClient } = useAxios();
   const queryClient = useQueryClient();
@@ -20,6 +49,9 @@ export const useMutationFollow = (options = {}) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['following'] });
+      queryClient.invalidateQueries({ queryKey: ['followers'] });
+      queryClient.invalidateQueries({ queryKey: ['userFollowing'] });
+      queryClient.invalidateQueries({ queryKey: ['userFollowers'] });
     },
     ...options,
   });
@@ -36,6 +68,9 @@ export const useMutationUnfollow = (options = {}) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['following'] });
+      queryClient.invalidateQueries({ queryKey: ['followers'] });
+      queryClient.invalidateQueries({ queryKey: ['userFollowing'] });
+      queryClient.invalidateQueries({ queryKey: ['userFollowers'] });
     },
     ...options,
   });

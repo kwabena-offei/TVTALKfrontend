@@ -34,7 +34,7 @@ export default function Page({ following: initialData }) {
       {following.results?.map((follower) => (
         <Grid key={`card-following-${follower.id}`} item xs={12} md={3} lg={2}>
           {isMobile ?
-            <FollowerCardMobile {...follower} /> :
+            <FollowerCardMobile follower={follower} /> :
             <FollowerCard follower={follower} {...follower} />
           }
         </Grid>
