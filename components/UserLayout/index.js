@@ -71,7 +71,7 @@ export const UserLayout = ({ children, mode }) => {
     {
       title: "Reactions",
       href: `${inheritURL}/reactions`,
-      count: reactions_count || "0",
+      count: reactions_count ?? 0,
     },
     {
       title: "Favorites",
