@@ -81,7 +81,7 @@ export const UserLayout = ({ children, mode }) => {
     {
       title: "Followers",
       href: `${inheritURL}/followers`,
-      count: followersCount || "0",
+      count: followersCount ?? 0,
     },
     {
       title: "Following",
