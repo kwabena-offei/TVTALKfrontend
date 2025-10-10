@@ -29,7 +29,7 @@ export default function Page({ followers }) {
       {followersList?.map((follower) => {
         return (
           <Grid key={`card-followers-${follower.id}`} item xs={12} md={3} lg={2}>
-            {isMobile ? <FollowerCardMobile {...follower} /> : <FollowerCard {...follower} />}
+            {isMobile ? <FollowerCardMobile {...follower} /> : <FollowerCard follower={follower} {...follower} />}
           </Grid>
         );
       })}
