@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import useAxios from '../../../../../services/api'
 import { isAuthenticated } from '../../../../../services/isAuth'
 import CommentCard from '../../../../../components/Chat/CommentCard'
@@ -35,22 +35,14 @@ export async function getServerSideProps(context) {
 }
 
 export default function Page({ subComments: serverSubComments, comment, newSubComment }) {
-  const [subComments, setSubComments] = useState(serverSubComments)
-
-  useEffect(() => {
-    if (newSubComment) {
-      setSubComments((prevState) => {
-        // Add a check to prevent duplicate entries on re-renders
-        if (prevState.results.find(c => c.id === newSubComment.id)) {
-          return prevState;
-        }
-        return {
-          ...prevState,
-          results: [...prevState.results, newSubComment]
-        };
-      });
-    }
-  }, [newSubComment]);
+  const subComments = !newSubComment ? serverSubComments : {
+    ...serverSubComments,
+    results: [
+      ...serverSubComments.results,
+      // Add check to prevent duplicate entries
+      ...(serverSubComments.results.find(c => c.id === newSubComment.id) ? [] : [newSubComment])
+    ]
+  };
 
   return (
     <>
