@@ -9,6 +9,8 @@ import Link from 'next/link';
 import { styled } from '@mui/system';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import dayjs from 'dayjs';
+import ShowImage from '../components/ShowImage';
 
 // ---------- helpers ----------
 const formatAirTime = (isoString) => {
@@ -44,11 +46,11 @@ function UpcomingCard({
   const filteredShows = React.useMemo(() => {
     if (!tvShows.length) return [];
     
-    const now = new Date();
-    const until = new Date(now.getTime() + windowHours * 60 * 60 * 1000);
+    const now = dayjs();
+    const until = now.add(windowHours, 'hours');
     const filtered = tvShows.filter(s => {
-      const t = new Date(s.rawAirtime);
-      return t >= now && t <= until;
+      const airtime = dayjs(s.rawAirtime);
+      return airtime.isAfter(now) && airtime.isBefore(until);
     });
 
     return filtered.length ? filtered : tvShows; // fallback to all if filter empties it
@@ -128,19 +130,9 @@ function UpcomingCard({
         {displayedShows.map((tvShow, index) => (
           <Item key={`${tvShow.tmsId}-${index}`} expanded={expanded}>
             <Card sx={{ background: 'transparent' }}>
-              <Image
-                src={tvShow.preferred_image_uri?.startsWith('http') 
-                  ? tvShow.preferred_image_uri 
-                  : tvShow.preferred_image_uri?.startsWith('/')
-                    ? tvShow.preferred_image_uri
-                    : tvShow.preferred_image_uri
-                      ? `https://${tvShow.preferred_image_uri}`
-                      : '/assets/live.jpg'
-                }
-                alt={`${tvShow.title || 'TV Show'} Image`}
-                width={720}
-                height={540}
-                layout="responsive"
+              <ShowImage
+                src={tvShow.preferred_image_uri}
+                title={tvShow.title}
                 quality={75}
                 loading='eager'
               />
