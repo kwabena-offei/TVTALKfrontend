@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import Image from "next/image";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
@@ -17,18 +16,11 @@ import {
 } from "@mui/material";
 import HeartButton from "../components/HeartButton";
 import BlueButton from "../components/BlueButton";
+import ShowImage from "../components/ShowImage";
 import Link from "next/link";
 import { styled } from "@mui/system";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
-// Utility function to normalize image URIs
-function getImageUrl(uri) {
-  if (!uri) return '/assets/live.jpg';
-  if (uri.startsWith('http')) return uri;
-  if (uri.startsWith('/')) return uri;
-  return `https://${uri}`;
-}
 
 function ExpandableGrid({ tvShows, title }) {
   const [expanded, setExpanded] = useState(false);
@@ -128,12 +120,9 @@ function ExpandableGrid({ tvShows, title }) {
         {displayedShows.map((tvShow, index) => (
           <Item key={index} expanded={expanded}>
             <Card key={`${tvShow.tmsId}`} sx={{ height: "100%" }}>
-              <Image
-                src={getImageUrl(tvShow.preferred_image_uri)}
-                alt={`${tvShow.title} Image`}
-                width={720}
-                height={540}
-                layout="responsive"
+              <ShowImage
+                src={tvShow.preferred_image_uri}
+                title={tvShow.title}
                 quality={75}
                 loading="eager"
               />

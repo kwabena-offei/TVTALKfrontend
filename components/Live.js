@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import Image from 'next/image';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { Button, Grid, Typography } from '@mui/material';
 import HeartButton from '../components/HeartButton';
 import BlueButton from '../components/BlueButton';
+import ShowImage from '../components/ShowImage';
 import Link from 'next/link';
 import { styled } from '@mui/system';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -94,19 +94,9 @@ function Live({ tvShows = [] }) {
         {displayedShows.map((tvShow, index) => (
           <Item key={index} expanded={expanded}>
             <Card key={`${tvShow.tmsId}`} sx={{ background: 'transparent' }}>
-              <Image
-                src={tvShow.preferred_image_uri?.startsWith('http') 
-                  ? tvShow.preferred_image_uri 
-                  : tvShow.preferred_image_uri?.startsWith('/')
-                    ? tvShow.preferred_image_uri
-                    : tvShow.preferred_image_uri
-                      ? `https://${tvShow.preferred_image_uri}`
-                      : '/assets/live.jpg'
-                }
-                alt={`${tvShow.title || 'TV Show'} Image`}
-                width={720}
-                height={540}
-                layout="responsive"
+              <ShowImage
+                src={tvShow.preferred_image_uri}
+                title={tvShow.title}
                 quality={75}
                 loading='eager'
               />
