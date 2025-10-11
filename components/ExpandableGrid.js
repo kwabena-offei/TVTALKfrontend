@@ -22,6 +22,14 @@ import { styled } from "@mui/system";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+// Utility function to normalize image URIs
+function getImageUrl(uri) {
+  if (!uri) return '/assets/live.jpg';
+  if (uri.startsWith('http')) return uri;
+  if (uri.startsWith('/')) return uri;
+  return `https://${uri}`;
+}
+
 function ExpandableGrid({ tvShows, title }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -121,14 +129,7 @@ function ExpandableGrid({ tvShows, title }) {
           <Item key={index} expanded={expanded}>
             <Card key={`${tvShow.tmsId}`} sx={{ height: "100%" }}>
               <Image
-                src={tvShow.preferred_image_uri?.startsWith('http')
-                  ? tvShow.preferred_image_uri
-                  : tvShow.preferred_image_uri?.startsWith('/')
-                    ? tvShow.preferred_image_uri
-                    : tvShow.preferred_image_uri
-                      ? `https://${tvShow.preferred_image_uri}`
-                      : '/assets/live.jpg'
-                }
+                src={getImageUrl(tvShow.preferred_image_uri)}
                 alt={`${tvShow.title} Image`}
                 width={720}
                 height={540}
