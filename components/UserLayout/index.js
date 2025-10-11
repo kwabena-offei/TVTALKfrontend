@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Box, Container, Stack, Tabs, Tab } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -13,11 +13,13 @@ import {
   ProfileUsernameMobile,
 } from "./UserLayout.styled";
 import { useRouter } from "next/router";
-import useAxios from "../../services/api";
 import { AuthContext } from "../../util/AuthContext";
+import {
+  useMutationUnfollow,
+  useMutationFollow
+} from "../../entities/user/hooks";
 
-const { axios } = useAxios();
-export async function fetchAccount(username, axiosInstance = axios) {
+export async function fetchAccount(username, axiosInstance) {
   const { data: profile } = await axiosInstance.get(`/users/${username}`);
   return profile;
 }
@@ -27,14 +29,12 @@ export const UserLayout = ({ children, mode }) => {
   let { profile } = props;
   const { profile: currentUser } = useContext(AuthContext);
 
-  // If we are on the main profile page, always use the currentUser from context
-  // This ensures that after login, we see the correct user's data
+
   if (mode === "profile") {
     profile = currentUser;
   }
 
-  // If the profile data is not yet loaded (e.g., right after login),
-  // we should not attempt to render the component contents.
+
   if (!profile?.id) {
     return null; 
   }
@@ -53,14 +53,9 @@ export const UserLayout = ({ children, mode }) => {
     is_following,
   } = profile;
 
-  const [isFollowing, setIsFollowing] = useState(is_following);
-  const [followersCount, setFollowersCount] = useState(followers_count);
-
-  useEffect(() => {
-    setFollowersCount(followers_count);
-    setIsFollowing(is_following);
-  }, [followers_count, is_following]);
-
+  const unfollowMutation = useMutationUnfollow();
+  const followMutation = useMutationFollow();
+  const isLoading = unfollowMutation.isPending || followMutation.isPending;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -81,7 +76,7 @@ export const UserLayout = ({ children, mode }) => {
     {
       title: "Followers",
       href: `${inheritURL}/followers`,
-      count: followersCount ?? 0,
+      count: followers_count ?? 0,
     },
     {
       title: "Following",
@@ -95,17 +90,13 @@ export const UserLayout = ({ children, mode }) => {
   };
 
   const handleFollow = async () => {
+    if (isLoading) return;
+
     try {
-      if (isFollowing) {
-        await axios.delete(`/relationships/${id}`);
-        setIsFollowing(false);
-        setFollowersCount((prev) => prev - 1);
+      if (is_following) {
+        await unfollowMutation.mutate(id);
       } else {
-        await axios.post(`/relationships`, {
-          followed_id: id,
-        });
-        setIsFollowing(true);
-        setFollowersCount((prev) => prev + 1);
+        await followMutation.mutate(id);
       }
     } catch (error) {
       console.error("Failed to update relationship", error);
@@ -133,9 +124,10 @@ export const UserLayout = ({ children, mode }) => {
               <FollowButton
                 isMobile={isMobile}
                 onClick={handleFollow}
-                isFollowing={isFollowing}
+                isFollowing={is_following}
+                disabled={isLoading}
               >
-                {isFollowing ? "Unfollow" : "Follow"}
+                {is_following ? "Unfollow" : "Follow"}
               </FollowButton>
             )}
           </Stack>
