@@ -1,13 +1,12 @@
 'use client';
 
-import React, { useState } from "react";
+import React from "react";
 import useAxios from '../../../../../services/api'
 import { isAuthenticated } from '../../../../../services/isAuth'
 import CommentCard from '../../../../../components/Chat/CommentCard'
 import { CommentLayout } from "../../../../../components/Chat/CommentLayout";
 import { Box } from "@mui/material";
 import { EmptyDataFeedback } from "../../../../../components/Chat/EmptyDataFeedback";
-import useSocket from '../../../../../hooks/useSocket';
 
 export async function getServerSideProps(context) {
   const { axios } = useAxios(context);
@@ -35,22 +34,15 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function Page({ subComments: serverSubComments, comment }) {
-  const [subComments, setSubComments] = useState(serverSubComments)
-
-  const socket = useSocket(
-    'comments',
-    'CommentsChannel',
-    { "comment_id": comment.id },
-    (response) => {
-      if(response.message?.type === 'sub_comment') {
-        setSubComments((prevState) => {
-          return {
-            ...prevState,
-            results: [ ...prevState.results, response.message ]};
-        })
-      }
-  });
+export default function Page({ subComments: serverSubComments, comment, newSubComment }) {
+  const subComments = !newSubComment ? serverSubComments : {
+    ...serverSubComments,
+    results: [
+      ...serverSubComments.results,
+      // Add check to prevent duplicate entries
+      ...(serverSubComments.results.find(c => c.id === newSubComment.id) ? [] : [newSubComment])
+    ]
+  };
 
   return (
     <>

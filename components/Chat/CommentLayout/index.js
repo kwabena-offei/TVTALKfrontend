@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, cloneElement } from "react";
 import {
   Box,
   Container,
@@ -16,13 +16,33 @@ import ReactionCard from "../../ReactionCard";
 import { ButtonBack, ButtonBackMobile } from "../Chat.styled"
 import Grid from "@mui/material/Unstable_Grid2";
 import { AuthContext } from "../../../util/AuthContext";
+import useSocket from "../../../hooks/useSocket";
 
 export const CommentLayout = ({ children, reply, isAuth }) => {
   const { props } = children;
   const { comment, profile, route } = props;
   const router = useRouter();
-  const currentRoute = route || 'likes'
-  const { tmsId, id, sub_comments_count, likes_count, shares_count } = comment;
+  const currentRoute = route || 'likes';
+
+  const [mainComment, setMainComment] = useState(comment);
+  const [newSubComment, setNewSubComment] = useState(null);
+
+  useSocket(
+    'comments',
+    'CommentsChannel',
+    { "comment_id": comment.id },
+    (response) => {
+      if(response.message?.type === 'sub_comment') {
+        setMainComment((prevState) => ({
+          ...prevState,
+          sub_comments_count: prevState.sub_comments_count + 1,
+        }));
+        setNewSubComment(response.message);
+      }
+    }
+  );
+
+  const { tmsId, id, sub_comments_count, likes_count, shares_count } = mainComment;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isMobileOrTablet = useMediaQuery(theme.breakpoints.down('md'))
@@ -105,7 +125,7 @@ export const CommentLayout = ({ children, reply, isAuth }) => {
         <Grid container>
           <Grid xs={0} md={2}/>
           <Grid xs={12} md={8}>
-            {children}
+            {cloneElement(children, { newSubComment: newSubComment })}
           </Grid>
           <Grid xs={0} md={2} />
         </Grid>

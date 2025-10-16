@@ -1,25 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { IconButton } from '@mui/material';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import Badge from '@mui/material/Badge';
-import useAxios from '../services/api';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from '@mui/material/styles';
+import { AuthContext } from '../util/AuthContext';
 
-const NotificationButton = ({ token }) => {
-  const { axios } = useAxios();
-  const [notifications, setNotifications] = useState([]);
+const NotificationButton = () => {
+  const { unreadCount } = useContext(AuthContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      let resp = await axios.get('/notifications/unread');
-      setNotifications(resp.data.results);
-    };
-    fetchNotifications();
-  }, [token]);
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -31,7 +22,7 @@ const NotificationButton = ({ token }) => {
   }));
 
   return (
-    <StyledBadge badgeContent={notifications.length} color="primary">
+    <StyledBadge badgeContent={unreadCount} color="primary">
       <IconButton
         style={{
           background: 'var(--background-color, #090F27)',

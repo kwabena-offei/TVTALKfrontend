@@ -20,6 +20,8 @@ import AppleLogin from "react-apple-signin-auth";
 import { setCookie } from "cookies-next";
 import getConfig from "next/config";
 import { ModalError } from "./ModalError";
+import { useContext } from "react";
+import { AuthContext } from "../../util/AuthContext";
 
 // -- get next.js config from environment variables (next.config.js) --
 const { publicRuntimeConfig } = getConfig();
@@ -28,6 +30,7 @@ const Login = (props) => {
   const { isMobile } = props;
   const router = useRouter();
   const { axios } = useAxios();
+  const { login } = useContext(AuthContext);
   const [formValues, setFormValues] = useState({
     username: "",
     password: "",
@@ -67,10 +70,11 @@ const Login = (props) => {
     try {
       // -- send user/password to API --
       const {
-        data: { token },
+        data: { token, user },
       } = await axios.post(`/auth/login`, formValues);
       // -- set cookie with token --
       setCookie("token", token);
+      login(user);
       // -- redirect user to profile page --
       router.push("/profile/reactions");
     } catch (error) {
@@ -84,13 +88,16 @@ const Login = (props) => {
   const handleResponseGoogle = async (googleResponse) => {
     try {
       // -- send request to API and exchange google token with local token --
-      const apiResponse = await axios.post(`/auth/login_social`, {
+      const {
+        data: { token, user },
+      } = await axios.post(`/auth/login_social`, {
         google_token: googleResponse.tokenId,
       });
       // -- set cookie with token --
-      setCookie("token", apiResponse.data.token);
+      setCookie("token", token);
+      login(user);
       // -- redirect user to profile page --
-      router.push("/");
+      router.push("/profile/reactions");
     } catch (event) {
       // -- show modal with error message in case of error from API --
       handleOpenErrorMessage("Google", event.response.data.error);
@@ -117,15 +124,18 @@ const Login = (props) => {
     try {
       // -- send request to API and exchange google token with local token --
       console.log(facebookResponse);
-      const apiResponse = await axios.post(`/auth/login_social`, {
+      const {
+        data: { token, user },
+      } = await axios.post(`/auth/login_social`, {
         facebook_token: facebookResponse.accessToken,
         facebook_id: facebookResponse.userID,
       });
 
       // -- set cookie with token --
-      setCookie("token", apiResponse.data.token);
+      setCookie("token", token);
+      login(user);
       // -- redirect user to profile page --
-      router.push("/");
+      router.push("/profile/reactions");
     } catch (error) {
       // -- show modal with error message in case of error from API --
       handleOpenErrorMessage("Facebook");
@@ -138,12 +148,15 @@ const Login = (props) => {
     console.log("apple response: ", appleResponse);
     try {
       // -- send request to API and exchange apple token with local token --
-      const apiResponse = await axios.post(`/auth/apple`, appleResponse);
+      const {
+        data: { token, user },
+      } = await axios.post(`/auth/apple`, appleResponse);
 
       // -- set cookie with token --
-      setCookie("token", apiResponse.data.token);
+      setCookie("token", token);
+      login(user);
       // -- redirect user to profile page --
-      router.push("/");
+      router.push("/profile/reactions");
     } catch (error) {
       // -- show modal with error message in case of error from API --
       handleOpenErrorMessage("Apple");

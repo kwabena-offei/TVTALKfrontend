@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
 import { ChatHeader, ChatContent } from "../../../components/Chat";
@@ -10,63 +8,46 @@ import useAxios from "../../../services/api";
 import uniqBy from "lodash/uniqBy";
 import { buildAPIUrl } from "../../../services/api";
 
-export async function getStaticProps({ params }) {
-  const { tmsId, reactionId } = params;
-  const { axios } = useAxios();
+export async function getServerSideProps(context) {
+  const { tmsId } = context.params;
+  const { axios } = useAxios(context);
 
   if (!tmsId) {
-    return {
-      notFound: true,
-    };
+    return { notFound: true };
   }
 
-  const { data: show } = await axios.get(
-    buildAPIUrl(`/shows/${tmsId}`)
-  );
-  const { data: comments } = await axios.get(
-    buildAPIUrl(`/comments?tms_id=${tmsId}`)
-  );
-
-  let heroImage = `https://${show.preferred_image_uri}`;
   try {
-    const heroImageUrl = buildAPIUrl(`/data/v1.1/programs/${tmsId}/images?imageAspectTV=16x9&imageSize=Ms&imageText=false`);
-    const heroImageResponse = await fetch(heroImageUrl);
-    const heroImages = await heroImageResponse.json();
-    heroImage =
-      heroImages.find(({ category }) => category === "Iconic") || heroImages[0];
-    heroImage = `https://${heroImage.uri}`;
+    const { data: show } = await axios.get(`/shows/${tmsId}`);
+    const { data: comments } = await axios.get(`/comments?tms_id=${tmsId}`);
+
+    // REMOVED: The slow second API call that was causing 10-30 second delays
+    // We'll handle series metadata lazily in the component instead
+
+    let heroImage = `https://${show.preferred_image_uri}`;
+    try {
+      const heroImageUrl = buildAPIUrl(`/data/v1.1/programs/${tmsId}/images?imageAspectTV=16x9&imageSize=Ms&imageText=false`);
+      const heroImageResponse = await fetch(heroImageUrl);
+      const heroImages = await heroImageResponse.json();
+      heroImage =
+        heroImages.find(({ category }) => category === "Iconic") || heroImages[0];
+      heroImage = `https://${heroImage.uri}`;
+    } catch (error) {
+      console.log(`Error fetching hero image`, error);
+    }
+
+    return {
+      props: {
+        show,
+        comments,
+        heroImage: heroImage || "",
+      },
+    };
   } catch (error) {
-    console.log(`Error fetching hero image`, error);
+    console.error('Error fetching chat data:', error);
+    return { notFound: true };
   }
-
-  return {
-    props: {
-      show,
-      comments,
-      heroImage: heroImage || "",
-    }, // will be passed to the page component as props
-  };
 }
 
-export async function getStaticPaths() {
-  const categoryResponse = await fetch(buildAPIUrl("/categories"));
-  const json = await categoryResponse.json();
-  const paths = [];
-  json.map((category) => {
-    category.shows.map((show) => {
-      paths.push({
-        params: {
-          tmsId: show.tmsId,
-        },
-      });
-    });
-  });
-
-  return {
-    paths: paths,
-    fallback: true,
-  };
-}
 
 const Chat = ({ show, comments: serverComments, heroImage }) => {
   if (!show) {
@@ -84,6 +65,15 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
   const [profile, setProfile] = useState({});
   const { isAuthenticated } = useContext(AuthContext);
   const [sortValue, setSortValue] = useState("");
+
+  // NEW: track which episode to post to
+  const isRouteEpisode = tmsId?.startsWith('EP');
+  const [selectedEpisodeTmsId, setSelectedEpisodeTmsId] = useState(isRouteEpisode ? tmsId : null);
+
+  // Initialize filteredComments only on mount, not whenever comments changes
+  useEffect(() => {
+    setFilteredComments(serverComments.results);
+  }, [serverComments]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -140,43 +130,51 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
   const handleEpisodeChange = async (selectedTmsId) => {
     if (selectedTmsId.tag === "total") {
       const totalPromises = selectedTmsId.content.map(async (episodeId) => {
-        return axios.get(`/comments?tmsId=${episodeId}`);
+        return axios.get(`/comments?tms_id=${episodeId}`);
       });
       Promise.allSettled(totalPromises).then((results) => {
-        const totalData = [];
-        results.forEach((result) => {
-          result.value.data.results.forEach((individualResult) =>
-            totalData.push(individualResult)
-          );
-        });
-        setFilteredComments(
-          uniqBy([...totalData.sort(sorter), filteredComments[0]], "id")
-        );
+        const totalData = results.flatMap(r => (r.value?.data?.results ?? []));
+        const base = totalData.sort(sorter);
+        setFilteredComments(uniqBy(base, 'id'));
       });
+      // Do NOT change post target for "Select All"
     } else {
-      const resp = await axios.get(`/comments?tmsId=${selectedTmsId}`);
+      const resp = await axios.get(`/comments?tms_id=${selectedTmsId}`);
 
-      setFilteredComments(
-        uniqBy([...resp.data.results.sort(sorter), filteredComments[0]], "id")
-      );
+      const list = Array.isArray(resp.data?.results) ? resp.data.results : [];
+      const base = list.sort(sorter);
+      setFilteredComments(uniqBy(base, 'id'));
+
+      // Update post target to selected episode
+      if (typeof selectedTmsId === 'string' && selectedTmsId.startsWith('EP')) {
+        setSelectedEpisodeTmsId(selectedTmsId);
+      }
     }
   };
+
 
   const onSortChange = (value) => {
     setSortValue(value);
   };
 
+  // Use the selected episode for websocket subscription, fallback to route tmsId
+  const activeChannelTmsId = selectedEpisodeTmsId || tmsId;
+
   const socket = useSocket(
     "comments",
     "CommentsChannel",
-    { tms_id: tmsId },
+    { tms_id: activeChannelTmsId },
     (response) => {
       if (response.message?.type === "comment") {
-        setComments((prevState) => {
-          return {
-            ...prevState,
-            results: [...prevState.results, response.message],
-          };
+        // Add the new comment directly to filteredComments (not to comments state)
+        // This ensures it only shows up when viewing the episode it was posted to
+        setFilteredComments((prevFiltered) => {
+          // Check if comment already exists to avoid duplicates
+          const exists = prevFiltered.some(c => c.id === response.message.id);
+          if (exists) {
+            return prevFiltered;
+          }
+          return [...prevFiltered, response.message];
         });
       }
     }
@@ -185,15 +183,14 @@ const Chat = ({ show, comments: serverComments, heroImage }) => {
   return (
     <>
       <ChatHeader show={show} heroImage={heroImage} />
-      <AuthContext.Provider value={isAuthenticated}>
-        <ChatContent
-          show={show}
-          comments={filteredComments}
-          profile={profile}
-          onEpisodeSelect={handleEpisodeChange}
-          onSortChange={onSortChange}
-        />
-      </AuthContext.Provider>
+      <ChatContent
+        show={show}
+        comments={filteredComments}
+        profile={profile}
+        selectedEpisodeTmsId={selectedEpisodeTmsId}
+        onEpisodeSelect={handleEpisodeChange}
+        onSortChange={onSortChange}
+      />
     </>
   );
 };

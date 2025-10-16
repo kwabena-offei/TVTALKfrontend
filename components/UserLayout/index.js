@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, Container, Stack, Tabs, Tab } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -13,29 +13,49 @@ import {
   ProfileUsernameMobile,
 } from "./UserLayout.styled";
 import { useRouter } from "next/router";
-import useAxios from "../../services/api";
+import { AuthContext } from "../../util/AuthContext";
+import {
+  useMutationUnfollow,
+  useMutationFollow
+} from "../../entities/user/hooks";
 
-const { axios } = useAxios();
-export async function fetchAccount(username) {
-  const { data: profile } = await axios.get(`/users/${username}`);
+export async function fetchAccount(username, axiosInstance) {
+  const { data: profile } = await axiosInstance.get(`/users/${username}`);
   return profile;
 }
 
 export const UserLayout = ({ children, mode }) => {
   const { props } = children;
-  const { profile } = props;
+  let { profile } = props;
+  const { profile: currentUser } = useContext(AuthContext);
+
+
+  if (mode === "profile") {
+    profile = currentUser;
+  }
+
+
+  if (!profile?.id) {
+    return null; 
+  }
 
   const router = useRouter();
   const currentRoute = router.asPath;
 
   const {
+    id,
     username,
     image,
     reactions_count,
     favorites_count,
     followers_count,
     following_count,
+    is_following,
   } = profile;
+
+  const unfollowMutation = useMutationUnfollow();
+  const followMutation = useMutationFollow();
+  const isLoading = unfollowMutation.isPending || followMutation.isPending;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -46,22 +66,22 @@ export const UserLayout = ({ children, mode }) => {
     {
       title: "Reactions",
       href: `${inheritURL}/reactions`,
-      count: reactions_count | "0",
+      count: reactions_count ?? 0,
     },
     {
       title: "Favorites",
       href: `${inheritURL}/favorites`,
-      count: favorites_count | "0",
+      count: favorites_count ?? 0,
     },
     {
       title: "Followers",
       href: `${inheritURL}/followers`,
-      count: followers_count | "0",
+      count: followers_count ?? 0,
     },
     {
       title: "Following",
       href: `${inheritURL}/following`,
-      count: following_count | "0",
+      count: following_count ?? 0,
     },
   ];
 
@@ -70,11 +90,17 @@ export const UserLayout = ({ children, mode }) => {
   };
 
   const handleFollow = async () => {
-    const res = await axios.post(`/relationships`, {
-      follower_id: 653,
-      followed_id: 485,
-    });
-    console.log("res", res);
+    if (isLoading) return;
+
+    try {
+      if (is_following) {
+        await unfollowMutation.mutate(id);
+      } else {
+        await followMutation.mutate(id);
+      }
+    } catch (error) {
+      console.error("Failed to update relationship", error);
+    }
   };
 
   return (
@@ -94,7 +120,16 @@ export const UserLayout = ({ children, mode }) => {
               <ProfileUsername>{username}</ProfileUsername>
             )}
 
-            <FollowButton isMobile={isMobile} onClick={handleFollow} />
+            {currentUser?.id !== id && (
+              <FollowButton
+                isMobile={isMobile}
+                onClick={handleFollow}
+                isFollowing={is_following}
+                disabled={isLoading}
+              >
+                {is_following ? "Unfollow" : "Follow"}
+              </FollowButton>
+            )}
           </Stack>
         </Box>
         <Box

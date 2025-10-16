@@ -32,7 +32,7 @@ export async function getServerSideProps(context) {
   const { username } = context.query;
 
   const { data: reactions } = await axios.get(`/users/${username}/reactions`);
-  const profile = await fetchAccount(username);
+  const profile = await fetchAccount(username, axios);
 
   return {
     props: {

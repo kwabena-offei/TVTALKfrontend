@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import Image from "next/image";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
@@ -17,6 +16,7 @@ import {
 } from "@mui/material";
 import HeartButton from "../components/HeartButton";
 import BlueButton from "../components/BlueButton";
+import ShowImage from "../components/ShowImage";
 import Link from "next/link";
 import { styled } from "@mui/system";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -120,12 +120,9 @@ function ExpandableGrid({ tvShows, title }) {
         {displayedShows.map((tvShow, index) => (
           <Item key={index} expanded={expanded}>
             <Card key={`${tvShow.tmsId}`} sx={{ height: "100%" }}>
-              <Image
-                src={`https://${tvShow.preferred_image_uri}`}
-                alt={`${tvShow.title} Image`}
-                width={720}
-                height={540}
-                layout="responsive"
+              <ShowImage
+                src={tvShow.preferred_image_uri}
+                title={tvShow.title}
                 quality={75}
                 loading="eager"
               />
@@ -137,10 +134,25 @@ function ExpandableGrid({ tvShows, title }) {
                   sx={{ minHeight: "120px" }}
                 >
                   <h3
-                    style={{ color: "#EFF2FD", fontSize: 25, fontWeight: 500 }}
+                    style={{ color: "#EFF2FD", fontSize: 25, fontWeight: 500, margin: '0' }}
                   >
                     {tvShow.title}
                   </h3>
+                  {tvShow.networks && (
+                    <span style={{ fontSize: '14px', paddingRight: '16px' }}>
+                      Network: {tvShow.networks.length > 0 ? tvShow.networks[0].name : 'N/A'}
+                    </span>
+                  )}
+                  {tvShow.channel && (
+                    <span style={{ fontSize: '14px', paddingRight: '16px' }}>
+                      Channel: {tvShow.channel || 'N/A'}
+                    </span>
+                  )}
+                  {tvShow.airtime && (
+                    <p style={{ fontSize: '14px', margin: '0' }}>
+                      Airtime: {tvShow.airtime || 'N/A'}
+                    </p>
+                  )}
                 </Typography>
                 <Grid container spacing={1}>
                   <Grid item>

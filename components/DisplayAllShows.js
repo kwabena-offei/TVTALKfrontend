@@ -21,14 +21,21 @@ import NetworkSelector from "./NetworkSelector";
 import Image from "next/image";
 import { styled } from "@mui/system";
 import ExpandableGrid from "./ExpandableGrid";
-import PopularChatter from "./PopularChatter"
-import PopularCommets from './PopularCommets'
-import UpcomingCard from './UpcomingCard'
-import Live from './Live'
+import PopularChatter from "./PopularChatter";
+import PopularComments from "./PopularCommets";
+import UpcomingCard from "./UpcomingCard";
+import Live from "./Live";
 import Container from "@mui/material/Container";
 import { Avatar, CardActions } from "@mui/material";
 
-const DisplayAllShows = ({ categories, network }) => {
+const DisplayAllShows = ({ 
+  categories,
+  network,
+  liveShows = [],
+  upcomingShows = [],
+  showLiveRow=true,
+  showUpcomingRow=true
+ }) => {
   const router = useRouter();
 
   // Pushes tmsID to the about page
@@ -105,7 +112,7 @@ const DisplayAllShows = ({ categories, network }) => {
         <Container maxWidth="xl">
           <NetworkSelector activeNetwork={network} />
             <PopularChatter />
-            <PopularCommets />
+            <PopularComments />
           {categories
             .filter((category) => category.shows.length)
             .map((category, index) => (
@@ -122,8 +129,8 @@ const DisplayAllShows = ({ categories, network }) => {
                 </div>
               </div>
             ))}
-            <Live />
-            <UpcomingCard />
+            {showLiveRow && <Live tvShows={Array.isArray(liveShows) ? liveShows : []} />}
+            {showUpcomingRow &&<UpcomingCard tvShows={Array.isArray(upcomingShows) ? upcomingShows : []} />}
         </Container>
       </Box>
     </>

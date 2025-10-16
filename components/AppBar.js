@@ -264,7 +264,7 @@ function ResponsiveAppBar({ context }) {
                 </Link>
 
                 <Link href="/notifications">
-                  <NotificationButton token={token} />
+                  <NotificationButton />
                 </Link>
 
                 <Tooltip title="Open settings">

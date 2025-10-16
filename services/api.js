@@ -22,6 +22,24 @@ const useAxios = (context) => {
     instance.defaults.headers.common['Authorization'] = `Bearer ${cookies.token}`;
   }
 
+  // Ensure Authorization header is attached on every client-side request,
+  // even after a hard refresh or when the axios instance is reused.
+  instance.interceptors.request.use((config) => {
+    try {
+      // Only attempt to read cookies on the client
+      if (typeof window !== 'undefined') {
+        const clientCookies = getCookies();
+        if (clientCookies.token) {
+          config.headers = config.headers || {};
+          config.headers['Authorization'] = `Bearer ${clientCookies.token}`;
+        }
+      }
+    } catch (e) {
+      // no-op
+    }
+    return config;
+  });
+
   return {
     axios: instance
   }

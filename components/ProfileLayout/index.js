@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Box, Container, Stack, Tabs, Tab } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -17,9 +17,8 @@ import { useRouter } from "next/router";
 import useAxios from "../../services/api";
 import { AuthContext } from "../../util/AuthContext";
 
-export async function fetchAccount(username) {
-  const { axios } = useAxios();
-  const { data: profile } = await axios.get(`/users/${username}`);
+export async function fetchAccount(username, axiosInstance) {
+  const { data: profile } = await axiosInstance.get(`/users/${username}`);
   return profile;
 }
 
@@ -27,6 +26,12 @@ export const ProfileLayout = ({ children, mode }) => {
   const { profile, mutateProfile } = useContext(AuthContext);
   const router = useRouter();
   const currentRoute = router.asPath;
+
+  useEffect(() => {
+    if (mode === "profile") {
+      mutateProfile();
+    }
+  }, [currentRoute, mode, mutateProfile]);
 
   const {
     username,

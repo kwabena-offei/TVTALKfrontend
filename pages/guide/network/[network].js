@@ -5,7 +5,11 @@ import { buildAPIUrl } from '../../../services/api';
 export default function StreamingNetwork({ categories, network }) {
   return (
     <>
-      <DisplayAllShows categories={categories} network={network} />
+      <DisplayAllShows 
+        categories={categories} 
+        network={network}
+        showLiveRow={false}
+        showUpcomingRow={false} />
     </>
   )
 }
@@ -22,6 +26,7 @@ export async function getStaticProps({ params }) {
       title: category[0],
       shows: shows?.filter((show, index) => {
         if (index === 0) return true
+        if (!show || !shows[index - 1]) return false
         const sameTitle = show.title === shows[index - 1].title
         const sameSeriesId = show.seriesId === shows[index - 1].seriesId
         return !sameSeriesId && !sameTitle;
@@ -35,10 +40,11 @@ export async function getStaticProps({ params }) {
   let upcomingShows = await fetchShows('upcoming', network, timezone);
   upcomingShows = upcomingShows?.filter((show, index) => {
     if (index === 0) {
-      if (liveShows[0].seriesId === show.seriesId) { return false }
+      if (liveShows && liveShows[0] && show && liveShows[0].seriesId === show.seriesId) { return false }
       return true
     }
 
+    if (!show || !upcomingShows[index - 1]) return false
     return show.seriesId != upcomingShows[index - 1].seriesId
   })
 

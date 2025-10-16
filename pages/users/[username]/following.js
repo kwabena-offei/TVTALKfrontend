@@ -1,17 +1,30 @@
 import { Grid } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import { UserLayout, fetchAccount } from "../../../components/UserLayout";
 import FollowerCard from "../../../components/FollowerCard/FollowerCard";
 import FollowerCardMobile from "../../../components/FollowerCard/FollowerCardMobile";
 import useAxios from "../../../services/api";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useRouter } from "next/router";
+import { AuthContext } from "../../../util/AuthContext";
+import { useQueryUserFollowing } from "../../../entities/user/hooks";
 
-export default function Page({ following }) {
+export default function Page({ following: initialData, profile }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const router = useRouter();
+  const { profile: currentUser } = useContext(AuthContext);
 
-  const { results: followingList, pagination } = following;
+ 
+  const { data: { data: following } = {} } = useQueryUserFollowing(router.query.username, {
+    initialData: { data: initialData }
+  });
+
+  const { results: followingList } = following || {};
+
+
+  const isOwnProfile = currentUser?.id === profile?.id;
 
   return (
     <Grid container spacing={isMobile ? 2 : 3.75}>
@@ -25,9 +38,18 @@ export default function Page({ following }) {
             lg={2}
           >
             {isMobile ? (
-              <FollowerCardMobile {...follower} />
+              <FollowerCardMobile 
+                follower={follower}
+                context="following"
+                isOwnProfile={isOwnProfile}
+              />
             ) : (
-              <FollowerCard {...follower} />
+              <FollowerCard 
+                follower={follower}
+                {...follower} 
+                context="following"
+                isOwnProfile={isOwnProfile}
+              />
             )}
           </Grid>
         );
@@ -40,7 +62,7 @@ export async function getServerSideProps(context) {
   const { axios } = useAxios(context);
   const { username } = context.query;
   const { data: following } = await axios.get(`/users/${username}/following`);
-  const profile = await fetchAccount(username);
+  const profile = await fetchAccount(username, axios);
   return {
     props: {
       following,

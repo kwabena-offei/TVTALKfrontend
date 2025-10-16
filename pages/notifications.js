@@ -1,10 +1,11 @@
 import { Stack, Grid } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import useAxios from "../services/api";
 import NotificationCard from '../components/NotificationCard';
 import { AccountSettingsLayout } from '../components/AccountSettingsLayout';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { AuthContext } from '../util/AuthContext';
 
 export async function getServerSideProps({ req, res }) {
   const { axios } = useAxios({ req, res });
@@ -21,24 +22,12 @@ export default function Page({ notifications }) {
   const { results: notificationsList, pagination } = notifications;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { axios } = useAxios();
+  const { markAllNotificationsAsRead } = useContext(AuthContext);
 
   useEffect(() => {
-    // Define the function to make the PUT request to /notifications/read
-    const markNotificationsAsRead = async () => {
-      try {
-        await axios.patch('/notifications/unread/all', {
-          notification: {
-            read: true
-          }
-        });
-      } catch (error) {
-        console.error('Error marking notifications as read:', error);
-      }
-    };
-
-    // Call the function to mark notifications as read when the component mounts
-    markNotificationsAsRead();
+    // Call the context function to mark all notifications as read
+    // This will also immediately update the unreadCount in the context
+    markAllNotificationsAsRead();
   }, []); // The empty dependency array ensures this effect runs only on component mount
 
 
